@@ -1,0 +1,37 @@
+{
+    "editor.tabSize": 2,
+    "colorize.exclude": [
+    
+        "**/*.css",
+        "**/*.scss",
+        "**/*.sass",
+        "**/*.less",
+        "**/*.styl",
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "**/*.jsx"
+        
+    ],
+    "editor.language.colorizedBracketPairs": [
+
+    ],
+    "colorize.colorized_variables": [
+
+
+        "CSS"
+    ],
+   "colorize.include": [
+        
+        "**/*.css",
+        "**/*.scss",
+        "**/*.sass",
+        "**/*.less",
+        "**/*.styl",
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "**/*.jsx"
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
+}

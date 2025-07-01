@@ -1,0 +1,490 @@
+import { useContext, useEffect, useState } from 'react'
+import { ActivityIndicator, Modal, TouchableOpacity } from 'react-native'
+import { Box, CloseIcon, Image, Input, InputIcon, InputSlot, Pressable, Text, Toast, ToastTitle, useToast, View } from '@gluestack-ui/themed'
+import { InputField } from '@gluestack-ui/themed'
+import { Icon } from '@gluestack-ui/themed'
+import { ParamListBase, useNavigation } from '@react-navigation/native'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import RazorpayCheckout from 'react-native-razorpay'; //razorpay 
+import { Container } from '../components/Container'
+import { AppBar } from '../components/AppBar'
+import { colors } from '../constants/colors'
+import Body from '../components/Body/Body'
+import { moderateScale, moderateScaleVertical } from '../utils/responsiveSize'
+import { imgIcon } from '../assets/icons'
+import { AddCashOfferImgIcon, CircleGreenTick, OfferPercentageIcon, SecurityGaurdIcon } from '../components/Icons'
+import { deviceHeight, razorKeyTest, shadowStyle } from '../constants/constant'
+import PrimaryButton from '../components/Button/PrimaryButton'
+import { NavigationString } from '../navigation/navigationStrings'
+import useAddWalletAmount from '../hooks/auth/add-wallet-amount'
+import authService from '../services/auth-service'
+import { queryClient } from '../utils/react-query-config'
+import { AuthContext } from '../utils/authContext'
+import useGetOffer from '../hooks/home/get-all-offer'
+import useGenerateOrder from '../hooks/auth/generate-order'
+import useGetSettings from '../hooks/private/use-get-settings'
+import { useGetUserWalletWaletSetting } from '../hooks/auth/get-user-wallet-info'
+import {CFPaymentGatewayService} from 'react-native-cashfree-pg-sdk';
+import {CFDropCheckoutPayment,CFEnvironment,CFSession} from 'cashfree-pg-api-contract';
+
+
+const key = razorKeyTest
+
+const AddCash = () => {
+  // init 
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const toast = useToast()
+  const authContext: any = useContext(AuthContext);
+  // console.log("authContext: ", authContext);
+  // console.log("authState: ", authContext?.userInfo);
+
+
+  const { data: offers, isLoading } = useGetOffer()
+  const { data: offersSettingsData, isLoading:offersSettingsIsLoading } = useGetUserWalletWaletSetting()
+
+
+  // state
+  const [selectedOffer, setSelectedOffer] = useState<string | null>('')
+  const [showAddCashModel, setShowAddCashModel] = useState<boolean>(false)
+  const [enterAmount, setEnterAmount] = useState<number>()
+  const [amount,setAmount]= useState<number|string>('')
+
+  const [matchedOffer, setMatchedOffer] = useState<any>(null);
+  const [matchedOffer2, setMatchedOffer2] = useState<any>(null);
+
+
+  // api
+  const useAddWalletAmountMutation = useAddWalletAmount()
+
+  const useGenerateOrderMutation = useGenerateOrder()
+
+
+  const handleAddWalletAmount = (addAmount: number, type: string, typeBonus: Number, data: any) => {
+    // console.log(" ========================================== handleAddWalletAmount =================================== ");
+    let bonuseAmount = 0
+    if(type === "offer"){
+      bonuseAmount = +typeBonus
+    } else  if(type==="enter"){
+      bonuseAmount =  matchedOffer.bounusAmount
+    }else if(type==="add"){
+      bonuseAmount = matchedOffer2.bounusAmount
+    }
+
+    // console.log(type,bonuseAmount)
+
+    // console.log("offer",typeBonus)
+    // console.log("enter",matchedOffer.bounusAmount)
+    // console.log("add",matchedOffer2.bounusAmount)
+
+    
+
+
+    const payload = {
+      amount: Number(addAmount),
+      bounusAmount: Number(bonuseAmount),
+      data,
+      date: new Date().toISOString()
+    }
+
+    useAddWalletAmountMutation.mutate(payload, {
+      onSuccess: (data) => {
+        console.log("data: response", data?.data);
+        setShowAddCashModel(false)
+        if (data?.data?.success) {
+          queryClient.invalidateQueries({
+            queryKey: [authService.queryKeys.getUserWalletInfo],  // Match the `queryKey` structure
+          });
+          toast.show({
+            placement: "bottom",
+            render: ({ id }) => {
+              const toastId = "toast-" + id
+              return (
+                <Toast nativeID={toastId} variant="accent" action="success">
+                  <ToastTitle>{`${data?.data?.message}`}</ToastTitle>
+                </Toast>
+              );
+            },
+          })
+          navigation.navigate(NavigationString.TransactionSuccessful, { amount: addAmount, bonus: bonuseAmount,bonusCashExpireDate:data?.data?.bonusCashExpireDate })
+        } else {
+          toast.show({
+            placement: "bottom",
+            render: ({ id }) => {
+              const toastId = "toast-" + id
+              return (
+                <Toast nativeID={toastId} variant="accent" action="error">
+                  <ToastTitle>{`${data?.data?.message}`}</ToastTitle>
+                </Toast>
+              );
+            },
+          })
+        }
+      }
+    })
+  }
+
+  // console.log(offers?.data?.data)
+
+  const hanldeAmountOnChange = (amount: number | any) => {
+    setEnterAmount(amount);
+    // Sort offers in ascending order of amount
+    const sortedOffers = [...offers?.data?.data].sort((a, b) => a.amount - b.amount);
+  
+    // Find the nearest higher or equal offer
+    const matchedOffer = sortedOffers.find((offer) => offer.amount > amount);
+    if(Number(matchedOffer?.amount)!==Number(amount)){
+
+        const pickedRange = sortedOffers.find((el)=>{
+          const [min,max] =  el.range.split(' - ')
+          return (Number(min)<=Number(amount) && Number(max)>=Number(amount))
+        })
+        console.log(pickedRange?.range,pickedRange?.bounusPercentage)
+
+        if(pickedRange){
+          setMatchedOffer({
+            bounusAmount:Number((pickedRange?.bounusPercentage*amount).toFixed(2)),
+            amount
+          })
+        }else{
+          const pickedRange = sortedOffers.at(-1)
+
+          setMatchedOffer({
+            bounusAmount:Number((pickedRange?.bounusPercentage*amount).toFixed(2)),
+            amount
+          }) 
+        }
+      //  const cretedOffer =  matchedOffer.bounusAmount
+    }else{
+      const highestOffer = sortedOffers[sortedOffers.length - 1];
+      setMatchedOffer(matchedOffer || highestOffer);
+    }
+
+     if(matchedOffer){
+      setMatchedOffer2(matchedOffer)
+     }else{
+         const pickedRange = sortedOffers.at(-1)
+         setMatchedOffer2({
+            bounusAmount:Number((pickedRange?.bounusPercentage*(Number(amount)+100)).toFixed(2)),
+            amount:Number(amount)+100
+          }) 
+     }
+    // If no higher offer is found, set the highest available offer
+  };
+
+
+  const handleOpenModal = () => {
+    const minimumAmount = Number(offersSettingsData?.data?.data?.minimumWaletRecharge || "");
+  
+    // Correctly check if enterAmount is invalid
+    const isInvalidAmount = !enterAmount || Number(enterAmount) < minimumAmount;
+  
+    if (isInvalidAmount) {
+      toast.show({
+        placement: "bottom",
+        render: ({ id }) => {
+          const toastId = "toast-" + id;
+          return (
+            <Toast nativeID={toastId} variant="accent" action="error">
+              <ToastTitle>
+                {Number(enterAmount || "") >= 0 && Number(enterAmount) < minimumAmount
+                  ? `Please enter a minimum amount of ${minimumAmount}`
+                  : "Please enter an amount"}
+              </ToastTitle>
+            </Toast>
+          );
+        },
+      });
+      return;
+    }
+  
+    setShowAddCashModel(true);
+  };
+  
+
+  const handleGenerateOrder = async (addAmount: any, type: any, typeBonus: any) => {
+    // console.log("addAmount", addAmount);
+    // console.log("type", type);
+    // console.log("typeBonus", typeBonus);
+    if (!(!!addAmount)) {
+      toast.show({
+        placement: "bottom",
+        render: ({ id }) => {
+          const toastId = "toast-" + id
+          return (
+            <Toast nativeID={toastId} variant="accent" action='error'>
+              <ToastTitle>Please enter amount</ToastTitle>
+            </Toast>
+          );
+        },
+      })
+      return
+    }
+    let payload = {
+      amount: `${addAmount}00`,
+      type: "addWallet"
+    }
+
+    useGenerateOrderMutation.mutate(payload, {
+      onSuccess: (data) => {
+      handleCheckOut(data?.data?.result, addAmount, type, typeBonus)
+        setShowAddCashModel(false)
+        if (data?.data?.success) {
+          queryClient.invalidateQueries({
+            queryKey: [authService.queryKeys.getUserWalletInfo],  // Match the `queryKey` structure
+          });
+          toast.show({
+            placement: "bottom",
+            render: ({ id }) => {
+              const toastId = "toast-" + id
+              return (
+                <Toast nativeID={toastId} variant="accent" action="success">
+                  <ToastTitle>{`${data?.data?.message}`}</ToastTitle>
+                </Toast>
+              );
+            },
+          })
+          // console.log("success");
+
+          // navigation.navigate(NavigationString.TransactionSuccessful, { amount: addAmount, bonus: addAmount === matchedOffer.amount ? matchedOffer.bounusAmount : 0 })
+        } else {
+          toast.show({
+            placement: "bottom",
+            render: ({ id }) => {
+              const toastId = "toast-" + id
+              return (
+                <Toast nativeID={toastId} variant="accent" action="error">
+                  <ToastTitle>{`${data?.data?.message}`}</ToastTitle>
+                </Toast>
+              );
+            },
+          })
+        }
+      }
+    })
+  }
+
+  const handleCheckOut = async ( result: any, addAmount: any, type: any, typeBonus: any ) => {
+
+      var options = {
+      description: 'Recharge your wallet',
+      // image: 'https://www.api.bsafelinkr.com/images/logo.png',
+      currency: 'INR',
+      key: key,
+      amount: result.amount,
+      name: 'WonByBid',
+      order_id: result.id, //Replace this with an order_id created using Orders API.
+      prefill: { email: authContext?.userInfo?.useEmail, contact: authContext?.userInfo?.userMobile, name: authContext?.userInfo?.userName },
+      theme: { color: '#FF2626' },
+    }
+
+        try {
+            const session = new CFSession(
+               result.payment_session_id,
+               result.order_id,
+                CFEnvironment.SANDBOX
+            );
+            CFPaymentGatewayService.doWebPayment(session);    
+
+            
+     CFPaymentGatewayService.setCallback({
+  onVerify(orderID) {
+    handleAddWalletAmount(addAmount, type, typeBonus, {
+      order_id: orderID,
+    });
+    CFPaymentGatewayService.removeCallback(); // Clean up
+  },
+  onError(error, orderID) {
+    toast.show({
+      placement: "bottom",
+      render: ({ id }) => {
+        const toastId = "toast-" + id;
+        return (
+          <Toast nativeID={toastId} variant="accent" action="error">
+            <ToastTitle>{`Failed to proceed payment!`}</ToastTitle>
+          </Toast>
+        );
+      },
+    });
+
+    CFPaymentGatewayService.removeCallback(); // Clean up
+  },
+});
+
+        } catch (e: any) {
+            console.log(e.message);
+        }
+
+  }
+
+  const handleLogout = () => {
+    authContext.logout()
+    navigation.navigate(NavigationString.Login)
+  }
+
+  useEffect(()=>{
+    if(amount){
+    hanldeAmountOnChange(amount)
+    }
+  },[amount])
+
+  return (
+    <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
+      <AppBar back title='Choose Amount' />
+
+      <Body>
+        <Box gap={moderateScaleVertical(15)} mt={moderateScaleVertical(15)}>
+          <Box flexDirection="row" flexWrap="wrap" justifyContent="space-between" alignItems="center" gap={moderateScale(15)} mx={moderateScale(20)}>
+            {isLoading && offersSettingsIsLoading ?
+              <Box w={'100%'} h={moderateScale(110)} alignContent={'center'} justifyContent={'center'}>
+                <ActivityIndicator size="large" color={colors.gray6} />
+              </Box>
+              :
+              offers?.data?.data?.map((item: any, ind: number) => {
+                return (
+                  <TouchableOpacity style={{ width: '47%' }} onPress={() => { handleGenerateOrder(item?.amount, "offer", item?.bounusAmount); setEnterAmount(item?.amount); }} key={ind}>
+                    <Box borderRightWidth={1} borderLeftWidth={1} borderRadius={10} borderColor={colors.white} overflow="hidden" pt={moderateScaleVertical(15)} pb={moderateScaleVertical(15)} >
+                      <Text fontFamily={'$robotoMedium'} fontSize={20} lineHeight={22} color={colors.white} numberOfLines={1} alignSelf="center">{'\u20B9'} {item?.amount}</Text>
+
+                      <Box flexDirection="row" alignItems="center" gap={4} width={140} borderRadius={5} alignSelf='center' h={moderateScale(25)} justifyContent="center">
+                        <Text fontFamily={'$robotoMedium'} fontSize={10} lineHeight={20} color={colors.gold} numberOfLines={1}>Get</Text>
+                        <Image alt="icon" source={imgIcon.bCoin} w={moderateScale(10)} h={moderateScale(10)} resizeMode="contain" />
+                        <Text fontFamily={'$robotoMedium'} fontSize={10} lineHeight={20} color={colors.gold} numberOfLines={1}>{item?.bounusAmount} Bonus Cash</Text>
+                      </Box>
+                    </Box>
+                  </TouchableOpacity>
+                );
+              })}
+          </Box>
+        </Box>
+        <Box flexDirection='row' alignItems='center' mx={moderateScale(20)} my={moderateScaleVertical(20)}>
+          <Box gap={5}>
+            <Input variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed} style={{ flex: 1 }}>
+             
+             
+
+              <InputField value={`${amount}`} color='white' fontFamily='$robotoMedium' 
+              keyboardType='number-pad' fontSize={14} placeholder="Enter Amount" 
+              onChangeText={(t) => setAmount(t)} placeholderTextColor={colors.placeHolderColor} />
+            </Input>
+
+            <Box flexDirection='row' alignItems='center'>
+              <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.greenText} numberOfLines={1} alignSelf='center'>Get </Text>
+              <Image alt='icon' source={imgIcon.bCoin} w={moderateScale(12)} h={moderateScale(12)} resizeMode='contain' alignSelf='baseline' />
+              <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.greenText} numberOfLines={1} alignSelf='center'>{matchedOffer ? ` ${matchedOffer?.bounusAmount} Bonus on ₹${matchedOffer?.amount}` : ' Bonus Cash will be shown here'}</Text>
+
+            </Box>
+
+          </Box>
+
+          <Pressable onPress={(()=>{navigation.navigate("Gst")})} flex={1}>
+            <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.Purple} numberOfLines={1} alignSelf='center'>Includes Deposit & GST</Text>
+          </Pressable>
+
+        </Box>
+
+
+
+        <Box flexDirection='row' alignItems='center' mx={moderateScale(20)} gap={moderateScale(10)} mt={moderateScaleVertical(15)}>
+          <OfferPercentageIcon />
+          <Text fontFamily={'$robotoBold'} fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1} alignSelf='center'>Best Offer</Text>
+        </Box>
+
+        <Box mx={moderateScale(20)} gap={15} mt={moderateScaleVertical(15)}>
+          {
+            // ['01', '02']?.map((item, index) => {
+              offersSettingsData?.data?.data?.selectedBestOfferWaletRecharge?.map((item, index) => {
+              return (
+                <Pressable key={index?.toString()} onPress={() => {
+                  setAmount(item?.amount)
+                  }} flexDirection='row' alignItems='center' h={moderateScale(70)} borderRadius={moderateScale(8)} overflow='hidden' style={shadowStyle}>
+                  <Box bgColor={colors.themeRed} h={'100%'} alignItems='center' justifyContent='center' borderRightWidth={3} borderRightColor={colors.white} borderStyle='dashed' >
+                    <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1} style={{ transform: [{ rotate: '270deg' }] }}>OFFER</Text>
+                  </Box>
+                  <Box flexDirection='row' alignItems='center' backgroundColor={colors.white} h={'100%'} w={'100%'} px={moderateScale(15)}>
+                    <Box flex={1.5} gap={moderateScale(8)}>
+                      <Box flexDirection='row' alignItems='center' gap={4} >
+                        <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={20} color={colors.black} numberOfLines={1} >You get</Text>
+                        <Image alt='icon' source={imgIcon.bCoin} w={moderateScale(13)} h={moderateScale(13)} resizeMode='contain' />
+                        <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={20} color={colors.black} numberOfLines={1}>{item.bonusAmount} Bonus </Text>
+                      </Box>
+
+                      <Box flexDirection='row' alignItems='center' justifyContent='space-between'>
+                        <Box marginRight={6} backgroundColor={'#d4f5e2'} py={3} px={5} borderWidth={1} borderColor={colors.gray3} borderRadius={moderateScale(5)}>
+                          <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14}  color={colors.gray6} numberOfLines={1}>{item.label}</Text>
+                        </Box>
+
+                        <Pressable>
+                          <Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.red} numberOfLines={1} >Remove</Text>
+                        </Pressable>
+                      </Box>
+                    </Box>
+                    {selectedOffer === item ? (<Box flex={1} alignItems='center' gap={moderateScaleVertical(5)}>
+                      <CircleGreenTick />
+                      <Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={18} color={colors.greenText} numberOfLines={1}>Applied</Text>
+                    </Box>) :
+                      (<Box flex={1}>
+                      </Box>)}
+                  </Box>
+                </Pressable>
+              )
+            })
+          }
+          <View style={{ width: '100%', backgroundColor: 'black', elevation: 3, padding: 15, borderRadius: 8, marginTop: 40, borderRightWidth: 1, borderEndEndRadius: 10, borderColor: colors.white }}>
+            <Box backgroundColor={colors.themeRed} position='absolute' alignSelf='center' w={'40%'} mt={5} borderRadius={5} height={23}>
+              <Text fontFamily={'$robotoMedium'} fontSize={17} lineHeight={22} color={colors.brightNavyBlue} numberOfLines={1} alignSelf='center'>Key Point</Text>
+            </Box>
+            <Text style={{ color: 'white', fontWeight: 600, }} mt={15}>“Get instant bonuses cash on every deposit—₹1 bonus equals ₹1 real value! Use 10% in every contest and get more out of every rupee you spend.”</Text>
+          </View>
+        </Box>
+
+
+      </Body>
+
+      {/* <PrimaryButton onPress={handleGenerateOrder} buttonText='Add Amount' loading={useAddWalletAmountMutation?.isPending} disabled={useAddWalletAmountMutation.isPending} bgColor={colors.greenText} height={moderateScale(35)} width={moderateScale(170)} /> */}
+      {/* <PrimaryButton onPress={handleLogout} buttonText='Add Amount' loading={useAddWalletAmountMutation?.isPending} disabled={useAddWalletAmountMutation.isPending} bgColor={colors.greenText} height={moderateScale(35)} width={moderateScale(170)} /> */}
+
+      <Box flexDirection='row' alignItems='center' justifyContent='space-between' backgroundColor={colors.black} px={moderateScale(15)} py={moderateScaleVertical(15)} style={shadowStyle}>
+        <Box flexDirection='row' alignItems='center' gap={moderateScale(5)}>
+          <SecurityGaurdIcon />
+          <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={20} color={colors.white} numberOfLines={1}>100% SECURE</Text>
+        </Box>
+
+        <PrimaryButton onPress={handleOpenModal} buttonText='Next' loading={useAddWalletAmountMutation?.isPending} disabled={useAddWalletAmountMutation.isPending} bgColor={colors.greenText} height={moderateScale(35)} width={moderateScale(170)} />
+      </Box>
+
+      <Modal animationType='slide' transparent={true} visible={showAddCashModel} onRequestClose={() => setShowAddCashModel(false)}>
+        <Box flex={1} backgroundColor='rgba(0, 0, 0, 0.5)' justifyContent='flex-end' >
+          <Box backgroundColor={colors.black} borderColor='white' borderTopRightRadius={10} borderTopLeftRadius={10} w={'100%'} gap={15} py={20} h={moderateScale(380)}>
+            <Box flexDirection='row' justifyContent='flex-end' alignItems='center' px={15}>
+              <Pressable hitSlop={20} onPress={() => setShowAddCashModel(false)}>
+                <Icon as={CloseIcon} size="lg" color={colors.red} />
+              </Pressable>
+            </Box>
+
+            <AddCashOfferImgIcon style={{ alignSelf: 'center' }} />
+
+            <Box alignItems='center' gap={moderateScaleVertical(10)} mt={moderateScaleVertical(25)}>
+              <Box flexDirection='row' alignItems='center' gap={4} >
+                <Text fontFamily={'$robotoBold'} fontSize={20} lineHeight={23} color={colors.white} numberOfLines={1} >Get</Text>
+                <Image alt='icon' source={imgIcon.bCoin} w={moderateScale(20)} h={moderateScale(20)} resizeMode='contain' />
+                <Text fontFamily={'$robotoBold'} fontSize={20} lineHeight={23} color={colors.white} numberOfLines={1}>{matchedOffer2?.bounusAmount} Bonus Cash </Text>
+              </Box>
+
+              <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={20} color={colors.gray6} numberOfLines={1}>On deposit of {'\u20B9'}{matchedOffer2?.amount}</Text>
+
+              <PrimaryButton onPress={() => handleGenerateOrder(matchedOffer2?.amount,"add")} buttonText={`Add \u20B9${matchedOffer2?.amount}`} backgroundColor={colors.greenText} height={moderateScale(45)} width={'85%'} />
+
+              <TouchableOpacity onPress={() => handleGenerateOrder(matchedOffer?.amount,"enter")}>
+                <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={20} color={colors.white} numberOfLines={1}>Continue with {'\u20B9'}{enterAmount}</Text>
+              </TouchableOpacity>
+            </Box>
+
+          </Box>
+        </Box>
+      </Modal>
+    </Container>
+  )
+}
+
+export default AddCash
+

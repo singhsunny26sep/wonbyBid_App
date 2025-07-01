@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "685280523209",
+    "project_id": "won-by-bid-notification",
+    "storage_bucket": "won-by-bid-notification.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:685280523209:android:8b911690add35058c32e18",
+        "android_client_info": {
+          "package_name": "com.indiawonbybid.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB--NMVjNyxBqbsCjFMkqh2wQaDd82Bg6A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
