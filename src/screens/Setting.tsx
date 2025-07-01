@@ -226,7 +226,7 @@ const Setting = () => {
             </Box>
           </TouchableOpacity>
           
-          <TouchableOpacity onPress={openGoogleForms} activeOpacity={0.6}>
+          {/* <TouchableOpacity onPress={openGoogleForms} activeOpacity={0.6}>
             <Box flexDirection='row' alignItems='center' justifyContent='space-between' px={7} py={15} mx={8} borderBottomColor={colors.gray5}>
               <Box flexDirection='row' alignItems='center' gap={moderateScale(25)}>
                 <OpinionSuggestionIcon />
@@ -234,7 +234,7 @@ const Setting = () => {
               </Box>
               <AccordionIcon as={ChevronRightIcon} color={colors.gold} size='lg' />
             </Box>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
 
           <TouchableOpacity onPress={() => navigation.navigate(NavigationString.ReferEarn)} activeOpacity={0.6}>
@@ -249,7 +249,7 @@ const Setting = () => {
             </Box>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={(() => { navigation.navigate("HelpSupport") })} activeOpacity={0.6}>
+          {/* <TouchableOpacity onPress={(() => { navigation.navigate("HelpSupport") })} activeOpacity={0.6}>
             <Box flexDirection='row' alignItems='center' justifyContent='space-between' px={7} py={15} mx={8} borderBottomColor={colors.gray5}>
               <Box flexDirection='row' alignItems='center' gap={moderateScale(25)}>
                 <HelpSupportIcon color={colors.white} />
@@ -257,7 +257,7 @@ const Setting = () => {
               </Box>
               <AccordionIcon as={ChevronRightIcon} color={colors.gold} size='lg' />
             </Box>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <TouchableOpacity onPress={(() => { navigation.navigate("Legality") })} activeOpacity={0.6}>
             <Box flexDirection='row' alignItems='center' justifyContent='space-between' px={7} py={15} mx={8} borderBottomColor={colors.gray5}>

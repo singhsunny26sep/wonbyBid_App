@@ -1,21 +1,21 @@
-import {Box, Spinner, Text} from '@gluestack-ui/themed';
+import { Box, Spinner, Text } from '@gluestack-ui/themed';
 
-import {Container} from '../components/Container';
-import {AppBar} from '../components/AppBar';
-import {colors} from '../constants/colors';
-import {moderateScale, moderateScaleVertical} from '../utils/responsiveSize';
-import {TouchableOpacity, View} from 'react-native';
-import {InfoCircleIcon} from '../components/Icons';
+import { Container } from '../components/Container';
+import { AppBar } from '../components/AppBar';
+import { colors } from '../constants/colors';
+import { moderateScale, moderateScaleVertical } from '../utils/responsiveSize';
+import { TouchableOpacity, View } from 'react-native';
+import { InfoCircleIcon } from '../components/Icons';
 import useAccountOverView from '../hooks/auth/use-accout-overview';
-import {NavigationString} from '../navigation/navigationStrings';
-import {ScrollView} from 'react-native';
-import {Modal} from 'react-native';
-import {useState} from 'react';
-import {TouchableWithoutFeedback} from 'react-native';
+import { NavigationString } from '../navigation/navigationStrings';
+import { ScrollView } from 'react-native';
+import { Modal } from 'react-native';
+import { useState } from 'react';
+import { TouchableWithoutFeedback } from 'react-native';
 import Loader from '../components/Loader';
 
-const AccountOverView = ({navigation}: any) => {
-  const {data: result, isLoading} = useAccountOverView();
+const AccountOverView = ({ navigation }: any) => {
+  const { data: result, isLoading } = useAccountOverView();
   const [isModalVisible, setModalVisible] = useState<boolean>(false);
 
   const toggleModal = () => {
@@ -30,18 +30,8 @@ const AccountOverView = ({navigation}: any) => {
         statusBarBackgroundColor={colors.themeRed}
         backgroundColor={colors.black}>
         <AppBar back title={'Account Overview'} />
-        <Box
-          backgroundColor="black"
-          my={moderateScaleVertical(10)}
-          py={moderateScaleVertical(10)}>
-          <Text
-            fontFamily="$robotoBold"
-            fontSize={20}
-            lineHeight={22}
-            color={colors.white}
-            numberOfLines={1}>
-            Account Overview
-          </Text>
+        <Box backgroundColor="black" my={moderateScaleVertical(10)} py={moderateScaleVertical(10)}>
+          <Text fontFamily="$robotoBold" fontSize={20} lineHeight={22} color={colors.white} numberOfLines={1}>Account Overview</Text>
         </Box>
         <Box flex={1} backgroundColor="black" py={moderateScaleVertical(10)}>
           {/* <Spinner size={'large'} color={colors.gold} /> */}
@@ -58,7 +48,7 @@ const AccountOverView = ({navigation}: any) => {
       statusBarStyle="light-content"
       statusBarBackgroundColor={colors.themeRed}
       backgroundColor={colors.black}>
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <AppBar textColor={colors.gold} back title={'Account Overview'} />
         {/* <Box mx={moderateScale(15)} my={moderateScaleVertical(10)} py={moderateScaleVertical(10)} borderBottomColor={colors.gray5}>
         <Text fontFamily='$robotoBold' fontSize={20} lineHeight={22} color={colors.Purple} numberOfLines={1} >Account Overview</Text>
@@ -141,9 +131,7 @@ const AccountOverView = ({navigation}: any) => {
               color={colors.white}
               numberOfLines={1}>
               {'\u20B9'}
-              {result?.data?.data?.totalWaletAmount
-                ? result?.data?.data?.totalWaletAmount.toFixed(2)
-                : 0}
+              {result?.data?.data?.totalWaletAmount ? result?.data?.data?.totalWaletAmount.toFixed(2) : 0}
             </Text>
           </Box>
 
@@ -181,7 +169,7 @@ const AccountOverView = ({navigation}: any) => {
                 TDS :{' '}
               </Text>
               <TouchableOpacity
-                style={{marginTop: -2}}
+                style={{ marginTop: -2 }}
                 onPress={() => navigation.navigate('Tds')}>
                 <InfoCircleIcon />
               </TouchableOpacity>
@@ -427,9 +415,11 @@ const AccountOverView = ({navigation}: any) => {
               fontSize={14}
               lineHeight={20}
               color={colors.white}>
-              TDS = (Total Withdrawal + Winning Balance – Total Deposits) × 30%{' '}
+              {/* TDS = (Total Withdrawal + Winning Balance – Total Deposits) × 30%{' '} */}
+              TDS = (Total Withdrawn Balance + Winning Balance – Total Deposits Balance) × 30%{' '}
               {'\n\n'}
-              Withdrawable Balance = Winning Balance - Winning Balance After Tax
+              Withdrawable Balance = Winning Balance - TDS
+              {/* Withdrawable Balance = Winning Balance - Winning Balance After Tax */}
             </Text>
           </Box>
         </Box>

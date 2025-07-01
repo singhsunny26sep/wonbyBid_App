@@ -29,12 +29,12 @@ const VerifyOTP = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const route = useRoute()
   const authContext: any = useContext(AuthContext);
-  const { mobileNumber,sessionId }: any = route.params
-  console.log(sessionId,mobileNumber)
+  const { mobileNumber, sessionId }: any = route.params
+  console.log(sessionId, mobileNumber)
   const [fcmToken, setFcmToken] = useState('')
   const [loading, setLoading] = useState(false);
-  const [isOtpVerify,setIsOptVerify] = useState(false)
-  const [sessionIdResend,setSessionId] = useState()
+  const [isOtpVerify, setIsOptVerify] = useState(false)
+  const [sessionIdResend, setSessionId] = useState()
 
   // api
   const useOtpVerifingMutation = useOtpVerifing()
@@ -58,14 +58,14 @@ const VerifyOTP = () => {
 
   }, [])
 
-  
+
 
   const onOTPVerifing = () => {
     // navigation.navigate(NavigationString.BottomTabBar)
     setLoading(true)
     const payload = {
       mobileNumber: mobileNumber,
-      sessionId:sessionId||sessionIdResend,
+      sessionId: sessionId || sessionIdResend,
       otp: Number(otpInput),
       fcmToken: fcmToken
     }
@@ -115,22 +115,20 @@ const VerifyOTP = () => {
           })
           setIsOptVerify(true)
         } else {
-          console.log(data?.data,"        console.log(data?.data?.message)")
-
           toast.show({
             placement: "bottom",
             render: ({ id }) => {
               const toastId = "toast-" + id
               return (
                 <Toast nativeID={toastId} variant="accent" action="error">
-                  <ToastTitle>{(data?.data?.message||'Something went wrong, please try again later')}</ToastTitle>
+                  <ToastTitle>{(data?.data?.message || 'Something went wrong, please try again later')}</ToastTitle>
                 </Toast>
               );
             },
           })
         }
       },
-      
+
     })
   }
 
@@ -142,14 +140,14 @@ const VerifyOTP = () => {
       // mobileNumber: generateUniqueMobileNumber(),
     };
 
-useOtpVerifingMutation.reset()
+    useOtpVerifingMutation.reset()
 
     useUserLoginMutation.mutate(payload, {
       onSuccess: data => {
         if (data?.data?.success) {
           toast.show({
             placement: 'bottom',
-            render: ({id}) => {
+            render: ({ id }) => {
               const toastId = 'toast-' + id;
               return (
                 <Toast nativeID={toastId} variant="accent" action="success">
@@ -159,11 +157,11 @@ useOtpVerifingMutation.reset()
             },
           });
           // console.log(data?.data,'kjkj');
-          setSessionId(data?.data?.sessionId||data?.data?.data?.sessionId)
+          setSessionId(data?.data?.sessionId || data?.data?.data?.sessionId)
         } else {
           toast.show({
             placement: 'bottom',
-            render: ({id}) => {
+            render: ({ id }) => {
               const toastId = 'toast-' + id;
               return (
                 <Toast nativeID={toastId} variant="accent" action="error">
@@ -190,15 +188,15 @@ useOtpVerifingMutation.reset()
         setLoading(false);
         return;
       }
-      const authState = JSON.parse(authStateString); 
-      const token = authState?.token; 
+      const authState = JSON.parse(authStateString);
+      const token = authState?.token;
       if (!token) {
         setLoading(false);
         return;
       }
 
       const response = await axios.post(`${serverBaseURL}user/login_check`, {}, {
-        headers: { Authorization: token }, 
+        headers: { Authorization: token },
       });
       if (response.data.success) {
         navigation.navigate(NavigationString.BottomTabBar)
@@ -213,7 +211,7 @@ useOtpVerifingMutation.reset()
   };
 
   useEffect(() => {
-    if(isOtpVerify){
+    if (isOtpVerify) {
       verifyUser();
     }
   }, [isOtpVerify]);
@@ -225,42 +223,42 @@ useOtpVerifingMutation.reset()
       <AppBar back />
       {/* <LinearGradient  colors={[colors.themeRed, black]} locations={[0.65, 1]} useAngle={true} angle={205} angleCenter={{ x: -0.2, y: 0.1 }} style={{ flex: 1 }}> */}
 
-        <Box mx={moderateScale(20)} pt={moderateScaleVertical(10)}>
-          <Box gap={moderateScaleVertical(15)} my={moderateScaleVertical(45)}>
-            <Text fontFamily={'$robotoBold'} fontSize={24} lineHeight={26} color={colors.white} >Enter the OTP</Text>
-            <Text fontFamily={'$robotoRegular'} fontSize={16} lineHeight={18} color={colors.white} >Verify your account using OTP on {mobileNumber}</Text>
+      <Box mx={moderateScale(20)} pt={moderateScaleVertical(10)}>
+        <Box gap={moderateScaleVertical(15)} my={moderateScaleVertical(45)}>
+          <Text fontFamily={'$robotoBold'} fontSize={24} lineHeight={26} color={colors.white} >Enter the OTP</Text>
+          <Text fontFamily={'$robotoRegular'} fontSize={16} lineHeight={18} color={colors.white} >Verify your account using OTP on {mobileNumber}</Text>
+        </Box>
+
+        <OtpInput
+          numberOfDigits={6}
+          onTextChange={(text) => setOtpInput(text)}
+          focusColor={colors.white}
+          focusStickBlinkingDuration={400}
+          theme={{
+            pinCodeTextStyle: { color: colors.gold },
+            pinCodeContainerStyle: { borderColor: colors.white, },
+            containerStyle: {
+              // marginHorizontal: responsiveWidth(6),
+              // marginVertical: responsiveHeight(8),
+            }
+          }}
+        />
+
+        <Box mt={moderateScaleVertical(35)} gap={moderateScale(15)}>
+          <Box flexDirection='row' alignItems='center' alignSelf='center' my={moderateScaleVertical(20)} >
+            <Text fontFamily={'$robotoRegular'} fontSize={16} lineHeight={20} color={colors.white} >Didn't receive the OTP ? </Text>
+            <Pressable onPress={() => { }}>
+              <Text fontFamily={'$robotoBold'} onPress={onnResendOtp} fontSize={16} lineHeight={20} color={colors.gold} >Resend OTP</Text>
+            </Pressable>
           </Box>
 
-          <OtpInput
-            numberOfDigits={6}
-            onTextChange={(text) => setOtpInput(text)}
-            focusColor={colors.white}
-            focusStickBlinkingDuration={400}
-            theme={{
-              pinCodeTextStyle: { color: colors.gold },
-              pinCodeContainerStyle: { borderColor: colors.white, },
-              containerStyle: {
-                // marginHorizontal: responsiveWidth(6),
-                // marginVertical: responsiveHeight(8),
-              }
-            }}
-          />
-
-          <Box mt={moderateScaleVertical(35)} gap={moderateScale(15)}>
-            <Box flexDirection='row' alignItems='center' alignSelf='center' my={moderateScaleVertical(20)} >
-              <Text fontFamily={'$robotoRegular'} fontSize={16} lineHeight={20} color={colors.white} >Didn't receive the OTP ? </Text>
-              <Pressable onPress={() => { }}>
-                <Text fontFamily={'$robotoBold'} onPress={onnResendOtp} fontSize={16} lineHeight={20} color={colors.gold} >Resend OTP</Text>
-              </Pressable>
-            </Box>
-
-            <PrimaryButton onPress={onOTPVerifing} loading={useOtpVerifingMutation.isPending&&loading} 
-            disabled={useOtpVerifingMutation.isPending&&loading} buttonText='Continue' loaderColor={colors.white} 
+          <PrimaryButton onPress={onOTPVerifing} loading={useOtpVerifingMutation.isPending && loading}
+            disabled={useOtpVerifingMutation.isPending && loading} buttonText='Continue' loaderColor={colors.white}
             backgroundColor={colors.gold} textColor={colors.white} height={moderateScale(50)} />
-            
-          </Box>
 
         </Box>
+
+      </Box>
 
       {/* </LinearGradient> */}
     </Container>

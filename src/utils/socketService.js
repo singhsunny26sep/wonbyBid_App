@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
-// const SOCKET_URL = 'http://192.168.29.4:7000';
 const SOCKET_URL = 'https://backend.wonbybid.com';
+// const SOCKET_URL = 'http://192.168.0.107:7000';
 
 class WSService {
   initialzeSocket = async (userId) => {

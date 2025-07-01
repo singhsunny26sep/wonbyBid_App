@@ -10,3 +10,11 @@ export const safeMaskString = (input: any): string => {
   const lengthToMask = input.length - 4;
   return "X".repeat(lengthToMask) + input?.slice(-4);
 };
+
+
+
+export const generateReferralCode = () => {
+  return Array.from({ length: 10 }, () =>
+    String.fromCharCode(Math.floor(Math.random() * 26) + 65) // A-Z (ASCII 65-90)
+  ).join('');
+};

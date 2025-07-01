@@ -23,54 +23,58 @@ import { AuthContext } from '../utils/authContext'
 import useGetOffer from '../hooks/home/get-all-offer'
 import useGenerateOrder from '../hooks/auth/generate-order'
 import useGetSettings from '../hooks/private/use-get-settings'
-import { useGetUserWalletWaletSetting } from '../hooks/auth/get-user-wallet-info'
-import {CFPaymentGatewayService} from 'react-native-cashfree-pg-sdk';
-import {CFDropCheckoutPayment,CFEnvironment,CFSession} from 'cashfree-pg-api-contract';
+import useGetUserWalletInfo, { useGetUserWalletWaletSetting } from '../hooks/auth/get-user-wallet-info'
+import { CFPaymentGatewayService } from 'react-native-cashfree-pg-sdk';
+import { CFDropCheckoutPayment, CFEnvironment, CFSession } from 'cashfree-pg-api-contract';
 import UPIWebView from '../components/WebView/UPIWebView'
 import { Linking, Platform } from "react-native";
+import axios from 'axios'
+import { generateReferralCode } from '../utils/helper'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { format } from 'date-fns';
 
 
 
 const key = razorKeyTest
 
-const CheckEnterdCashBonus = ({amount,hanldeAmountOnChange,setAmount,matchedOffer})=>{
+const CheckEnterdCashBonus = ({ amount, hanldeAmountOnChange, setAmount, matchedOffer }) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-  
- useEffect(()=>{
-    if(amount){
-    hanldeAmountOnChange(amount)
+
+  useEffect(() => {
+    if (amount) {
+      hanldeAmountOnChange(amount)
     }
-  },[amount])
+  }, [amount])
 
   return <Box flexDirection='row' alignItems='center' mx={moderateScale(20)} my={moderateScaleVertical(20)}>
-          <Box gap={5}>
-             <Text fontFamily='$robotoMedium' fontSize={14} color={colors.white} mb={1}>
-                Enter Amount 
-             </Text>
+    <Box gap={5}>
+      <Text fontFamily='$robotoMedium' fontSize={14} color={colors.white} mb={1}>
+        Enter Amount
+      </Text>
 
-            <Input variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed} style={{ flex: 1 }}>
-             
-             
-       
-              <InputField value={`${amount}`} color='white' fontFamily='$robotoMedium' 
-              keyboardType='number-pad' fontSize={14} placeholder="Enter Amount" 
-              onChangeText={(t) => setAmount(t)} placeholderTextColor={colors.placeHolderColor} />
-            </Input>
+      <Input variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed} style={{ flex: 1 }}>
 
-            <Box flexDirection='row' alignItems='center'>
-              <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.greenText} numberOfLines={1} alignSelf='center'>Get </Text>
-              <Image alt='icon' source={imgIcon.bCoin} w={moderateScale(12)} h={moderateScale(12)} resizeMode='contain' alignSelf='baseline' />
-              <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.greenText} numberOfLines={1} alignSelf='center'>{matchedOffer ? ` ${matchedOffer?.bounusAmount} Bonus on ₹${matchedOffer?.amount}` : ' Bonus Cash will be shown here'}</Text>
 
-            </Box>
 
-          </Box>
+        <InputField value={`${amount}`} color='white' fontFamily='$robotoMedium'
+          keyboardType='number-pad' fontSize={14} placeholder="Enter Amount"
+          onChangeText={(t) => setAmount(t)} placeholderTextColor={colors.placeHolderColor} />
+      </Input>
 
-          <Pressable onPress={(()=>{navigation.navigate("Gst")})} flex={1}>
-            <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.Purple} numberOfLines={1} alignSelf='center'>Includes Deposit & GST</Text>
-          </Pressable>
+      <Box flexDirection='row' alignItems='center'>
+        <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.greenText} numberOfLines={1} alignSelf='center'>Get </Text>
+        <Image alt='icon' source={imgIcon.bCoin} w={moderateScale(12)} h={moderateScale(12)} resizeMode='contain' alignSelf='baseline' />
+        <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.greenText} numberOfLines={1} alignSelf='center'>{matchedOffer ? ` ${matchedOffer?.bounusAmount} Bonus on ₹${matchedOffer?.amount}` : ' Bonus Cash will be shown here'}</Text>
 
-        </Box>
+      </Box>
+
+    </Box>
+
+    <Pressable onPress={(() => { navigation.navigate("Gst") })} flex={1}>
+      <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.Purple} numberOfLines={1} alignSelf='center'>Includes Deposit & GST</Text>
+    </Pressable>
+
+  </Box>
 }
 
 const AddCash = () => {
@@ -81,199 +85,197 @@ const AddCash = () => {
   // console.log("authContext: ", authContext);
   // console.log("authState: ", authContext?.userInfo);
 
-
+  const { data: walletInfoData, isLoading: walletInfoIsLoading } = useGetUserWalletInfo();
   const { data: offers, isLoading } = useGetOffer()
-  const { data: offersSettingsData, isLoading:offersSettingsIsLoading } = useGetUserWalletWaletSetting()
+  const { data: offersSettingsData, isLoading: offersSettingsIsLoading } = useGetUserWalletWaletSetting()
 
+  // console.log("walletInfoData: ", new Date(walletInfoData?.data?.bonusCashInfo?.expiringBonusAmount.expireBonusAmountDate).toISOString());
 
   // state
   const [selectedOffer, setSelectedOffer] = useState<string | null>('')
   const [showAddCashModel, setShowAddCashModel] = useState<boolean>(false)
   const [enterAmount, setEnterAmount] = useState<number>()
-  const [amount,setAmount]= useState<number|string>('')
+  const [amount, setAmount] = useState<number | string>('')
 
   const [matchedOffer, setMatchedOffer] = useState<any>(null);
   const [matchedOffer2, setMatchedOffer2] = useState<any>(null);
-  const [isActiveWebView,setWebViewStatus] =useState(false)
-  const [paymentLink,setPaymentLink] = useState('')
+  const [isActiveWebView, setWebViewStatus] = useState(false)
+  const [paymentLink, setPaymentLink] = useState('')
 
   // api
   const useAddWalletAmountMutation = useAddWalletAmount()
 
   const useGenerateOrderMutation = useGenerateOrder()
-  
- const createOrder = async () => {
-      try {
-        const response = await fetch('https://api.ekqr.in/api/create_order', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            key: '06718f0b-8d2a-42c5-a753-15f4471a5a3c',
-            client_txn_id: '1234567810',
-            amount: '1',
-            p_info: 'Product Name',
-            customer_name: 'Jon Doe',
-            customer_email: 'jondoe@gmail.com',
-            customer_mobile: '6201342801',
-            redirect_url: 'https://www.wonbybid.com',
-            udf1: 'user defined field 1 (max 25 char)',
-            udf2: 'user defined field 2 (max 25 char)',
-            udf3: 'user defined field 3 (max 25 char)',
-          }),
-        });
 
-        const data = await response.json();
-          navigation.navigate('PaymentScreen', { apiData: data });
-        console.log('API Response:', data);
-      } catch (error) {
-        console.error('Error creating order:', error);
-      }
-    };
-  const openInBrowser = async (url:string) => {
-  const supported = await Linking.canOpenURL(url);
-  if (supported) {
-    await Linking.openURL(url); // opens in external browser
-  } else {
-    console.log("Don't know how to open URI: " + url);
-  }
-};
+  const createOrder = async () => {
+    try {
+      const response = await fetch('https://api.ekqr.in/api/create_order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          key: '06718f0b-8d2a-42c5-a753-15f4471a5a3c',
+          client_txn_id: '1234567810',
+          amount: '1',
+          p_info: 'Product Name',
+          customer_name: 'Jon Doe',
+          customer_email: 'jondoe@gmail.com',
+          customer_mobile: '6201342801',
+          // redirect_url: 'https://www.wonbybid.com',
+          redirect_url: 'https://www.wonbybid.com',
+          udf1: 'user defined field 1 (max 25 char)',
+          udf2: 'user defined field 2 (max 25 char)',
+          udf3: 'user defined field 3 (max 25 char)',
+        }),
+      });
 
-console.log(offersSettingsData?.data?.data?.mobileNumber)
-
-const handleAddWalletAmount = async (
-  addAmount: number,
-  type: string,
-  typeBonus: number
-) => {
-  const minimumAmount = Number(offersSettingsData?.data?.data?.minimumWaletRecharge || "");
-  const isInvalidAmount = !addAmount || Number(addAmount) < minimumAmount;
-
-  if (isInvalidAmount) {
-    toast.show({
-      placement: "bottom",
-      render: ({ id }) => (
-        <Toast nativeID={`toast-${id}`} variant="accent" action="error">
-          <ToastTitle>
-            {Number(addAmount) >= 0 && Number(addAmount) < minimumAmount
-              ? `Please enter a minimum amount of ₹${minimumAmount}`
-              : "Please enter an amount"}
-          </ToastTitle>
-        </Toast>
-      ),
-    });
-    return;
-  }
-
-  try {
-    // Calculate bonus
-    let bonuseAmount = 0;
-    if (type === "offer") {
-      bonuseAmount = +typeBonus;
-    } else if (type === "enter") {
-      bonuseAmount = matchedOffer?.bounusAmount || 0;
-    } else if (type === "add") {
-      bonuseAmount = matchedOffer2?.bounusAmount || 0;
+      const data = await response.json();
+      navigation.navigate('PaymentScreen', { apiData: data });
+      console.log('API Response:', data);
+    } catch (error) {
+      console.error('Error creating order:', error);
     }
-
-    // Generate unique order ID
-   const orderId = `ORD${Date.now()}${Math.floor(1000 + Math.random() * 9000)}`;
-
-
-    // Create order in backend
-    const orderResponse = await useGenerateOrderMutation.mutateAsync({
-      amount: addAmount,
-      type: "Wallet Recharge",
-    });
-
-    const obj = {
-      payin_ref: orderResponse.data.data.order_id,
-      amount: String(addAmount),
-      fName: "Yash",
-      lName: "Sir",
-      mNo: offersSettingsData?.data?.data?.mobileNumber || "9005126629",
-      email: "wonbybid@gmail.com",
-      add1: "xxxxxx",
-      city: "Mumbai",
-      state: "Maharastra",
-      pCode: "xxxxxx",
-    };
-
-    console.log(obj)
-
-    const queryParams = new URLSearchParams(obj).toString();
-
-    const url = `https://api.ekonetsolutions.com/EkoN54454ss/api/v2/endpoints/EkoNetSolutionsDynamicQR?${queryParams}`;
-
-    // Send POST request to payment gateway
-    console.log(url)
-    
-    const data = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-      "merchantId": "23971251",
-      "clientid": "PMICW73B-942Q-8KZK-V45G-9QHFVYF1254F",
-      "clientSecretKey": "82L3KN3FJSZOTKCHWKOTQ7I9EFM7LB3P"
-    })
-    }).then((res) => res.json());
-
-    console.log("Payment API Response:", data);
-
-    if ((Platform.OS === "android" || Platform.OS === "ios") && data?.UpiLink) {
-      Linking.canOpenURL(data?.UpiLink)
-        .then((supported) => {
-          if (supported) {
-            Linking.openURL(data?.UpiLink);
-          } else {
-            toast.show({
-              placement: "bottom",
-              render: ({ id }) => (
-                <Toast nativeID={`toast-${id}`} variant="accent" action="error">
-                  <ToastTitle>
-                    No UPI app found. Please install Google Pay, PhonePe, or Paytm.
-                  </ToastTitle>
-                </Toast>
-              ),
-            });
-          }
-        })
-        .catch((err) => {
-          console.error("❌ Error checking UPI link support:", err);
-        });
+  };
+  const openInBrowser = async (url: string) => {
+    const supported = await Linking.canOpenURL(url);
+    if (supported) {
+      await Linking.openURL(url); // opens in external browser
     } else {
+      console.log("Don't know how to open URI: " + url);
+    }
+  };
+
+
+
+  const handleAddWalletAmount = async (addAmount: number, type: string, typeBonus: number) => {
+
+    const userDetails: any = await AsyncStorage.getItem("userInfo");
+    // console.log(" ===================== handleAddWalletAmount ============================== ");
+
+    const minimumAmount = Number(offersSettingsData?.data?.data?.minimumWaletRecharge || "");
+    const isInvalidAmount = !addAmount || Number(addAmount) < minimumAmount;
+
+    if (isInvalidAmount) {
       toast.show({
         placement: "bottom",
         render: ({ id }) => (
           <Toast nativeID={`toast-${id}`} variant="accent" action="error">
-            <ToastTitle>Payment link not received.</ToastTitle>
+            <ToastTitle>
+              {Number(addAmount) >= 0 && Number(addAmount) < minimumAmount
+                ? `Please enter a minimum amount of ₹${minimumAmount}`
+                : "Please enter an amount"}
+            </ToastTitle>
+          </Toast>
+        ),
+      });
+      return;
+    }
+
+    try {
+      // Calculate bonus
+      let bonuseAmount = 0;
+      if (type === "offer") {
+        bonuseAmount = +typeBonus;
+      } else if (type === "enter") {
+        bonuseAmount = matchedOffer?.bounusAmount || 0;
+      } else if (type === "add") {
+        bonuseAmount = matchedOffer2?.bounusAmount || 0;
+      }
+      // navigation.navigate(NavigationString.TransactionSuccessful, { amount: addAmount, bonus: bonuseAmount, /* bonusCashExpireDate: data?.data?.bonusCashExpireDate */ });
+      // return
+
+      // Generate unique order ID
+      const orderId = `ORD${Date.now()}${Math.floor(1000 + Math.random() * 9000)}`;
+
+
+      // Create order in backend
+      const orderResponse = await useGenerateOrderMutation.mutateAsync({
+        amount: addAmount,
+        type: "Wallet Recharge",
+      });
+
+      const data = await axios.post(`https://api.ekqr.in/api/create_order`,
+        {
+          "key": "06718f0b-8d2a-42c5-a753-15f4471a5a3c",
+          "client_txn_id": String(orderResponse.data.data.order_id),
+          "amount": String(addAmount),
+          "p_info": "Product Name",
+          "customer_name": String(userDetails?.name),
+          "customer_mobile": "6201342801",
+          "customer_email": "jondoe@gmail.com",
+          "redirect_url": `https://wonbybid.netlify.app?amount=${String(addAmount)}&bonus=${String(bonuseAmount)}&bonusCashExpireDate=${String(walletInfoData?.data?.bonusCashInfo?.expiringBonusAmount.expireBonusAmountDate)}`,
+          "udf1": "user defined field 1 (max 25 char)",
+          "udf2": "user defined field 2 (max 25 char)",
+          "udf3": "user defined field 3 (max 25 char)"
+        }
+      )
+
+      console.log("data: ", data?.data);
+      if (!data?.data?.status) {
+        // Toast.show({ type: "error", text1: data?.msg })
+        setShowAddCashModel(false)
+        toast.show({
+          placement: "bottom",
+          render: ({ id }) => (
+            <Toast nativeID={`toast-${id}`} variant="accent" action="error">
+              <ToastTitle>{data?.data?.msg || "Something went wrong while initiating payment."}</ToastTitle>
+            </Toast>
+          ),
+        });
+        return
+      }
+      navigation.navigate('PaymentScreen', { apiData: data?.data?.data });
+
+      setShowAddCashModel(false)
+
+      /* if ((Platform.OS === "android" || Platform.OS === "ios") && data?.UpiLink) {
+        Linking.canOpenURL(data?.UpiLink)
+          .then((supported) => {
+            if (supported) {
+              Linking.openURL(data?.UpiLink);
+            } else {
+              toast.show({
+                placement: "bottom",
+                render: ({ id }) => (
+                  <Toast nativeID={`toast-${id}`} variant="accent" action="error">
+                    <ToastTitle>
+                      No UPI app found. Please install Google Pay, PhonePe, or Paytm.
+                    </ToastTitle>
+                  </Toast>
+                ),
+              });
+            }
+          })
+          .catch((err) => {
+            console.error("❌ Error checking UPI link support:", err);
+          });
+      } else {
+        toast.show({
+          placement: "bottom",
+          render: ({ id }) => (
+            <Toast nativeID={`toast-${id}`} variant="accent" action="error">
+              <ToastTitle>Payment link not received.</ToastTitle>
+            </Toast>
+          ),
+        });
+      } */
+
+      // Optionally store or send recharge attempt info
+
+      // console.log("Recharge Payload:", payload);
+    } catch (err) {
+      console.error("Payment Error:", err);
+      toast.show({
+        placement: "bottom",
+        render: ({ id }) => (
+          <Toast nativeID={`toast-${id}`} variant="accent" action="error">
+            <ToastTitle>Something went wrong while initiating payment.</ToastTitle>
           </Toast>
         ),
       });
     }
-
-    // Optionally store or send recharge attempt info
-    const payload = {
-      amount: Number(addAmount),
-      bounusAmount: Number(bonuseAmount),
-      date: new Date().toISOString(),
-    };
-    console.log("Recharge Payload:", payload);
-  } catch (err) {
-    console.error("Payment Error:", err);
-    toast.show({
-      placement: "bottom",
-      render: ({ id }) => (
-        <Toast nativeID={`toast-${id}`} variant="accent" action="error">
-          <ToastTitle>Something went wrong while initiating payment.</ToastTitle>
-        </Toast>
-      ),
-    });
-  }
-};
+  };
 
 
 
@@ -284,56 +286,56 @@ const handleAddWalletAmount = async (
     setEnterAmount(amount);
     // Sort offers in ascending order of amount
     const sortedOffers = [...offers?.data?.data].sort((a, b) => a.amount - b.amount);
-  
+
     // Find the nearest higher or equal offer
     const matchedOffer = sortedOffers.find((offer) => offer.amount > amount);
-    console.log("Checking Matched",Number(matchedOffer?.amount)!==Number(amount))
+    console.log("Checking Matched", Number(matchedOffer?.amount) !== Number(amount))
 
-    if(Number(matchedOffer?.amount)!==Number(amount)){
+    if (Number(matchedOffer?.amount) !== Number(amount)) {
 
-        const pickedRange = sortedOffers.find((el)=>{
-          const [min,max] =  el.range.split(' - ')
-          return (Number(min)<=Number(amount) && Number(max)>=Number(amount))
+      const pickedRange = sortedOffers.find((el) => {
+        const [min, max] = el.range.split(' - ')
+        return (Number(min) <= Number(amount) && Number(max) >= Number(amount))
+      })
+      console.log("Checking Exact Matched", pickedRange?.range, pickedRange?.bounusPercentage)
+
+      if (pickedRange) {
+        setMatchedOffer({
+          bounusAmount: Number((pickedRange?.bounusPercentage * amount).toFixed(2)),
+          amount
         })
-        console.log("Checking Exact Matched",pickedRange?.range,pickedRange?.bounusPercentage)
+      } else {
+        const pickedRange = sortedOffers.at(-1)
 
-        if(pickedRange){
-          setMatchedOffer({
-            bounusAmount:Number((pickedRange?.bounusPercentage*amount).toFixed(2)),
-            amount
-          })
-        }else{
-          const pickedRange = sortedOffers.at(-1)
-
-          setMatchedOffer({
-            bounusAmount:Number((pickedRange?.bounusPercentage*amount).toFixed(2)),
-            amount
-          }) 
-        }
+        setMatchedOffer({
+          bounusAmount: Number((pickedRange?.bounusPercentage * amount).toFixed(2)),
+          amount
+        })
+      }
       //  const cretedOffer =  matchedOffer.bounusAmount
-    }else{
+    } else {
       const highestOffer = sortedOffers[sortedOffers.length - 1];
       setMatchedOffer(matchedOffer || highestOffer);
     }
 
-     if(matchedOffer){
+    if (matchedOffer) {
       setMatchedOffer2(matchedOffer)
-     }else{
-         const pickedRange = sortedOffers.at(-1)
-         setMatchedOffer2({
-            bounusAmount:Number((pickedRange?.bounusPercentage*(Number(amount)+100)).toFixed(2)),
-            amount:Number(amount)+100
-          }) 
-     }
+    } else {
+      const pickedRange = sortedOffers.at(-1)
+      setMatchedOffer2({
+        bounusAmount: Number((pickedRange?.bounusPercentage * (Number(amount) + 100)).toFixed(2)),
+        amount: Number(amount) + 100
+      })
+    }
     // If no higher offer is found, set the highest available offer
   };
 
 
   const handleOpenModal = () => {
-        // Correctly check if enterAmount is invalid
-   const minimumAmount = Number(offersSettingsData?.data?.data?.minimumWaletRecharge || "");    
+    // Correctly check if enterAmount is invalid
+    const minimumAmount = Number(offersSettingsData?.data?.data?.minimumWaletRecharge || "");
     const isInvalidAmount = !enterAmount || Number(enterAmount) < minimumAmount;
-  
+
     if (isInvalidAmount) {
       toast.show({
         placement: "bottom",
@@ -353,9 +355,9 @@ const handleAddWalletAmount = async (
       return;
     }
 
-     setShowAddCashModel(true)
+    setShowAddCashModel(true)
   };
-  
+
 
 
   const handleLogout = () => {
@@ -363,7 +365,7 @@ const handleAddWalletAmount = async (
     navigation.navigate(NavigationString.Login)
   }
 
-
+  // Expiring on  {new Date(walletInfoData?.data?.bonusCashInfo?.expiringBonusAmount.expireBonusAmountDate).getDate()} {months[new Date(walletInfoData?.data?.bonusCashInfo?.expiringBonusAmount.expireBonusAmountDate).getMonth()]} {new Date(walletInfoData?.data?.bonusCashInfo?.expiringBonusAmount.expireBonusAmountDate).toLocaleTimeString()}
 
   return (
     <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
@@ -379,12 +381,12 @@ const handleAddWalletAmount = async (
               :
               offers?.data?.data?.map((item: any, ind: number) => {
                 return (
-                  <TouchableOpacity style={{ width: '47%' }} onPress={() => {  
+                  <TouchableOpacity style={{ width: '47%' }} onPress={() => {
                     setEnterAmount(item?.amount),
-                    setAmount(item?.amount),
-                    handleAddWalletAmount(item?.amount, "offer", item?.bounusAmount);
-                     
-                     }} key={ind}>
+                      setAmount(item?.amount),
+                      handleAddWalletAmount(item?.amount, "offer", item?.bounusAmount);
+
+                  }} key={ind}>
                     <Box borderRightWidth={1} borderLeftWidth={1} borderRadius={10} borderColor={colors.white} overflow="hidden" pt={moderateScaleVertical(15)} pb={moderateScaleVertical(15)} >
                       <Text fontFamily={'$robotoMedium'} fontSize={20} lineHeight={22} color={colors.white} numberOfLines={1} alignSelf="center">{'\u20B9'} {item?.amount}</Text>
 
@@ -399,11 +401,11 @@ const handleAddWalletAmount = async (
               })}
           </Box>
         </Box>
-        
-         <CheckEnterdCashBonus amount={amount} hanldeAmountOnChange={hanldeAmountOnChange} setAmount={setAmount}
-         matchedOffer={matchedOffer} 
-         
-         />
+
+        <CheckEnterdCashBonus amount={amount} hanldeAmountOnChange={hanldeAmountOnChange} setAmount={setAmount}
+          matchedOffer={matchedOffer}
+
+        />
 
 
         <Box flexDirection='row' alignItems='center' mx={moderateScale(20)} gap={moderateScale(10)} mt={moderateScaleVertical(15)}>
@@ -413,12 +415,12 @@ const handleAddWalletAmount = async (
 
         <Box mx={moderateScale(20)} gap={15} mt={moderateScaleVertical(15)}>
           {
-              offersSettingsData?.data?.data?.selectedBestOfferWaletRecharge?.map((item, index) => {
+            offersSettingsData?.data?.data?.selectedBestOfferWaletRecharge?.map((item, index) => {
               return (
                 <Pressable key={index?.toString()} onPress={() => {
                   handleAddWalletAmount(item?.amount, "offer", item?.bounusAmount);
-                   setAmount(item?.amount)
-                  }} flexDirection='row' alignItems='center' h={moderateScale(70)} borderRadius={moderateScale(8)} overflow='hidden' style={shadowStyle}>
+                  setAmount(item?.amount)
+                }} flexDirection='row' alignItems='center' h={moderateScale(70)} borderRadius={moderateScale(8)} overflow='hidden' style={shadowStyle}>
                   <Box bgColor={colors.themeRed} h={'100%'} alignItems='center' justifyContent='center' borderRightWidth={3} borderRightColor={colors.white} borderStyle='dashed' >
                     <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1} style={{ transform: [{ rotate: '270deg' }] }}>OFFER</Text>
                   </Box>
@@ -430,9 +432,9 @@ const handleAddWalletAmount = async (
                         <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={20} color={colors.black} numberOfLines={1}>{item.bonusAmount} Bonus </Text>
                       </Box>
 
-                        <Box flexDirection='row' alignItems='center' justifyContent='space-between'>
+                      <Box flexDirection='row' alignItems='center' justifyContent='space-between'>
                         <Box marginRight={6} backgroundColor={'#d4f5e2'} py={3} px={5} borderWidth={1} borderColor={colors.gray3} borderRadius={moderateScale(5)}>
-                          <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14}  color={colors.gray6} numberOfLines={1}>{item.label}</Text>
+                          <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray6} numberOfLines={1}>{item.label}</Text>
                         </Box>
 
                         <Pressable>
@@ -458,10 +460,9 @@ const handleAddWalletAmount = async (
             <Text style={{ color: 'white', fontWeight: 600, }} mt={15}>“Get instant bonuses cash on every deposit—₹1 bonus equals ₹1 real value! Use 10% in every contest and get more out of every rupee you spend.”</Text>
           </View>
         </Box>
-        <TouchableOpacity onPress={createOrder}>
-
-<Text>sunny</Text>
-        </TouchableOpacity>
+        {/* <TouchableOpacity onPress={createOrder}>
+          <Text>sunny</Text>
+        </TouchableOpacity> */}
 
       </Body>
 
@@ -497,9 +498,9 @@ const handleAddWalletAmount = async (
 
               <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={20} color={colors.gray6} numberOfLines={1}>On deposit of {'\u20B9'}{matchedOffer2?.amount}</Text>
 
-              <PrimaryButton onPress={() => handleAddWalletAmount(matchedOffer2?.amount,"add")} buttonText={`Add \u20B9${matchedOffer2?.amount}`} backgroundColor={colors.greenText} height={moderateScale(45)} width={'85%'} />
+              <PrimaryButton onPress={() => handleAddWalletAmount(matchedOffer2?.amount, "add")} buttonText={`Add \u20B9${matchedOffer2?.amount}`} backgroundColor={colors.greenText} height={moderateScale(45)} width={'85%'} />
 
-              <TouchableOpacity onPress={() => handleAddWalletAmount(matchedOffer?.amount,"enter")}>
+              <TouchableOpacity onPress={() => handleAddWalletAmount(matchedOffer?.amount, "enter")}>
                 <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={20} color={colors.white} numberOfLines={1}>Continue with {'\u20B9'}{enterAmount}</Text>
               </TouchableOpacity>
             </Box>
@@ -507,14 +508,14 @@ const handleAddWalletAmount = async (
           </Box>
         </Box>
       </Modal>
-         <UPIWebView paymentLink={paymentLink} visible={isActiveWebView} onClose={() => setWebViewStatus(false)}>
-  <CheckEnterdCashBonus
-    amount={amount}
-    hanldeAmountOnChange={hanldeAmountOnChange}
-    setAmount={setAmount}
-    matchedOffer={matchedOffer}
-  />
-</UPIWebView> 
+      <UPIWebView paymentLink={paymentLink} visible={isActiveWebView} onClose={() => setWebViewStatus(false)}>
+        <CheckEnterdCashBonus
+          amount={amount}
+          hanldeAmountOnChange={hanldeAmountOnChange}
+          setAmount={setAmount}
+          matchedOffer={matchedOffer}
+        />
+      </UPIWebView>
     </Container>
   )
 }

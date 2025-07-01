@@ -22,7 +22,11 @@ const TransactionSuccessful = () => {
   // init
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const route = useRoute()
-  const { amount, bonus,bonusCashExpireDate }: any = route?.params
+  const { amount, bonus, bonusCashExpireDate }: any = route?.params
+
+  // console.log(" ===================== route.params ===================== ");
+  // console.log("route.params: ", route?.params);
+
 
   const animatedOpacity = useRef(new Animated.Value(0)).current; // For fade-in
   const animatedTranslateY = useRef(new Animated.Value(-50)).current; // For sliding down
@@ -76,15 +80,15 @@ const TransactionSuccessful = () => {
   };
 
   const months = [
-    "January", "February", "March", "April", "May", "June", 
+    "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
   return (
     <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
-      <AppBar title='Deposited' back />
+      <AppBar title='Deposited' />
       <Body>
         <Animatable.View animation={slideInUp} duration={1000}>
-          <Box bgColor={colors.black} h={moderateScale(140)} borderRadius={moderateScale(10)} mx={moderateScale(45)} mt={moderateScaleVertical(70)} style={shadowStyle} px={moderateScale(15)}>
+          <Box bgColor={colors.black} h={moderateScale(170)} borderRadius={moderateScale(10)} mx={moderateScale(45)} mt={moderateScaleVertical(70)} style={shadowStyle} px={moderateScale(15)}>
             <Animated.View style={[styles.container, { opacity: animatedOpacity, transform: [{ translateY: animatedTranslateY }], },]}>
               <CircleGreenTick width={moderateScale(50)} height={moderateScale(50)} style={styles.tick} />
             </Animated.View>
@@ -101,9 +105,14 @@ const TransactionSuccessful = () => {
                 <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={16} color={colors.white} numberOfLines={1} >Govt. GST on Deposit</Text>
                 <Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={16} color={colors.white} numberOfLines={1}>{'\u20B9'}{gstAmount}</Text>
               </Box>
+              <Box flexDirection='row' alignItems='center' justifyContent='space-between'>
+                <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={16} color={colors.white} numberOfLines={1} >GST Refund by Wonbybid</Text>
+                <Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={16} color={colors.white} numberOfLines={1}>{'\u20B9'}{gstAmount}</Text>
+              </Box>
             </Box>
           </Box>
         </Animatable.View>
+
         <Animatable.View animation={fadeIn} delay={500} duration={1000}>
           <Box flexDirection='row' alignItems='center' justifyContent='space-between' bgColor='#ebf9de' py={moderateScaleVertical(10)} mx={moderateScale(50)} zIndex={-10} mt={moderateScaleVertical(-5)} borderRadius={moderateScale(6)} px={moderateScale(10)} style={shadowStyle}>
             <Box flexDirection='row' alignItems='center'>
@@ -119,17 +128,15 @@ const TransactionSuccessful = () => {
         </Animatable.View>
         <Animatable.View animation={fadeIn} delay={550} duration={1000}>
           <Box flexDirection='row' alignItems='center' justifyContent='space-between' mx={moderateScale(80)}>
-            <Box h={moderateScale(35)} borderRightWidth={2} borderRightColor={colors.gray6} style={{ borderStyle: 'dashed' }}>
-            </Box>
-            <Box h={moderateScale(35)} borderRightWidth={2} borderRightColor={colors.gray6} style={{ borderStyle: 'dashed' }}>
-            </Box>
+            <Box h={moderateScale(35)} borderRightWidth={2} borderRightColor={colors.gray6} style={{ borderStyle: 'dashed' }}></Box>
+            <Box h={moderateScale(35)} borderRightWidth={2} borderRightColor={colors.gray6} style={{ borderStyle: 'dashed' }}></Box>
           </Box>
         </Animatable.View>
         <Animatable.View animation="fadeInUp" duration={800} delay={800}>
           <Box bgColor={colors.black} h={moderateScale(120)} borderRightWidth={1} borderEndEndRadius={10} borderLeftWidth={1} marginBottom={24} borderColor='white' borderRadius={moderateScale(10)} mx={moderateScale(45)} style={shadowStyle} px={moderateScale(15)}>
             <Box alignItems='center' mt={moderateScaleVertical(30)} gap={15}>
               <Box flexDirection='row' alignItems='center' gap={5}>
-                <Text fontFamily={'$robotoBold'} fontSize={28} lineHeight={30} color={colors.gold} numberOfLines={1}>{'\u20B9'}{(Number(depositAmount)+(bonus ? bonus : 0)).toFixed(2)}</Text>
+                <Text fontFamily={'$robotoBold'} fontSize={28} lineHeight={30} color={colors.gold} numberOfLines={1}>{'\u20B9'}{(Number(depositAmount) + Number(gstAmount) + (bonus ? bonus : 0)).toFixed(2)}</Text>
                 {/* <Image alt='icon' source={imgIcon.bCoin} w={moderateScale(24)} h={moderateScale(25)} alignSelf='baseline' resizeMode='contain' /> */}
                 {/* <Text fontFamily={'$robotoBold'} fontSize={28} lineHeight={30} color={colors.greenText} numberOfLines={1}>{bonus ? bonus : 0}</Text> */}
               </Box>

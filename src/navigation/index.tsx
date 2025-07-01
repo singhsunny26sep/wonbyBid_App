@@ -15,8 +15,24 @@ const AppNavigator = () => {
     },
   };
 
+  const linking = {
+    prefixes: ['com.indiawonbybid.app://'],
+    config: {
+      screens: {
+        TransactionSuccessful: {
+          path: 'transaction-successful',
+          parse: {
+            amount: Number,
+            bonus: Number,
+            bonusCashExpireDate: (value: any) => value, // parse as string
+          },
+        },
+      },
+    },
+  };
+
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <MainNavigation />
     </NavigationContainer>
   )

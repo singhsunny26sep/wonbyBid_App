@@ -68,7 +68,7 @@ const ViewTransaction = () => {
     setTimeout(() => {
       setIsLoading(false)
     }, 3000)
-    setSelectedTransactionType({"_index": 0, "label": "All", "value": "All"})
+    setSelectedTransactionType({ "_index": 0, "label": "All", "value": "All" })
   }, [isLoading])
   if (isLoading) {
     return (
@@ -76,7 +76,7 @@ const ViewTransaction = () => {
         <AppBar back title='View Transactions' />
         <Box flex={1} backgroundColor='black' justifyContent='center' alignItems='center' >
           {/* <Spinner size={'large'} color={colors.gold} /> */}
-          <Loader/>
+          <Loader />
         </Box>
       </Container>
     )
@@ -86,7 +86,7 @@ const ViewTransaction = () => {
       <AppBar back title='View Transactions' />
       <Box flexDirection='row' alignItems='center' justifyContent='space-between' mx={moderateScale(15)} py={moderateScaleVertical(10)} borderBottomWidth={1} borderBottomColor={colors.gray3} mt={moderateScaleVertical(10)}>
         <Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.white} numberOfLines={1} >Account Details</Text>
-        <Text fontFamily={'$robotoMedium'} fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1} >Documents & Invoices</Text>
+        {/* <Text fontFamily={'$robotoMedium'} fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1} >Documents & Invoices</Text> */}
       </Box>
 
       <Box mx={moderateScale(15)} mb={moderateScaleVertical(5)}>
@@ -103,7 +103,7 @@ const ViewTransaction = () => {
           renderRightIcon={() => <Icon as={ChevronDownIcon} size="sm" mr='$2' color="white" />}
 
           selectedTextProps={{ numberOfLines: 1 }}
-          renderItem={(item) => { return (<Text fontFamily='$robotoMedium' padding={5}  fontSize={12} lineHeight={16} numberOfLines={1} style={{ paddingHorizontal: responsiveWidth(2.5), paddingVertical: responsiveHeight(1.5) }} >{item?.label}</Text>) }}
+          renderItem={(item) => { return (<Text fontFamily='$robotoMedium' padding={5} fontSize={12} lineHeight={16} numberOfLines={1} style={{ paddingHorizontal: responsiveWidth(2.5), paddingVertical: responsiveHeight(1.5) }} >{item?.label}</Text>) }}
           itemTextStyle={localStyles.selectedTextStyle}
           itemContainerStyle={localStyles.itemContainerStyle}
         />

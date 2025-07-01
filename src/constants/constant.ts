@@ -1,7 +1,7 @@
 import { Dimensions } from "react-native";
 
  export const serverBaseURL = 'https://restapi.wonbybid.com/api/';
-// export const serverBaseURL = 'http://192.168.29.4:5000/api/';
+// export const serverBaseURL = 'http://192.168.0.107:5000/api/';
 
 // export const razorKeyTest = "rzp_live_gv4FVdLog5EVaq"
 // Testing

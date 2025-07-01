@@ -24,9 +24,9 @@ import useGetOffer from '../hooks/home/get-all-offer'
 import useGenerateOrder from '../hooks/auth/generate-order'
 import useGetSettings from '../hooks/private/use-get-settings'
 import { useGetUserWalletWaletSetting } from '../hooks/auth/get-user-wallet-info'
-import {CFPaymentGatewayService} from 'react-native-cashfree-pg-sdk';
-import {CFDropCheckoutPayment,CFEnvironment,CFSession} from 'cashfree-pg-api-contract';
-
+import { CFPaymentGatewayService } from 'react-native-cashfree-pg-sdk';
+import { CFDropCheckoutPayment, CFEnvironment, CFSession } from 'cashfree-pg-api-contract';
+import axios from 'axios'
 
 const key = razorKeyTest
 
@@ -40,14 +40,14 @@ const AddCash = () => {
 
 
   const { data: offers, isLoading } = useGetOffer()
-  const { data: offersSettingsData, isLoading:offersSettingsIsLoading } = useGetUserWalletWaletSetting()
+  const { data: offersSettingsData, isLoading: offersSettingsIsLoading } = useGetUserWalletWaletSetting()
 
 
   // state
   const [selectedOffer, setSelectedOffer] = useState<string | null>('')
   const [showAddCashModel, setShowAddCashModel] = useState<boolean>(false)
   const [enterAmount, setEnterAmount] = useState<number>()
-  const [amount,setAmount]= useState<number|string>('')
+  const [amount, setAmount] = useState<number | string>('')
 
   const [matchedOffer, setMatchedOffer] = useState<any>(null);
   const [matchedOffer2, setMatchedOffer2] = useState<any>(null);
@@ -60,13 +60,13 @@ const AddCash = () => {
 
 
   const handleAddWalletAmount = (addAmount: number, type: string, typeBonus: Number, data: any) => {
-    // console.log(" ========================================== handleAddWalletAmount =================================== ");
+    console.log(" ========================================== handleAddWalletAmount =================================== ");
     let bonuseAmount = 0
-    if(type === "offer"){
+    if (type === "offer") {
       bonuseAmount = +typeBonus
-    } else  if(type==="enter"){
-      bonuseAmount =  matchedOffer.bounusAmount
-    }else if(type==="add"){
+    } else if (type === "enter") {
+      bonuseAmount = matchedOffer.bounusAmount
+    } else if (type === "add") {
       bonuseAmount = matchedOffer2.bounusAmount
     }
 
@@ -76,7 +76,7 @@ const AddCash = () => {
     // console.log("enter",matchedOffer.bounusAmount)
     // console.log("add",matchedOffer2.bounusAmount)
 
-    
+
 
 
     const payload = {
@@ -87,7 +87,7 @@ const AddCash = () => {
     }
 
     useAddWalletAmountMutation.mutate(payload, {
-      onSuccess: (data) => {
+      onSuccess: async (data) => {
         console.log("data: response", data?.data);
         setShowAddCashModel(false)
         if (data?.data?.success) {
@@ -105,7 +105,26 @@ const AddCash = () => {
               );
             },
           })
-          navigation.navigate(NavigationString.TransactionSuccessful, { amount: addAmount, bonus: bonuseAmount,bonusCashExpireDate:data?.data?.bonusCashExpireDate })
+          const result = await axios.post(`https://api.ekqr.in/api/create_order`,
+            {
+              "key": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+              "client_txn_id": "1234567890",
+              "amount": "100",
+              "p_info": "Product Name",
+              "customer_name": "Jon Doe",
+              "customer_email": "jondoe@gmail.com",
+              "customer_mobile": "9876543210",
+              "redirect_url": "http://google.com",
+              "udf1": "user defined field 1 (max 25 char)",
+              "udf2": "user defined field 2 (max 25 char)",
+              "udf3": "user defined field 3 (max 25 char)"
+            }
+          )
+
+          console.log(" =================================== result =================================== ")
+          console.log("result: ", result);
+
+          // navigation.navigate(NavigationString.TransactionSuccessful, { amount: addAmount, bonus: bonuseAmount, bonusCashExpireDate: data?.data?.bonusCashExpireDate })
         } else {
           toast.show({
             placement: "bottom",
@@ -129,55 +148,49 @@ const AddCash = () => {
     setEnterAmount(amount);
     // Sort offers in ascending order of amount
     const sortedOffers = [...offers?.data?.data].sort((a, b) => a.amount - b.amount);
-  
+
     // Find the nearest higher or equal offer
     const matchedOffer = sortedOffers.find((offer) => offer.amount > amount);
-    if(Number(matchedOffer?.amount)!==Number(amount)){
+    if (Number(matchedOffer?.amount) !== Number(amount)) {
 
-        const pickedRange = sortedOffers.find((el)=>{
-          const [min,max] =  el.range.split(' - ')
-          return (Number(min)<=Number(amount) && Number(max)>=Number(amount))
-        })
-        console.log(pickedRange?.range,pickedRange?.bounusPercentage)
+      const pickedRange = sortedOffers.find((el) => {
+        const [min, max] = el.range.split(' - ')
+        return (Number(min) <= Number(amount) && Number(max) >= Number(amount))
+      })
+      console.log(pickedRange?.range, pickedRange?.bounusPercentage)
 
-        if(pickedRange){
-          setMatchedOffer({
-            bounusAmount:Number((pickedRange?.bounusPercentage*amount).toFixed(2)),
-            amount
-          })
-        }else{
-          const pickedRange = sortedOffers.at(-1)
+      if (pickedRange) {
+        setMatchedOffer({ bounusAmount: Number((pickedRange?.bounusPercentage * amount).toFixed(2)), amount })
+      } else {
+        const pickedRange = sortedOffers.at(-1)
 
-          setMatchedOffer({
-            bounusAmount:Number((pickedRange?.bounusPercentage*amount).toFixed(2)),
-            amount
-          }) 
-        }
+        setMatchedOffer({ bounusAmount: Number((pickedRange?.bounusPercentage * amount).toFixed(2)), amount })
+      }
       //  const cretedOffer =  matchedOffer.bounusAmount
-    }else{
+    } else {
       const highestOffer = sortedOffers[sortedOffers.length - 1];
       setMatchedOffer(matchedOffer || highestOffer);
     }
 
-     if(matchedOffer){
+    if (matchedOffer) {
       setMatchedOffer2(matchedOffer)
-     }else{
-         const pickedRange = sortedOffers.at(-1)
-         setMatchedOffer2({
-            bounusAmount:Number((pickedRange?.bounusPercentage*(Number(amount)+100)).toFixed(2)),
-            amount:Number(amount)+100
-          }) 
-     }
+    } else {
+      const pickedRange = sortedOffers.at(-1)
+      setMatchedOffer2({
+        bounusAmount: Number((pickedRange?.bounusPercentage * (Number(amount) + 100)).toFixed(2)),
+        amount: Number(amount) + 100
+      })
+    }
     // If no higher offer is found, set the highest available offer
   };
 
 
   const handleOpenModal = () => {
     const minimumAmount = Number(offersSettingsData?.data?.data?.minimumWaletRecharge || "");
-  
+
     // Correctly check if enterAmount is invalid
     const isInvalidAmount = !enterAmount || Number(enterAmount) < minimumAmount;
-  
+
     if (isInvalidAmount) {
       toast.show({
         placement: "bottom",
@@ -196,12 +209,14 @@ const AddCash = () => {
       });
       return;
     }
-  
+
     setShowAddCashModel(true);
   };
-  
+
 
   const handleGenerateOrder = async (addAmount: any, type: any, typeBonus: any) => {
+    console.log(" ============================== handleGenerateOrder ============================== ");
+
     // console.log("addAmount", addAmount);
     // console.log("type", type);
     // console.log("typeBonus", typeBonus);
@@ -226,7 +241,7 @@ const AddCash = () => {
 
     useGenerateOrderMutation.mutate(payload, {
       onSuccess: (data) => {
-      handleCheckOut(data?.data?.result, addAmount, type, typeBonus)
+        handleCheckOut(data?.data?.result, addAmount, type, typeBonus)
         setShowAddCashModel(false)
         if (data?.data?.success) {
           queryClient.invalidateQueries({
@@ -263,9 +278,10 @@ const AddCash = () => {
     })
   }
 
-  const handleCheckOut = async ( result: any, addAmount: any, type: any, typeBonus: any ) => {
+  const handleCheckOut = async (result: any, addAmount: any, type: any, typeBonus: any) => {
+    console.log(" ============================================== handleCheckOut ============================================== ");
 
-      var options = {
+    /* var options = {
       description: 'Recharge your wallet',
       // image: 'https://www.api.bsafelinkr.com/images/logo.png',
       currency: 'INR',
@@ -275,44 +291,40 @@ const AddCash = () => {
       order_id: result.id, //Replace this with an order_id created using Orders API.
       prefill: { email: authContext?.userInfo?.useEmail, contact: authContext?.userInfo?.userMobile, name: authContext?.userInfo?.userName },
       theme: { color: '#FF2626' },
+    } */
+
+    try {
+      /* const session = new CFSession(result.payment_session_id, result.order_id, CFEnvironment.SANDBOX);
+      CFPaymentGatewayService.doWebPayment(session);
+
+
+      CFPaymentGatewayService.setCallback({
+        onVerify(orderID) {
+          handleAddWalletAmount(addAmount, type, typeBonus, {
+            order_id: orderID,
+          });
+          CFPaymentGatewayService.removeCallback(); // Clean up
+        },
+        onError(error, orderID) {
+          toast.show({
+            placement: "bottom",
+            render: ({ id }) => {
+              const toastId = "toast-" + id;
+              return (
+                <Toast nativeID={toastId} variant="accent" action="error">
+                  <ToastTitle>{`Failed to proceed payment!`}</ToastTitle>
+                </Toast>
+              );
+            },
+          });
+
+          CFPaymentGatewayService.removeCallback(); // Clean up
+        },
+      }); */
+
+    } catch (e: any) {
+      console.log(e.message);
     }
-
-        try {
-            const session = new CFSession(
-               result.payment_session_id,
-               result.order_id,
-                CFEnvironment.SANDBOX
-            );
-            CFPaymentGatewayService.doWebPayment(session);    
-
-            
-     CFPaymentGatewayService.setCallback({
-  onVerify(orderID) {
-    handleAddWalletAmount(addAmount, type, typeBonus, {
-      order_id: orderID,
-    });
-    CFPaymentGatewayService.removeCallback(); // Clean up
-  },
-  onError(error, orderID) {
-    toast.show({
-      placement: "bottom",
-      render: ({ id }) => {
-        const toastId = "toast-" + id;
-        return (
-          <Toast nativeID={toastId} variant="accent" action="error">
-            <ToastTitle>{`Failed to proceed payment!`}</ToastTitle>
-          </Toast>
-        );
-      },
-    });
-
-    CFPaymentGatewayService.removeCallback(); // Clean up
-  },
-});
-
-        } catch (e: any) {
-            console.log(e.message);
-        }
 
   }
 
@@ -321,11 +333,11 @@ const AddCash = () => {
     navigation.navigate(NavigationString.Login)
   }
 
-  useEffect(()=>{
-    if(amount){
-    hanldeAmountOnChange(amount)
+  useEffect(() => {
+    if (amount) {
+      hanldeAmountOnChange(amount)
     }
-  },[amount])
+  }, [amount])
 
   return (
     <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
@@ -359,12 +371,12 @@ const AddCash = () => {
         <Box flexDirection='row' alignItems='center' mx={moderateScale(20)} my={moderateScaleVertical(20)}>
           <Box gap={5}>
             <Input variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed} style={{ flex: 1 }}>
-             
-             
 
-              <InputField value={`${amount}`} color='white' fontFamily='$robotoMedium' 
-              keyboardType='number-pad' fontSize={14} placeholder="Enter Amount" 
-              onChangeText={(t) => setAmount(t)} placeholderTextColor={colors.placeHolderColor} />
+
+
+              <InputField value={`${amount}`} color='white' fontFamily='$robotoMedium'
+                keyboardType='number-pad' fontSize={14} placeholder="Enter Amount"
+                onChangeText={(t) => setAmount(t)} placeholderTextColor={colors.placeHolderColor} />
             </Input>
 
             <Box flexDirection='row' alignItems='center'>
@@ -376,7 +388,7 @@ const AddCash = () => {
 
           </Box>
 
-          <Pressable onPress={(()=>{navigation.navigate("Gst")})} flex={1}>
+          <Pressable onPress={(() => { navigation.navigate("Gst") })} flex={1}>
             <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.Purple} numberOfLines={1} alignSelf='center'>Includes Deposit & GST</Text>
           </Pressable>
 
@@ -392,11 +404,11 @@ const AddCash = () => {
         <Box mx={moderateScale(20)} gap={15} mt={moderateScaleVertical(15)}>
           {
             // ['01', '02']?.map((item, index) => {
-              offersSettingsData?.data?.data?.selectedBestOfferWaletRecharge?.map((item, index) => {
+            offersSettingsData?.data?.data?.selectedBestOfferWaletRecharge?.map((item, index) => {
               return (
                 <Pressable key={index?.toString()} onPress={() => {
                   setAmount(item?.amount)
-                  }} flexDirection='row' alignItems='center' h={moderateScale(70)} borderRadius={moderateScale(8)} overflow='hidden' style={shadowStyle}>
+                }} flexDirection='row' alignItems='center' h={moderateScale(70)} borderRadius={moderateScale(8)} overflow='hidden' style={shadowStyle}>
                   <Box bgColor={colors.themeRed} h={'100%'} alignItems='center' justifyContent='center' borderRightWidth={3} borderRightColor={colors.white} borderStyle='dashed' >
                     <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1} style={{ transform: [{ rotate: '270deg' }] }}>OFFER</Text>
                   </Box>
@@ -410,7 +422,7 @@ const AddCash = () => {
 
                       <Box flexDirection='row' alignItems='center' justifyContent='space-between'>
                         <Box marginRight={6} backgroundColor={'#d4f5e2'} py={3} px={5} borderWidth={1} borderColor={colors.gray3} borderRadius={moderateScale(5)}>
-                          <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14}  color={colors.gray6} numberOfLines={1}>{item.label}</Text>
+                          <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray6} numberOfLines={1}>{item.label}</Text>
                         </Box>
 
                         <Pressable>
@@ -472,9 +484,9 @@ const AddCash = () => {
 
               <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={20} color={colors.gray6} numberOfLines={1}>On deposit of {'\u20B9'}{matchedOffer2?.amount}</Text>
 
-              <PrimaryButton onPress={() => handleGenerateOrder(matchedOffer2?.amount,"add")} buttonText={`Add \u20B9${matchedOffer2?.amount}`} backgroundColor={colors.greenText} height={moderateScale(45)} width={'85%'} />
+              <PrimaryButton onPress={() => handleGenerateOrder(matchedOffer2?.amount, "add")} buttonText={`Add \u20B9${matchedOffer2?.amount}`} backgroundColor={colors.greenText} height={moderateScale(45)} width={'85%'} />
 
-              <TouchableOpacity onPress={() => handleGenerateOrder(matchedOffer?.amount,"enter")}>
+              <TouchableOpacity onPress={() => handleGenerateOrder(matchedOffer?.amount, "enter")}>
                 <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={20} color={colors.white} numberOfLines={1}>Continue with {'\u20B9'}{enterAmount}</Text>
               </TouchableOpacity>
             </Box>

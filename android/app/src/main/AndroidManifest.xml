@@ -124,7 +124,15 @@
                     android:scheme="otpless.ttij0nlr64g95lzgxaeq" />
             </intent-filter>
 
+            <!-- Your transaction-successful deep link -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="com.indiawonbybid.app" android:host="transaction-successful" />
+            </intent-filter>
         </activity>
+
 
         <!-- Google Sign-In metadata -->
         <meta-data
