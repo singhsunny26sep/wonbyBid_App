@@ -196,16 +196,15 @@ const Setting = () => {
               </Box>
             </TouchableOpacity> */}
           </Box>
-          <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate(NavigationString.JoinPrivateContest)}>
+          {/* <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate(NavigationString.JoinPrivateContest)}>
             <Box flexDirection='row' alignItems='center' justifyContent='space-between' px={7} py={15} mx={8} borderBottomColor={colors.gray5}>
               <Box flexDirection='row' alignItems='center' gap={moderateScale(25)}>
-                {/* <JoinPrivateContestIcon /> */}
                 <JoinCentestIcon color={colors.white} />
                 <Text fontFamily={'$robotoRegular'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1} >Join Private Contest</Text>
               </Box>
               <AccordionIcon as={ChevronRightIcon} color={colors.gold} size='lg' />
             </Box>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity onPress={(() => { navigation.navigate("HowToPlay") })} activeOpacity={0.6}>
             <Box flexDirection='row' alignItems='center' justifyContent='space-between' px={7} py={15} mx={8} borderBottomColor={colors.gray5}>
               <Box flexDirection='row' alignItems='center' gap={moderateScale(25)}>
@@ -225,7 +224,7 @@ const Setting = () => {
               <AccordionIcon as={ChevronRightIcon} color={colors.gold} size='lg' />
             </Box>
           </TouchableOpacity>
-          
+
           {/* <TouchableOpacity onPress={openGoogleForms} activeOpacity={0.6}>
             <Box flexDirection='row' alignItems='center' justifyContent='space-between' px={7} py={15} mx={8} borderBottomColor={colors.gray5}>
               <Box flexDirection='row' alignItems='center' gap={moderateScale(25)}>
@@ -351,7 +350,7 @@ const Setting = () => {
                 alignItems: 'center',
                 justifyContent: "center"
 
-                
+
               }}>
                 <Text fontSize={18} fontWeight="bold" mb={4} color='white' textAlign="center">Are you sure you want to logout?</Text>
                 <Box flexDirection="row" marginTop={40} justifyContent="space-between" width="100%">

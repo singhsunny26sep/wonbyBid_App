@@ -22,10 +22,10 @@ interface GET_CATEGORY {
   state: string;
   title: string;
   updatedAt: string;
-  userId:any;
-  categoryId:any;
-  categoryStatus:any;
-  
+  userId: any;
+  categoryId: any;
+  categoryStatus: any;
+
 };
 
 const SportCard = ({ item, index, cardShadowColor, onPress, cardFrom }: { item: GET_CATEGORY, index: number, cardShadowColor?: string, onPress?: () => void, cardFrom?: string }) => {
@@ -113,16 +113,14 @@ const SportCard = ({ item, index, cardShadowColor, onPress, cardFrom }: { item: 
             <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} textAlign='center'>
               {cardFrom === 'upcoming' ? `upcoming contest is at ${contestDate}` : `Next contest is at ${contestDate}`}</Text>
           </Box>) : (
-           
-             <Box gap={5} alignItems='center'>
-                          <Text fontFamily="$robotoMedium" fontSize={12} lineHeight={14} color={colors.red} numberOfLines={2} textAlign="center">
-                            {cardFrom === 'upcoming'  ? <CardTimer endTime={item?.startTime} color={colors.red} />
-                             : format(item?.startTime, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") ?<CardTimer endTime={item?.endTime} color={colors.red} /> : format(item?.startTime, "hh:mm a")}
-                          </Text>
-                          <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.dimGray} numberOfLines={2} textAlign="center">Upcoming contest is at {format(item?.startTime, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") ? format(item?.endTime, "hh:mm a") : format(item?.endTime, "dd MMM yyyy hh:mm a")}</Text>
-                        </Box>
+
+            <Box gap={5} alignItems='center'>
+              <Text fontFamily="$robotoMedium" fontSize={12} lineHeight={14} color={colors.red} numberOfLines={2} textAlign="center">
+                {cardFrom === 'upcoming' ? <CardTimer endTime={item?.startTime} color={colors.red} /> : format(item?.startTime, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") ? <CardTimer endTime={item?.endTime} color={colors.red} /> : format(item?.startTime, "hh:mm a")}
+              </Text>
+              <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.dimGray} numberOfLines={2} textAlign="center">Upcoming contest is at {format(item?.startTime, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") ? format(item?.endTime, "hh:mm a") : format(item?.endTime, "dd MMM yyyy hh:mm a")}</Text>
+            </Box>
           )}
-          
           <Box></Box>
         </LinearGradient>
         <Box flexDirection='row' alignItems='center' justifyContent='space-between' h={moderateScale(35)} py={5} px={10} overflow='hidden'>
@@ -134,7 +132,7 @@ const SportCard = ({ item, index, cardShadowColor, onPress, cardFrom }: { item: 
             <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.black} numberOfLines={1}>{cardFrom === 'winnings' ? 'Played Contests: 12' : `Mega \u20B9 3.5 Cr`}</Text>
           </Box> */}
 
-{/* 
+          {/* 
           <Box display={cardFrom === 'upcoming' || cardFrom === 'live' ? 'flex' : 'none'} bgColor='#fdf9e5' py={3} px={8} borderRadius={10} alignItems='center' justifyContent='center'>
             <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.black} numberOfLines={1}>{cardFrom === 'upcoming' ? 'Mega \u20B9 3.5 Cr' : `Mega \u20B9 3.5 Cr`}</Text>
           </Box> */}
@@ -143,11 +141,7 @@ const SportCard = ({ item, index, cardShadowColor, onPress, cardFrom }: { item: 
             <MyMatchYellowColorIcon />
             <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>{cardFrom === 'upcoming' ? `Mega \u20B9 3.5 Cr` : cardFrom === 'live' ? `Mega \u20B9 3.5 Cr` : `You have won \u20B9 3.5 Cr`}</Text>
           </Box>
-
-
-
         </Box>
-
       </Box>
     </Pressable>
   )

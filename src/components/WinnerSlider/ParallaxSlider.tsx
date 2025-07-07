@@ -27,11 +27,7 @@ const ParallaxSlider = () => {
         {/* Tabs */}
         <View style={styles1.tabContainer}>
           {["Earners", "Referrers"].map((tab) => (
-            <TouchableOpacity
-              key={tab}
-              style={[styles1.tab, activeTab === tab && styles1.activeTab]}
-              onPress={() => setActiveTab(tab)}
-            >
+            <TouchableOpacity key={tab} style={[styles1.tab, activeTab === tab && styles1.activeTab]} onPress={() => setActiveTab(tab)}>
               <Text style={[styles1.tabText, activeTab === tab && styles1.activeTabText]}>{tab}</Text>
             </TouchableOpacity>
           ))}
@@ -48,19 +44,21 @@ const ParallaxSlider = () => {
             </View>
 
             {/* Table Rows */}
-            {activeTab === "Earners" ? data?.data?.data?.topUserranks?.map((item, index) => (
+            {activeTab === "Earners" ? data?.data?.data?.topUserranks?.map((item: any, index: any) => (
               <View key={index} style={[styles1.row, index % 2 === 0 ? styles1.rowEven : styles1.rowOdd]}>
                 <Text style={styles1.cell}>{item.rank}</Text>
                 <Text style={styles1.cell}>{item.userDetail.name}</Text>
                 <Text style={styles1.cell}>Rs {item.totalWiningAmount.toFixed(2)}</Text>
               </View>
-            )) : data?.data?.data?.topReferalUserRanks?.map((item, index) => (
-              <View key={index} style={[styles1.row, index % 2 === 0 ? styles1.rowEven : styles1.rowOdd]}>
-                <Text style={styles1.cell}>{item.rank}</Text>
-                <Text style={styles1.cell}>{item.userDetail.name}</Text>
-                <Text style={styles1.cell}>Rs {item.totalEarningAmount.toFixed(2)}</Text>
-              </View>
-            ))}
+            )) : data?.data?.data?.topReferalUserRanks?.map((item: any, index: any) => {
+              return item.totalEarningAmount.toFixed(0) == 0 ? null : (
+                <View key={index} style={[styles1.row, index % 2 === 0 ? styles1.rowEven : styles1.rowOdd]}>
+                  <Text style={styles1.cell}>{item.rank}</Text>
+                  <Text style={styles1.cell}>{item.userDetail.name}</Text>
+                  <Text style={styles1.cell}>Rs {item.totalEarningAmount.toFixed(2)}</Text>
+                </View>
+              );
+            })}
 
           </View>
         </ScrollView>
@@ -78,7 +76,7 @@ const styles1 = StyleSheet.create({
   tab: { flex: 1, padding: 12, alignItems: "center", borderBottomWidth: 2, borderBottomColor: "#ccc" },
   activeTab: { borderBottomColor: colors.gold },
   tabText: { fontSize: 16, color: "white" },
-  activeTabText: { fontWeight: "bold", color:colors.gold },
+  activeTabText: { fontWeight: "bold", color: colors.gold },
   table: { width: "100%" },
   row: { flexDirection: "row", paddingVertical: 10, borderBottomWidth: 0.2, borderBottomColor: "white" },
   header: { backgroundColor: "black" },

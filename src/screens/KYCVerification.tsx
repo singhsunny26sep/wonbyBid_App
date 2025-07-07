@@ -9,29 +9,29 @@ import {
   Image,
 } from '@gluestack-ui/themed';
 
-import {Container} from '../components/Container';
-import {AppBar} from '../components/AppBar';
-import {colors} from '../constants/colors';
-import {moderateScale, moderateScaleVertical} from '../utils/responsiveSize';
-import {useRef, useState} from 'react';
-import {Pressable} from '@gluestack-ui/themed';
+import { Container } from '../components/Container';
+import { AppBar } from '../components/AppBar';
+import { colors } from '../constants/colors';
+import { moderateScale, moderateScaleVertical } from '../utils/responsiveSize';
+import { useRef, useState } from 'react';
+import { Pressable } from '@gluestack-ui/themed';
 import PrimaryButton from '../components/Button/PrimaryButton';
-import {Input} from '@gluestack-ui/themed';
-import {InputField} from '@gluestack-ui/themed';
-import {CameraIconBig, ImageIcon, UploadPlusIcon} from '../components/Icons';
-import {Animated, TouchableOpacity} from 'react-native';
+import { Input } from '@gluestack-ui/themed';
+import { InputField } from '@gluestack-ui/themed';
+import { CameraIconBig, ImageIcon, UploadPlusIcon } from '../components/Icons';
+import { Animated, TouchableOpacity } from 'react-native';
 import ImagePicker from 'react-native-image-crop-picker';
-import ActionSheet, {ActionSheetRef} from 'react-native-actions-sheet';
-import {uploadImageToCloudinary} from '../utils/Cloudinary';
-import {Spinner} from '@gluestack-ui/themed';
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import ActionSheet, { ActionSheetRef } from 'react-native-actions-sheet';
+import { uploadImageToCloudinary } from '../utils/Cloudinary';
+import { Spinner } from '@gluestack-ui/themed';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import useKycUpdateDetails from '../hooks/home/update-kyc-details';
 import useKycDetails from '../hooks/home/get-kyc-details';
 
 const KYCVerification = () => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-  const {data: result} = useKycDetails();
+  const { data: result } = useKycDetails();
   const toast = useToast();
 
   const updateKyc = useKycUpdateDetails();
@@ -173,10 +173,10 @@ const KYCVerification = () => {
           if (data?.data?.success) {
             // Update only the name field in userInfo
             // updateUserName(data?.data?.data?.name, data?.data?.data?.profile);
-
+            navigation.goBack()
             toast.show({
               placement: 'bottom',
-              render: ({id}) => {
+              render: ({ id }) => {
                 const toastId = 'toast-' + id;
                 return (
                   <Toast nativeID={toastId} variant="accent" action="success">
@@ -188,7 +188,7 @@ const KYCVerification = () => {
           } else {
             toast.show({
               placement: 'bottom',
-              render: ({id}) => {
+              render: ({ id }) => {
                 const toastId = 'toast-' + id;
                 return (
                   <Toast nativeID={toastId} variant="accent" action="error">
@@ -401,7 +401,7 @@ const KYCVerification = () => {
               {panImage ? (
                 <>
                   <Image
-                    source={{uri: panImage}}
+                    source={{ uri: panImage }}
                     alt="pan card"
                     w={'90%'}
                     h={'90%'}
@@ -453,7 +453,7 @@ const KYCVerification = () => {
               {adharImage ? (
                 <>
                   <Image
-                    source={{uri: adharImage}}
+                    source={{ uri: adharImage }}
                     alt="pan card"
                     w={'90%'}
                     h={'90%'}
@@ -528,7 +528,7 @@ const KYCVerification = () => {
           flexDirection="row">
           <Box flex={1} alignItems="center" justifyContent="center">
             <TouchableOpacity
-              style={{alignItems: 'center', justifyContent: 'center'}}
+              style={{ alignItems: 'center', justifyContent: 'center' }}
               onPress={pickImage}>
               <ImageIcon />
               <Text
@@ -544,7 +544,7 @@ const KYCVerification = () => {
           </Box>
           <Box flex={1} alignItems="center" justifyContent="center">
             <TouchableOpacity
-              style={{alignItems: 'center', justifyContent: 'center'}}
+              style={{ alignItems: 'center', justifyContent: 'center' }}
               onPress={openCamera}>
               <CameraIconBig />
               <Text

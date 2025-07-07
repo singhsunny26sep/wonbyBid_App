@@ -31,7 +31,7 @@ const BankVerification = () => {
   const [ifscCode, setIFSCCode] = useState<string | any>(result?.data?.data?.enterIFSCCode ? result?.data?.data?.enterIFSCCode : '')
   const [upiId, setUpiId] = useState<string | any>(result?.data?.data?.enterUpiId ? result?.data?.data?.enterUpiId : '')
 
-// console.log(result?.data?.data)
+  // console.log(result?.data?.data)
   const handlSubmit = async () => {
     if (!accountNumber || !confirmaccountNumber || !bankName || !ifscCode || !upiId) {
       toast.show({
@@ -61,14 +61,14 @@ const BankVerification = () => {
       });
       return;
     }
-    updateKyc?.mutate({ enterAccountNumber:accountNumber, enterBankName:bankName, enterIFSCCode:ifscCode, enterUpiId:upiId }, {
+    updateKyc?.mutate({ enterAccountNumber: accountNumber, enterBankName: bankName, enterIFSCCode: ifscCode, enterUpiId: upiId }, {
       onSuccess: (data) => {
         // console.log("data response: ", data?.data?.message);
 
         if (data?.data?.success) {
           // Update only the name field in userInfo
           // updateUserName(data?.data?.data?.name, data?.data?.data?.profile);
-
+          navigation.goBack()
           toast.show({
             placement: "bottom",
             render: ({ id }) => {
@@ -105,32 +105,18 @@ const BankVerification = () => {
         </Box>
 
         <Box mx={moderateScale(15)} my={moderateScaleVertical(15)} w={moderateScale(240)} gap={moderateScale(10)}>
-          <Input  marginBottom={5} variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
+          <Input marginBottom={5} variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
             <InputField color={colors.white} fontFamily='$robotoMedium' fontSize={14} placeholder="Enter Account Number *" keyboardType="numeric" placeholderTextColor={colors.placeHolderColor} onChangeText={(e) => setAccountNumber(e)} value={accountNumber} />
           </Input>
 
-          <Input marginBottom={5}  variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
+          <Input marginBottom={5} variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
             <InputField color={colors.white} fontFamily='$robotoMedium' fontSize={14} placeholder="Re-Enter Account Number *" keyboardType="numeric" placeholderTextColor={colors.placeHolderColor} onChangeText={(e) => setConfirmaccountNumber(e)} value={confirmaccountNumber} />
           </Input>
 
           <Input marginBottom={5} variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
-          <InputField
-  color={colors.white}
-  fontFamily="$robotoMedium"
-  fontSize={14}
-  placeholder="ENTER BANK NAME *"
-  placeholderTextColor={colors.placeHolderColor}
-  autoCapitalize="characters"
-  style={{
-    textTransform: 'uppercase', // Ensures uppercase rendering
-    
-    paddingRight: 10,
-  }}
-  onChangeText={(e) => setBankName(e.toUpperCase())}
-  value={bankName}
-/>
-
+            <InputField color={colors.white} fontFamily="$robotoMedium" fontSize={14} placeholder="ENTER BANK NAME *" placeholderTextColor={colors.placeHolderColor} autoCapitalize="characters" style={{ textTransform: 'uppercase', paddingRight: 10, }} onChangeText={(e) => setBankName(e.toUpperCase())} value={bankName} />
           </Input>
+          
           <Input marginBottom={5} variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
             <InputField color={colors.white} fontFamily='$robotoMedium' fontSize={14} placeholder="Enter IFSC Code *" placeholderTextColor={colors.placeHolderColor} onChangeText={(e) => setIFSCCode(e)} value={ifscCode} />
           </Input>

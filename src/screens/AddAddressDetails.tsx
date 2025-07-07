@@ -15,14 +15,16 @@ import { deviceHeight, shadowStyle } from '../constants/constant';
 import usePersonalInfo from '../hooks/home/usePersonal-info';
 import useKycDetails from '../hooks/home/get-kyc-details';
 import { ToastTitle } from '@gluestack-ui/themed';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 const AddAddressDetails = () => {
   // init
-  // const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const { data: result, isLoading } = useKycDetails()
   const toast = useToast()
   const updateKyc = usePersonalInfo()
- const profileDetails =  result?.data?.profileDetails
+  const profileDetails = result?.data?.profileDetails
 
 
   // state
@@ -58,7 +60,7 @@ const AddAddressDetails = () => {
         if (data?.data?.success) {
           // Update only the name field in userInfo
           // updateUserName(data?.data?.data?.name, data?.data?.data?.profile);
-
+          navigation.goBack()
           toast.show({
             placement: "bottom",
             render: ({ id }) => {
@@ -101,14 +103,14 @@ const AddAddressDetails = () => {
         <Box mx={moderateScale(30)} gap={moderateScale(20)}>
           <Input variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed} >
             <InputField color={colors.white} fontFamily='$robotoMedium' fontSize={14} placeholder="Full Name *"
-             placeholderTextColor={colors.placeHolderColor} onChangeText={(e) => setFullName(e)} value={fullName} />
+              placeholderTextColor={colors.placeHolderColor} onChangeText={(e) => setFullName(e)} value={fullName} />
           </Input>
 
           <Box flexDirection='row' alignItems='center' gap={moderateScale(10)}>
             <Pressable onPress={() => { setFocusDob(!focusDob); setDatePickerModel(true) }} flex={1} borderWidth={1} borderColor={focusDob ? colors.themeRed : colors.gray3} pl={moderateScale(15)} h={moderateScale(38)} borderRadius={moderateScale(5)} justifyContent='center'>
               <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={16} color={!!selectedDate ? colors.white : colors.placeHolderColor} numberOfLines={1} >{!!selectedDate ? selectedDate : 'Date of Birth *'}</Text>
             </Pressable>
-            
+
 
             <Input variant="outline" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed} flex={1}>
               <InputField color={colors.white} fontFamily='$robotoMedium' fontSize={14} placeholder="Pincode *" placeholderTextColor={colors.placeHolderColor} onChangeText={(e) => setPincode(e)} value={pincode} />

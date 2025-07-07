@@ -1,7 +1,7 @@
 import { Dimensions } from "react-native";
 
- export const serverBaseURL = 'https://restapi.wonbybid.com/api/';
-// export const serverBaseURL = 'http://192.168.0.107:5000/api/';
+export const serverBaseURL = 'https://wonbybid.com/v1/api/';
+// export const serverBaseURL = 'http://192.168.0.104:5000/api/';
 
 // export const razorKeyTest = "rzp_live_gv4FVdLog5EVaq"
 // Testing
@@ -53,7 +53,7 @@ export function formatAmount(amount: number): string {
     return amount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
   } else {
     // For amounts less than 1000, return as-is
-    return amount?.toFixed?amount?.toFixed(2):`${amount}`;
+    return amount?.toFixed ? amount?.toFixed(2) : `${amount}`;
   }
 }
 

@@ -32,22 +32,22 @@ const MyMatches = () => {
       const fetch = async () => {
         await emitContestCategory(authContext?.authState?.userId);
       };
-  
+
       fetch();
-  
+
       socketServices.on('mycontest-live-category', (data: any) => {
-       console.log(data)
+        console.log(data)
         setliveContest(data);
       });
-  
+
       socketServices.on('mycontest-upcoming-category', (data: any) => {
         setUpcomingContest(data);
       });
-  
+
       socketServices.on('mycontest-expired-category', (data: any) => {
         setWinningContest(data);
       });
-  
+
       return () => {
         socketServices.removeListener('mycontest-live-category');
         socketServices.removeListener('mycontest-upcoming-category');
@@ -55,7 +55,7 @@ const MyMatches = () => {
       };
     }, [authContext?.authState?.userId]) // Dependencies to re-run effect when userId changes
   );
-  
+
 
 
   const emitContestCategory = (userId: string) => {
@@ -63,7 +63,9 @@ const MyMatches = () => {
     socketServices.emit('my-contestcategory', { userId: userId });
   };
 
-  
+  const sortByDateDesc = (data: any[], dateKey: string) => {
+    return [...data].sort((a, b) => new Date(b[dateKey]).getTime() - new Date(a[dateKey]).getTime());
+  };
 
   return (
     <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed} backgroundColor='black'>
@@ -105,7 +107,76 @@ const MyMatches = () => {
           </Box>
         </Pressable >
       </Box>
-      {/* {
+
+      {selectedOption === 'live' ? (
+        <FlatList
+          data={liveContest?.length > 0 ? liveContest : []}
+          renderItem={({ item, index }: { item: any, index: number }) => <SportCard key={item} item={item} index={index} cardShadowColor={'#0984e3'} onPress={() => {
+
+            navigation.navigate(NavigationString.MyContestList, { cardFrom: 'live', categoryName: item?.title, catId: item?.categorieId, type: 'myMatches' })
+          }} cardFrom={'live'} />}
+          keyExtractor={(item: any) => item?._id}
+          style={{ flex: 1, marginTop: responsiveHeight(8) }}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => {
+            return (
+              <Box flex={1} justifyContent='center' alignItems='center'>
+                <Text fontSize={18} color={colors.gold} lineHeight={22} fontFamily='$poppinsSemiBold'>No Contest Found</Text>
+              </Box>
+            )
+          }}
+          contentContainerStyle={{ gap: responsiveWidth(5), marginHorizontal: responsiveWidth(4), flexGrow: 1 }}
+        />
+      ) : selectedOption === 'upcoming' ? (
+        <FlatList
+          data={upcomingContest?.length > 0 ? upcomingContest : []}
+          renderItem={({ item, index }: { item: any, index: number }) => <SportCard key={item?._id} item={item} index={index} cardShadowColor={'#74b9ff'} onPress={() => {
+
+            navigation.navigate(NavigationString.MyContestList, { cardFrom: 'upcoming', categoryName: item?.title, catId: item?.categorieId, type: 'myMatches' })
+          }} cardFrom={'upcoming'} />}
+          keyExtractor={(item: any) => item?._id}
+          style={{ flex: 1, marginTop: responsiveHeight(8) }}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => {
+            return (
+              <Box flex={1} justifyContent='center' alignItems='center'>
+                <Text fontSize={18} color={colors.gold} lineHeight={22} fontFamily='$poppinsSemiBold'>No Contest Found</Text>
+              </Box>
+            )
+          }}
+          contentContainerStyle={{ gap: responsiveWidth(4), marginHorizontal: responsiveWidth(4), flexGrow: 1 }}
+        />
+      ) : (
+        <FlatList
+          data={winningContest?.length > 0 ? sortByDateDesc(winningContest, 'endTime') : []}
+          renderItem={({ item, index }: { item: any, index: number }) => <SportCard key={item} item={item} index={index} cardShadowColor={'#54a0ff'}
+            onPress={() => {
+              navigation.navigate(NavigationString.MyContestList, { cardFrom: 'wining', categoryName: item?.title, catId: item?.categorieId, type: 'myMatches' })
+            }}
+            cardFrom={'wining'} />
+          }
+          keyExtractor={(item: any) => item?._id}
+          style={{ flex: 1, marginTop: responsiveHeight(8) }}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() => {
+            return (
+              <Box flex={1} justifyContent='center' alignItems='center'>
+                <Text fontSize={18} color={colors.gold} lineHeight={22} fontFamily='$poppinsSemiBold'>No Contest Found</Text>
+              </Box>
+            )
+          }}
+          contentContainerStyle={{ gap: responsiveWidth(5), marginHorizontal: responsiveWidth(4), flexGrow: 1 }}
+        />
+      )
+      }
+    </Container>
+  )
+}
+
+export default MyMatches
+
+
+{/* {
         selectedOption === 'live' ? (
           <FlatList
             data={['01', '02', '03', '04', '05', '06', '07', '08']}
@@ -162,67 +233,3 @@ const MyMatches = () => {
           />
         )
       } */}
-      {
-        selectedOption === 'live' ? (
-          <FlatList
-            data={liveContest?.length > 0 ? liveContest : []}
-            renderItem={({ item, index }: { item: any, index: number }) => <SportCard  key={item} item={item} index={index} cardShadowColor={'#0984e3'} onPress={() => {
-      
-              navigation.navigate(NavigationString.MyContestList, { cardFrom: 'live', categoryName: item?.title, catId: item?.categorieId, type: 'myMatches' })
-            }} cardFrom={'live'} />}
-            keyExtractor={(item: any) => item?._id}
-            style={{ flex: 1, marginTop: responsiveHeight(8) }}
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={() => {
-              return (
-                <Box flex={1} justifyContent='center' alignItems='center'>
-                  <Text fontSize={18} color={colors.gold} lineHeight={22} fontFamily='$poppinsSemiBold'>No Contest Found</Text>
-                </Box>
-              )
-            }}
-            contentContainerStyle={{ gap: responsiveWidth(5), marginHorizontal: responsiveWidth(4), flexGrow: 1 }}
-          />
-        ) : selectedOption === 'upcoming' ? (
-          <FlatList
-            data={upcomingContest?.length > 0 ? upcomingContest : []}
-            renderItem={({ item, index }: { item: any, index: number }) => <SportCard key={item?._id} item={item} index={index} cardShadowColor={'#74b9ff'} onPress={() => {
-
-              navigation.navigate(NavigationString.MyContestList, { cardFrom: 'upcoming', categoryName: item?.title, catId: item?.categorieId, type: 'myMatches' })
-            }} cardFrom={'upcoming'} />}
-            keyExtractor={(item: any) => item?._id}
-            style={{ flex: 1, marginTop: responsiveHeight(8) }}
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={() => {
-              return (
-                <Box flex={1} justifyContent='center' alignItems='center'>
-                  <Text fontSize={18} color={colors.gold} lineHeight={22} fontFamily='$poppinsSemiBold'>No Contest Found</Text>
-                </Box>
-              )
-            }}
-            contentContainerStyle={{ gap: responsiveWidth(4), marginHorizontal: responsiveWidth(4), flexGrow: 1 }}
-          />
-        ) : (
-          <FlatList
-            data={winningContest?.length > 0 ? winningContest : []}
-            renderItem={({ item, index }: { item: any, index: number }) => <SportCard key={item} item={item} index={index} cardShadowColor={'#54a0ff'} onPress={() => {
-              navigation.navigate(NavigationString.MyContestList, { cardFrom: 'wining', categoryName: item?.title, catId: item?.categorieId, type: 'myMatches' })
-            }} cardFrom={'wining'} />}
-            keyExtractor={(item: any) => item?._id}
-            style={{ flex: 1, marginTop: responsiveHeight(8) }}
-            showsVerticalScrollIndicator={false}
-            ListEmptyComponent={() => {
-              return (
-                <Box flex={1} justifyContent='center' alignItems='center'>
-                  <Text fontSize={18} color={colors.gold} lineHeight={22} fontFamily='$poppinsSemiBold'>No Contest Found</Text>
-                </Box>
-              )
-            }}
-            contentContainerStyle={{ gap: responsiveWidth(5), marginHorizontal: responsiveWidth(4), flexGrow: 1 }}
-          />
-        )
-      }
-    </Container>
-  )
-}
-
-export default MyMatches

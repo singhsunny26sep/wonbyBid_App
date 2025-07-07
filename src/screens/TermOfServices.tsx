@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginTop: 5,
         lineHeight: 20,
-        color: '#ccc', 
+        color: '#ccc',
 
     },
 });

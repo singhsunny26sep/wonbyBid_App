@@ -17,21 +17,8 @@ const BidderCard = ({ item, index }: any) => {
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
   return (
-    <TouchableOpacity onPress={() => navigation.navigate(NavigationString.ContactUserProfile, { userId: item?.userId })}>
-      <Box
-        borderRightWidth={1}
-        borderColor='white'
-        borderTopRightRadius={8}
-        borderBottomRightRadius={8}
-        flexDirection='row'
-        alignItems='center'
-        justifyContent='space-between'
-        bgColor={colors.black}
-        py={responsiveHeight(1)}
-        px={moderateScale(15)}
-        width={"90%"}
-        alignSelf='center'
-      >
+    <TouchableOpacity /* onPress={() => navigation.navigate(NavigationString.ContactUserProfile, { userId: item?.userId })} */>
+      <Box borderRightWidth={1} borderColor='white' borderTopRightRadius={8} borderBottomRightRadius={8} flexDirection='row' alignItems='center' justifyContent='space-between' bgColor={colors.black} py={responsiveHeight(1)} px={moderateScale(15)} width={"90%"} alignSelf='center'>
         <Box flexDirection='row' alignItems='center' gap={moderateScale(15)}>
           <Box h={moderateScale(40)} w={moderateScale(40)} borderRadius={moderateScale(40)} >
             <Image alt='icon' source={{ uri: 'https://cdn-icons-png.flaticon.com/512/219/219988.png' }} h={'100%'} w={'100%'} resizeMode='contain' />
@@ -54,10 +41,6 @@ const BiddersHomeList = () => {
   // api
   const { data, isLoading } = useGetBidersHome({ contestId: contestId, timeslotId: slotId })
 
-  // data?.data?.data?.map((value: any) => {
-  //   console.log("value: ", value);
-  // })
-
 
   if (isLoading) {
     return (
@@ -65,18 +48,22 @@ const BiddersHomeList = () => {
         <AppBar title='Biddesr List' back />
         <Box flex={1} backgroundColor='black' justifyContent='center' alignItems='center' >
           {/* <Spinner size={'large'} color={colors.gold} /> */}
-          <Loader/>
+          <Loader />
         </Box>
       </Container>
     )
   }
+
+  const sortByBidsDesc = (bidders: any[]) => {
+    return [...bidders].sort((a, b) => b.bidsCount - a.bidsCount);
+  };
 
   return (
     <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
       <AppBar back title={'Bidders List'} />
 
       <FlatList
-        data={data?.data?.data?.length as number > 0 ? data?.data?.data : []}
+        data={data?.data?.data?.length as number > 0 ? sortByBidsDesc(data?.data?.data) : []}
         renderItem={({ item, index }: { item: any, index: number }) => <BidderCard key={item?.userId} item={item} index={index} />}
         keyExtractor={(item: any) => item?.userId}
         style={{ flex: 1, }}
@@ -89,11 +76,9 @@ const BiddersHomeList = () => {
               </View>
             )
           }
-
           return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
               <Text fontFamily={'$robotoMedium'} fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1} > No Bidders Found</Text>
-
             </View>
           )
         }}

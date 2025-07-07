@@ -18,3 +18,33 @@ export const generateReferralCode = () => {
     String.fromCharCode(Math.floor(Math.random() * 26) + 65) // A-Z (ASCII 65-90)
   ).join('');
 };
+
+
+/* export const isValidURL = (str: string) => {
+  const pattern = new RegExp(
+    "^(https?:\\/\\/)" + // now required protocol
+    "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" +
+    "((\\d{1,3}\\.){3}\\d{1,3}))" +
+    "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" +
+    "(\\?[;&a-z\\d%_.~+=-]*)?" +
+    "(\\#[-a-z\\d_]*)?$",
+    "i"
+  );
+  return !!pattern.test(str);
+}; */
+export const isValidURL = (str: string) => {
+  try {
+    const url = new URL(str);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch (_) {
+    return false;
+  }
+};
+
+
+export const shouldBeTrue = (updatedAtStr: any) => {
+  const updatedAt: any = new Date(updatedAtStr);
+  const now: any = new Date();
+  const elapsed = now - updatedAt; // in milliseconds
+  return elapsed < 30 * 1000;
+}

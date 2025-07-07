@@ -54,10 +54,10 @@ interface GameTimerProps {
   color: string;
   contestId: string;  // Extra data to pass
   slotId: string; // Extra data to pass
-  onRoomLeft:()=>void
+  onRoomLeft: () => void
 }
 
-const GameTimer: React.FC<GameTimerProps> = ({ endTime, color, contestId, slotId,onRoomLeft }) => {
+const GameTimer: React.FC<GameTimerProps> = ({ endTime, color, contestId, slotId, onRoomLeft }) => {
   const [timeLeft, setTimeLeft] = useState<string>('00:00');
   const navigation = useNavigation<any>(); // Navigation hookconsole.log(contestId, slotId)
 
@@ -68,24 +68,17 @@ const GameTimer: React.FC<GameTimerProps> = ({ endTime, color, contestId, slotId
       const end = new Date(endTime);
       const totalSeconds = differenceInSeconds(end, now);
 
-      if ((typeof totalSeconds === "number" && (!isNaN(totalSeconds)) && totalSeconds <= 0) &&endTime&& contestId) {
+      if ((typeof totalSeconds === "number" && (!isNaN(totalSeconds)) && totalSeconds <= 0) && endTime && contestId) {
         setTimeLeft('00:00'); // Ensure final state update
-        
 
-           navigation.navigate(NavigationString.ViewHomeContest,{
-                  flexible:true,
-                  cardFrom:"wining",
-                  slotId,
-                  isUserJoinContest:true,
-                  contestId,
-                  isDeclare:true
-                 })
-           if(onRoomLeft){
-            onRoomLeft()
-           }      
+
+        navigation.navigate(NavigationString.ViewHomeContest, { flexible: true, cardFrom: "wining", slotId, isUserJoinContest: true, contestId, isDeclare: true })
+        if (onRoomLeft) {
+          onRoomLeft()
+        }
         return;
       }
-      
+
       const hours = Math.floor(totalSeconds / 3600);
       const minutes = Math.floor((totalSeconds % 3600) / 60);
       const seconds = totalSeconds % 60;
@@ -93,13 +86,9 @@ const GameTimer: React.FC<GameTimerProps> = ({ endTime, color, contestId, slotId
       let formattedTime = '';
 
       if (hours > 0) {
-        formattedTime = `${hours.toString().padStart(2, '0')}:${minutes
-          .toString()
-          .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
       } else {
-        formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds
-          .toString()
-          .padStart(2, '0')}`;
+        formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
       }
 
       setTimeLeft(formattedTime);
@@ -115,16 +104,7 @@ const GameTimer: React.FC<GameTimerProps> = ({ endTime, color, contestId, slotId
   }, [endTime, navigation]);
 
   return (
-    <Text 
-      fontFamily={'$robotoBold'} 
-      fontSize={24} 
-      lineHeight={26} 
-      color={color} 
-      numberOfLines={1} 
-      textAlign='center'
-    >
-      {timeLeft}
-    </Text>
+    <Text fontFamily={'$robotoBold'} fontSize={24} lineHeight={26} color={color} numberOfLines={1} textAlign='center'>{timeLeft}</Text>
   );
 };
 

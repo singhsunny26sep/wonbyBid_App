@@ -31,14 +31,14 @@ const ContestList = () => {
 	const { cardFrom }: any = route.params
 	const today = new Date();
 	const nextDay = subDays(today, 1)
-	
+
 	const startDate = format(today, 'yyyy-MM-dd');
 
 	// console.log(cardFrom);
-	
+
 
 	// useStates
-	const [selectedContestScreen, setSelectedContestScreen] = useState( (cardFrom === 'mywinnings' || cardFrom === 'mylive')  ? 'my' : 'all')
+	const [selectedContestScreen, setSelectedContestScreen] = useState((cardFrom === 'mywinnings' || cardFrom === 'mylive') ? 'my' : 'all')
 	const [selectedSortBy, setSelectedSortBy] = useState('')
 	const [datePickerModel, setDatePickerModel] = useState(false)
 	const [selectedDate, setSelectedDate] = useState('')
@@ -89,8 +89,8 @@ const ContestList = () => {
 		<Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed}>
 			<AppBar left={<LeftAppBar />} right={<RightIcon />} />
 
-			{ cardFrom !== 'mywinnings' || cardFrom !== 'mylive' && <Box display={cardFrom === 'live' ? 'flex' : 'none'} flexDirection='row' alignItems='center' alignSelf='center' bgColor={colors.gray10}>
-				<Pressable  onPress={() => setSelectedContestScreen('all')} flex={1} alignItems='center' borderBottomWidth={selectedContestScreen === 'all' ? 2 : 0} borderBottomColor={colors.themeRed}>
+			{cardFrom !== 'mywinnings' || cardFrom !== 'mylive' && <Box display={cardFrom === 'live' ? 'flex' : 'none'} flexDirection='row' alignItems='center' alignSelf='center' bgColor={colors.gray10}>
+				<Pressable onPress={() => setSelectedContestScreen('all')} flex={1} alignItems='center' borderBottomWidth={selectedContestScreen === 'all' ? 2 : 0} borderBottomColor={colors.themeRed}>
 					<Text fontFamily={selectedContestScreen === 'all' ? '$robotoBold' : '$robotoMedium'} fontSize={14} lineHeight={16} color={colors.black} numberOfLines={1} py={10}>{cardFrom === 'live' ? 'All Contests' : 'All Winnings'}</Text>
 				</Pressable>
 				<Pressable onPress={() => setSelectedContestScreen('my')} flex={1} alignItems='center' borderBottomWidth={selectedContestScreen === 'my' ? 2 : 0} borderBottomColor={colors.themeRed}>
@@ -98,7 +98,7 @@ const ContestList = () => {
 				</Pressable>
 			</Box>}
 
-			<Box display={cardFrom === 'upcoming' || cardFrom === 'winnings' ? 'flex' : 'none'} flexDirection='row' alignItems='center' justifyContent='space-between' pl={moderateScale(15)} bgColor={colors.gray10} borderBottomWidth={2} borderBottomColor={colors.white}>
+			{/* <Box display={cardFrom === 'upcoming' || cardFrom === 'winnings' ? 'flex' : 'none'} flexDirection='row' alignItems='center' justifyContent='space-between' pl={moderateScale(15)} bgColor={colors.gray10} borderBottomWidth={2} borderBottomColor={colors.white}>
 				<Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.grayish} numberOfLines={1} py={10}>Show Upcoming By :</Text>
 				<Box flexDirection='row' alignItems='center' gap={5}>
 					<Pressable flexDirection='row' alignItems='center' gap={6} onPress={() => { setDatePickerModel(!datePickerModel) }}>
@@ -128,7 +128,7 @@ const ContestList = () => {
 
 				</Box>
 
-			</Box>
+			</Box> */}
 
 			<Box flexDirection='row' alignItems='center' bgColor={colors.gray10}>
 				<Box justifyContent='center' alignItems='center' pl={moderateScale(15)}>
@@ -162,82 +162,65 @@ const ContestList = () => {
 				</Box>
 			</Box>
 
-			{(selectedContestScreen === 'all' && (cardFrom !== 'mywinnings' || cardFrom !== 'mylive'))  ? (
-				<FlatList
-					data={['01', '02', '03',]}
-					renderItem={({ item, index }: { item: any, index: number }) => {
-						return (
-							<>
-								{
-									item == '01' && (<Box backgroundColor={colors.white} px={15} py={20}>
-										<Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.black} numberOfLines={1} pb={10}>Mega Contest</Text>
-										<ContestListCard cardFrom={cardFrom} />
-									</Box>)}
+			{(selectedContestScreen === 'all' && (cardFrom !== 'mywinnings' || cardFrom !== 'mylive')) ? (
+				<FlatList data={['01', '02', '03',]} renderItem={({ item, index }: { item: any, index: number }) => {
+					return (
+						<>
+							{item == '01' && (<Box backgroundColor={colors.white} px={15} py={20}>
+								<Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.black} numberOfLines={1} pb={10}>Mega Contest</Text>
+								<ContestListCard cardFrom={cardFrom} />
+							</Box>)}
 
-								{
-									item == '02' && (<Box backgroundColor={colors.white} px={15} py={20}>
-										<Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.black} numberOfLines={1} pb={10}>Only For Beginners</Text>
-										<Box gap={15}>
-											<ContestListCard flexible={true} cardFrom={cardFrom} />
-											<ContestListCard cardFrom={cardFrom} />
-										</Box>
-									</Box>)}
+							{item == '02' && (<Box backgroundColor={colors.white} px={15} py={20}>
+								<Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.black} numberOfLines={1} pb={10}>Only For Beginners</Text>
+								<Box gap={15}>
+									<ContestListCard flexible={true} cardFrom={cardFrom} />
+									<ContestListCard cardFrom={cardFrom} />
+								</Box>
+							</Box>)}
 
-								{
-									item == '03' && (<Box backgroundColor={colors.white} px={15} py={20}>
-										<Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.black} numberOfLines={1} pb={10}>Multiple Contest</Text>
-										<Box gap={15}>
-											<ContestListCard cardFrom={cardFrom} />
-											<ContestListCard cardFrom={cardFrom} />
-										</Box>
-									</Box>)}
-
-							</>
-
-
-						)
-					}}
+							{item == '03' && (<Box backgroundColor={colors.white} px={15} py={20}>
+								<Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.black} numberOfLines={1} pb={10}>Multiple Contest</Text>
+								<Box gap={15}>
+									<ContestListCard cardFrom={cardFrom} />
+									<ContestListCard cardFrom={cardFrom} />
+								</Box>
+							</Box>)}
+						</>
+					)
+				}}
 					keyExtractor={(item: any) => item}
 					style={{ flex: 1, }}
 					showsVerticalScrollIndicator={false}
 					contentContainerStyle={{ gap: responsiveWidth(3) }}
 				/>
 			) : (
-		
-				<FlatList
-					data={[]}
-					renderItem={({ item, index }: { item: any, index: number }) => {
-						return (
-							<>
-								{
-									item == '01' && (<Box backgroundColor={colors.white} px={15} py={20}>
-										<Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.black} numberOfLines={1} pb={10}>Mega Contest</Text>
-										<ContestListCard cardFrom={cardFrom} />
-									</Box>)}
 
-								{
-									item == '02' && (<Box backgroundColor={colors.white} px={15} py={20}>
-										<Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.black} numberOfLines={1} pb={10}>Only For Beginners</Text>
-										<Box gap={15}>
-											<ContestListCard flexible={true} cardFrom={cardFrom} />
-											<ContestListCard cardFrom={cardFrom} />
-										</Box>
-									</Box>)}
+				<FlatList data={[]} renderItem={({ item, index }: { item: any, index: number }) => {
+					return (
+						<>
+							{item == '01' && (<Box backgroundColor={colors.white} px={15} py={20}>
+								<Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.black} numberOfLines={1} pb={10}>Mega Contest</Text>
+								<ContestListCard cardFrom={cardFrom} />
+							</Box>)}
+							{item == '02' && (<Box backgroundColor={colors.white} px={15} py={20}>
+								<Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.black} numberOfLines={1} pb={10}>Only For Beginners</Text>
+								<Box gap={15}>
+									<ContestListCard flexible={true} cardFrom={cardFrom} />
+									<ContestListCard cardFrom={cardFrom} />
+								</Box>
+							</Box>)}
 
-								{
-									item == '03' && (<Box backgroundColor={colors.white} px={15} py={20}>
-										<Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.black} numberOfLines={1} pb={10}>Multiple Contest</Text>
-										<Box gap={15}>
-											<ContestListCard cardFrom={cardFrom} />
-											<ContestListCard cardFrom={cardFrom} />
-										</Box>
-									</Box>)}
-
-							</>
-
-
-						)
-					}}
+							{item == '03' && (<Box backgroundColor={colors.white} px={15} py={20}>
+								<Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.black} numberOfLines={1} pb={10}>Multiple Contest</Text>
+								<Box gap={15}>
+									<ContestListCard cardFrom={cardFrom} />
+									<ContestListCard cardFrom={cardFrom} />
+								</Box>
+							</Box>)}
+						</>
+					)
+				}}
 					ListEmptyComponent={() => {
 						return (
 							<Box flex={1} alignItems='center' justifyContent='center'>
@@ -251,54 +234,50 @@ const ContestList = () => {
 					showsVerticalScrollIndicator={false}
 					contentContainerStyle={{ gap: responsiveWidth(3), flexGrow: 1 }}
 				/>
-			
-				)}
 
-			<Modal
-				animationType='slide'
-				transparent={true}
-				visible={datePickerModel}
-			>
+			)}
+
+			<Modal animationType='slide' transparent={true} visible={datePickerModel}>
 
 				<Box style={localStyles.modalCenterView} >
 					<Box style={localStyles.modalView}>
 
 						{
-							 cardFrom === 'upcoming' ? (
+							cardFrom === 'upcoming' ? (
 								<DatePicker
-								mode='calendar'
-								options={{
-									mainColor: colors.themeRed,
-								}}
-								selected={selectedDate}
-	
-								onDateChange={(propDate: any) => {
-									// console.log(propDate);
-	
-									const parsedDate = parse(propDate, 'yyyy/MM/dd', new Date())
-									setSelectedDate(format(parsedDate, 'yyyy-MM-dd'))
-								}}
-								minimumDate={startDate}
-								
-							/>
-							 ) : (
-								<DatePicker
-								mode='calendar'
-								options={{
-									mainColor: colors.themeRed,
-								}}
-								selected={selectedDate}
-	
-								onDateChange={(propDate: any) => {
-									// console.log(propDate);
-	
-									const parsedDate = parse(propDate, 'yyyy/MM/dd', new Date())
-									setSelectedDate(format(parsedDate, 'yyyy-MM-dd'))
-								}}
+									mode='calendar'
+									options={{
+										mainColor: colors.themeRed,
+									}}
+									selected={selectedDate}
 
-								maximumDate={startDate}
-							/>
-							 )
+									onDateChange={(propDate: any) => {
+										// console.log(propDate);
+
+										const parsedDate = parse(propDate, 'yyyy/MM/dd', new Date())
+										setSelectedDate(format(parsedDate, 'yyyy-MM-dd'))
+									}}
+									minimumDate={startDate}
+
+								/>
+							) : (
+								<DatePicker
+									mode='calendar'
+									options={{
+										mainColor: colors.themeRed,
+									}}
+									selected={selectedDate}
+
+									onDateChange={(propDate: any) => {
+										// console.log(propDate);
+
+										const parsedDate = parse(propDate, 'yyyy/MM/dd', new Date())
+										setSelectedDate(format(parsedDate, 'yyyy-MM-dd'))
+									}}
+
+									maximumDate={startDate}
+								/>
+							)
 						}
 
 						<Box style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }} >
@@ -466,7 +445,7 @@ const localStyles = StyleSheet.create({
 		backgroundColor: colors.gray10,
 		paddingLeft: moderateScale(10),
 		width: moderateScale(150),
-		
+
 
 	},
 	labelStyle: {

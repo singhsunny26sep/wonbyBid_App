@@ -8,12 +8,12 @@ import {
   ToastTitle,
   StatusBar,
 } from '@gluestack-ui/themed';
-import {LinearGradient as RNLinearGradient} from 'react-native-linear-gradient';
-import {ParamListBase, useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import { LinearGradient as RNLinearGradient } from 'react-native-linear-gradient';
+import { ParamListBase, useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import messaging from '@react-native-firebase/messaging';
-import {Container} from '../components/Container';
-import {colors} from '../constants/colors';
+import { Container } from '../components/Container';
+import { colors } from '../constants/colors';
 import {
   Alert,
   Platform,
@@ -26,18 +26,18 @@ import {
   moderateScaleVertical,
   textScale,
 } from '../utils/responsiveSize';
-import {imgIcon} from '../assets/icons';
+import { imgIcon } from '../assets/icons';
 import PrimaryButton from '../components/Button/PrimaryButton';
-import {NavigationString} from '../navigation/navigationStrings';
+import { NavigationString } from '../navigation/navigationStrings';
 import useUserLogin from '../hooks/auth/user-login';
-import {useEffect, useState} from 'react';
-import {number} from 'yup';
-import {imagePaths} from '../assets/images';
+import { useEffect, useState } from 'react';
+import { number } from 'yup';
+import { imagePaths } from '../assets/images';
 import {
   GoogleSignin,
   statusCodes,
 } from '@react-native-google-signin/google-signin';
-import {OtplessHeadlessModule} from 'otpless-react-native';
+import { OtplessHeadlessModule } from 'otpless-react-native';
 
 const Login = () => {
   const headlessModule = new OtplessHeadlessModule();
@@ -97,7 +97,7 @@ const Login = () => {
         if (data?.data?.success) {
           toast.show({
             placement: 'bottom',
-            render: ({id}) => {
+            render: ({ id }) => {
               const toastId = 'toast-' + id;
               return (
                 <Toast nativeID={toastId} variant="accent" action="success">
@@ -106,18 +106,15 @@ const Login = () => {
               );
             },
           });
-
-
-
           navigation.navigate(NavigationString.VerifyOTP, {
             mobileNumber: mobile,
-            sessionId: data?.data?.sessionId||data?.data?.data?.sessionId
+            sessionId: data?.data?.sessionId || data?.data?.data?.sessionId
           });
 
         } else {
           toast.show({
             placement: 'bottom',
-            render: ({id}) => {
+            render: ({ id }) => {
               const toastId = 'toast-' + id;
               return (
                 <Toast nativeID={toastId} variant="accent" action="error">
@@ -145,8 +142,8 @@ const Login = () => {
             locations={[0.65, 1]}
             useAngle={true}
             angle={205}
-            angleCenter={{x: -0.2, y: 0.1}}
-            style={{flex: 1}}>
+            angleCenter={{ x: -0.2, y: 0.1 }}
+            style={{ flex: 1 }}>
             <Box
               alignSelf="center"
               mt={moderateScaleVertical(90)}
@@ -206,7 +203,7 @@ const Login = () => {
                 autoCapitalize="none"
                 style={{
                   backgroundColor: colors.black,
-                  color: colors.gold, 
+                  color: colors.gold,
                   fontSize: textScale(14),
                   lineHeight: moderateScale(16),
                   fontFamily: 'Roboto-Medium',
@@ -232,7 +229,7 @@ const Login = () => {
               marginTop={moderateScaleVertical(40)}
             />
 
-            <Box px={14}>
+            {/* <Box px={14}>
               <Text marginTop={24} color={colors.gold} fontSize={20}>
                 Beta Testing
               </Text>
@@ -243,7 +240,7 @@ const Login = () => {
                 “If you find any issues, please report them in the Beta Testing
                 section.”
               </Text>
-            </Box>
+            </Box> */}
 
             {/* <PrimaryButton buttonText='Login with google' loading={loading} disabled={loading}  loaderColor={colors.themeRed} fontSize={20} backgroundColor={colors.white} textColor={colors.themeRed} height={moderateScale(50)} marginHorizontal={moderateScale(20)} marginTop={moderateScaleVertical(40)} /> */}
             {/* <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={28} color={colors.white} >powered by <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={28} color={colors.black} >WonByBid</Text></Text> */}

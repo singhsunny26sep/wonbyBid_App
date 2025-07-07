@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
-const SOCKET_URL = 'https://backend.wonbybid.com';
-// const SOCKET_URL = 'http://192.168.0.107:7000';
+const SOCKET_URL = 'https://realtime.wonbybid.com';
+// const SOCKET_URL = 'http://192.168.0.104:7000';
 
 class WSService {
   initialzeSocket = async (userId) => {
@@ -15,7 +15,7 @@ class WSService {
         }
       })
       // console.log('initialzing socket', this.socket);TTIJ0NLR64G95LZGXAEQ
-      console.log('initialzing socket');
+      // console.log('initialzing socket');
       this.socket.on("connect", (data) => {
         console.log("=== socket connectd ===");
         // console.log("data: ", data);

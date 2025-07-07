@@ -10,23 +10,24 @@ import { useState } from 'react'
 import { useToast } from '@gluestack-ui/themed'
 import useEmailKyc from '../hooks/home/useEmailKyc'
 import { Toast } from '@gluestack-ui/themed'
+import { useNavigation } from '@react-navigation/native'
 
 const AddEmailAddress = () => {
-
+  const navigation = useNavigation<any>()
   const { data: result, isLoading } = useKycDetails()
   const toast = useToast()
   const updateKyc = useEmailKyc()
 
-  console.log("result: ",result?.data?.verificationData?.emailVarification);
+  console.log("result: ", result?.data?.verificationData?.emailVarification);
 
-  const emailVerification =result?.data?.verificationData?.emailVarification     
+  const emailVerification = result?.data?.verificationData?.emailVarification
 
   const [email, setEmail] = useState<string | any>(emailVerification?.email ? emailVerification?.email : '')
   const [conEmail, setConEmail] = useState<string | any>(emailVerification?.email ? emailVerification?.email : '')
 
 
   const handlSubmit = async () => {
- 
+
     if (email !== conEmail) {
       toast.show({
         placement: "bottom",
@@ -48,7 +49,7 @@ const AddEmailAddress = () => {
         if (data?.data?.success) {
           // Update only the name field in userInfo
           // updateUserName(data?.data?.data?.name, data?.data?.data?.profile);
-
+          navigation.goBack()
           toast.show({
             placement: "bottom",
             render: ({ id }) => {
@@ -82,7 +83,7 @@ const AddEmailAddress = () => {
     <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
       <AppBar back title='' />
 
-      <Box mx={moderateScale(15)} my={moderateScaleVertical(10)} py={moderateScaleVertical(10)}  borderBottomColor={colors.gray5}>
+      <Box mx={moderateScale(15)} my={moderateScaleVertical(10)} py={moderateScaleVertical(10)} borderBottomColor={colors.gray5}>
         <Text fontFamily='$robotoBold' fontSize={20} lineHeight={22} color={colors.white} numberOfLines={1} >Email</Text>
       </Box>
 

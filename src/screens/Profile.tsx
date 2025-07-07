@@ -33,7 +33,7 @@ import Loader from '../components/Loader'
 const Profile = () => {
   // init
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-  
+
   // const toast = useToast()
   // const route = useRoute()
   // console.log("route: ", route?.params);
@@ -45,18 +45,12 @@ const Profile = () => {
 
   // states
   const [showSettingOptionModal, setShowSettingOptionModal] = useState<any>(false)
-  const [selectedCategory, setSelectedCategory] = useState<{
-    _id:string,
-    title:string
-  }>({
-    _id:"all",
-    title:"Select Category"
-  })
+  const [selectedCategory, setSelectedCategory] = useState<{ _id: string, title: string }>({ _id: "all", title: "Select Category" })
 
 
   const { data: profileData, isLoading: profileIsLoading } = useUserDashboard({
-    userId:userInfo.userId,
-    categoryId:selectedCategory._id
+    userId: userInfo.userId,
+    categoryId: selectedCategory._id
   })
 
   console.log("userInfo: ", userInfo);
@@ -113,15 +107,15 @@ const Profile = () => {
                 <ShareWhiteIcon />
               </TouchableOpacity>
 
-              <Pressable onPress={() => setShowSettingOptionModal(true)}>
+              {/* <Pressable onPress={() => setShowSettingOptionModal(true)}>
                 <ThreeDotsIcon />
-              </Pressable>
+              </Pressable> */}
             </Box>
           </Box>
         </Box>
         <Box backgroundColor='black' flex={1} justifyContent='center' alignItems='center' >
           {/* <Spinner size={'large'} color={colors.gold} /> */}
-          <Loader/>
+          <Loader />
         </Box>
       </>
     )
@@ -131,9 +125,7 @@ const Profile = () => {
     <Container backgroundColor='black' statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed}>
       <Box h={moderateScale(160)} bgColor={colors.themeRed} gap={15}>
         <Box w={'100%'} flexDirection='row' alignItems='center' justifyContent='space-between' px={15} gap={20} pt={15}>
-          <Pressable hitSlop={20} 
-          onPress={() => navigation.goBack()}
-            >
+          <Pressable hitSlop={20} onPress={() => navigation.goBack()}>
             <BackIconWhite />
           </Pressable>
 
@@ -143,9 +135,9 @@ const Profile = () => {
               <ShareWhiteIcon />
             </TouchableOpacity>
 
-            <Pressable onPress={() => setShowSettingOptionModal(true)}>
+            {/* <Pressable onPress={() => setShowSettingOptionModal(true)}>
               <ThreeDotsIcon />
-            </Pressable>
+            </Pressable> */}
           </Box>
 
         </Box>
@@ -199,17 +191,17 @@ const Profile = () => {
                   style={localStyles.dropdown}
                   placeholderStyle={localStyles.placeholderStyle}
                   selectedTextStyle={localStyles.selectedTextStyle}
-                  data={profileData?.data?.data?.ctegory?[...profileData?.data?.data?.ctegory,{
-                    _id:"all",
-                    title:"all"
-                  }]:[]}
+                  data={profileData?.data?.data?.ctegory ? [...profileData?.data?.data?.ctegory, {
+                    _id: "all",
+                    title: "all"
+                  }] : []}
                   labelField="title"
                   valueField="title"
                   placeholder={selectedCategory.title}
                   onChange={(item) => {
                     setSelectedCategory(item)
                   }}
-                 renderRightIcon={() => <Icon as={ChevronDownIcon} size="sm" mr="$2" color="white" />}
+                  renderRightIcon={() => <Icon as={ChevronDownIcon} size="sm" mr="$2" color="white" />}
 
                   // selectedTextProps={{ numberOfLines: 1 }}
                   renderItem={({ title }) => (<Text fontFamily="$robotoMedium" backgroundColor="$black" color={colors.white} fontSize={14} lineHeight={16} numberOfLines={1} textAlign="center" style={{ paddingHorizontal: responsiveWidth(2.5), paddingVertical: responsiveHeight(1.5), }}>{title}</Text>)}
@@ -243,7 +235,7 @@ const Profile = () => {
 
           </Box>
 
-          <Box bgColor={colors.white}  alignSelf='center' h={moderateScale(40)} marginTop={40} alignItems='center' justifyContent='center' borderRadius={10} p={10} my={moderateScaleVertical(15)}>
+          <Box bgColor={colors.white} alignSelf='center' h={moderateScale(40)} marginTop={40} alignItems='center' justifyContent='center' borderRadius={10} p={10} my={moderateScaleVertical(15)}>
             <Text fontFamily={'$robotoRegular'} fontSize={14} lineHeight={16} color={colors.black} numberOfLines={1}>
               Playing on WonByBid Since <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={16} color={colors.black} numberOfLines={1}>
                 {new Date(profileData?.data?.data?.expirEDate).toDateString()}
@@ -283,7 +275,7 @@ const Profile = () => {
             </Box>
 
             <Box>
-              
+
               <TouchableOpacity activeOpacity={0.6} onPress={() => { setShowSettingOptionModal(false); navigation.navigate(NavigationString.MyAccount) }}>
                 <Box flexDirection='row' alignItems='center' justifyContent='space-between' px={7} py={15} borderBottomWidth={1} mx={8} borderBottomColor={colors.gray5}>
                   <Box flexDirection='row' alignItems='center' gap={moderateScale(25)}>
@@ -292,7 +284,7 @@ const Profile = () => {
                   </Box>
                   <AccordionIcon as={ChevronRightIcon} color={colors.grayish} size='lg' />
                 </Box>
-            
+
               </TouchableOpacity>
               <TouchableOpacity activeOpacity={0.6} onPress={() => { setShowSettingOptionModal(false); navigation.navigate(NavigationString.PrivacySettings) }}>
                 <Box flexDirection='row' alignItems='center' justifyContent='space-between' px={7} py={15} borderBottomWidth={1} mx={8} borderBottomColor={colors.gray5}>
@@ -303,7 +295,7 @@ const Profile = () => {
                   <AccordionIcon as={ChevronRightIcon} color={colors.grayish} size='lg' />
                 </Box>
               </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.6} onPress={() => {  setShowSettingOptionModal(false),handleLogout()}}>
+              <TouchableOpacity activeOpacity={0.6} onPress={() => { setShowSettingOptionModal(false), handleLogout() }}>
                 <Box flexDirection='row' alignItems='center' justifyContent='space-between' px={7} py={15} borderBottomWidth={1} mx={8} borderBottomColor={colors.gray5}>
                   <Box flexDirection='row' alignItems='center' gap={moderateScale(25)}>
                     <PrivacySettingIcon />
@@ -330,13 +322,13 @@ const localStyles = StyleSheet.create({
     width: '100%',
     height: moderateScale(35),
     paddingLeft: moderateScale(10),
-    backgroundColor:colors.black,
-    color:colors.black
+    backgroundColor: colors.black,
+    color: colors.black
     // flex: 1,
   },
   labelStyle: {
     // ...styles.mt15,
-    backgroundColor:colors.black,
+    backgroundColor: colors.black,
 
   },
   placeholderStyle: {
@@ -364,7 +356,7 @@ const localStyles = StyleSheet.create({
     marginHorizontal: responsiveWidth(5),
     marginVertical: responsiveHeight(2.5),
     backgroundColor: colors.white,
-    color:colors.white,
+    color: colors.white,
     borderRadius: responsiveWidth(5),
     width: '90%',
     paddingHorizontal: responsiveWidth(8),

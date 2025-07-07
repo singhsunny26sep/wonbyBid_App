@@ -63,8 +63,9 @@ const VerifyOTP = () => {
   const onOTPVerifing = () => {
     // navigation.navigate(NavigationString.BottomTabBar)
     setLoading(true)
-    const payload = {
+    const payload: any = {
       mobileNumber: mobileNumber,
+      // sessionId: sessionId ? sessionId?.Details : sessionIdResend,
       sessionId: sessionId || sessionIdResend,
       otp: Number(otpInput),
       fcmToken: fcmToken
@@ -195,9 +196,7 @@ const VerifyOTP = () => {
         return;
       }
 
-      const response = await axios.post(`${serverBaseURL}user/login_check`, {}, {
-        headers: { Authorization: token },
-      });
+      const response = await axios.post(`${serverBaseURL}user/login_check`, {}, { headers: { Authorization: token }, });
       if (response.data.success) {
         navigation.navigate(NavigationString.BottomTabBar)
       } else {
@@ -255,9 +254,7 @@ const VerifyOTP = () => {
           <PrimaryButton onPress={onOTPVerifing} loading={useOtpVerifingMutation.isPending && loading}
             disabled={useOtpVerifingMutation.isPending && loading} buttonText='Continue' loaderColor={colors.white}
             backgroundColor={colors.gold} textColor={colors.white} height={moderateScale(50)} />
-
         </Box>
-
       </Box>
 
       {/* </LinearGradient> */}

@@ -189,7 +189,7 @@ const HomeContestList = () => {
       console.log("helo")
 
       socketServices.on('mycontest-live-contest', (data: any) => {
-        console.log("mycontest-live-contest",data)
+        console.log("mycontest-live-contest", data)
 
         setContests((prevContests: any) => ([
           ...data,
@@ -204,13 +204,13 @@ const HomeContestList = () => {
     if (cardFrom === 'wining') {
       console.log("helo")
       socketServices.on('mycontest-expired-contest', (data: any) => {
-        console.log("mycontest-upcoming-category",data)
+        console.log("mycontest-upcoming-category", data)
 
         setContests((prevContests: any) => ([
           ...data,
         ]));
       })
-      
+
       return () => {
         socketServices.removeListener('mycontest-expired-contest')
       }
@@ -273,7 +273,7 @@ const HomeContestList = () => {
   };
 
 
-  console.log("contests",contests) 
+  console.log("contests", contests)
 
   const handleSaveContest = (contestId: string, categoryId: string, slotId: string) => {
     useSaveContestInMyMatchesMutation.mutate({ contestId: contestId, categoryId, timeslotId: slotId }, {
@@ -359,7 +359,7 @@ const HomeContestList = () => {
       <Box flexDirection='row' alignItems='center' gap={15} w={moderateScale(250)}>
         <Pressable onPress={() => navigation.navigate(NavigationString.Notification)}>
 
-          <Box  flexDirection='row' alignItems='center' py={8} px={7} borderRadius={10} gap={10}>
+          <Box flexDirection='row' alignItems='center' py={8} px={7} borderRadius={10} gap={10}>
 
             <Icon as={BellIcon} color={colors.white} w="$5" h="$5" />
           </Box>
@@ -367,13 +367,13 @@ const HomeContestList = () => {
 
         <Pressable onPress={() => navigation.navigate(NavigationString.Winners)}>
 
-          <Box  flexDirection='row' alignItems='center' py={8} px={7} borderRadius={10} gap={10}>
+          <Box flexDirection='row' alignItems='center' py={8} px={7} borderRadius={10} gap={10}>
             <WinnerIcon />
           </Box>
         </Pressable>
         <Pressable onPress={() => navigation.navigate(NavigationString.MyWallet)}>
 
-          <Box  flexDirection='row' alignItems='center' py={7} px={7} mr={moderateScale(20)} borderRadius={10} gap={10}>
+          <Box flexDirection='row' alignItems='center' py={7} px={7} mr={moderateScale(20)} borderRadius={10} gap={10}>
 
             <WalletIcon />
           </Box>
@@ -390,7 +390,7 @@ const HomeContestList = () => {
         <AppBar left={<LeftAppBar />} right={<RightIcon />} />
         <Box flex={1} backgroundColor='black' justifyContent='center' alignItems='center' >
           {/* <Spinner size={'large'} color={colors.gold} /> */}
-          <Loader/>
+          <Loader />
         </Box>
       </Container>
     )
@@ -419,10 +419,10 @@ const HomeContestList = () => {
 
 
         {/* date selection button */}
-        <Box display={cardFrom === 'upcoming' || cardFrom === 'wining' ? 'flex' : 'none'} flexDirection='row' alignItems='center' justifyContent='space-between' pl={moderateScale(15)} pr={moderateScale(10)} bgColor={colors.black} borderBottomWidth={2} borderBottomColor={colors.gray6}>
+        {/* <Box display={cardFrom === 'upcoming' || cardFrom === 'wining' ? 'flex' : 'none'} flexDirection='row' alignItems='center' justifyContent='space-between' pl={moderateScale(15)} pr={moderateScale(10)} bgColor={colors.black} borderBottomWidth={2} borderBottomColor={colors.gray6}>
           <Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.grayish} numberOfLines={1} py={10}>Show Upcoming By :</Text>
 
-          <Box flexDirection='row' alignItems='center'  gap={1}>
+          <Box flexDirection='row' alignItems='center' gap={1}>
             <Pressable flexDirection='row' alignItems='center' gap={3} onPress={() => { setDatePickerModel(!datePickerModel) }}>
               <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.grayish} numberOfLines={1} py={10}>{startDateFilter === '' ? 'Select Date' : `${startDateFilter}`}</Text>
               {datePickerModel ? <Icon as={ChevronUpIcon} w="$4" h="$4" color={colors.white} /> : <Icon as={ChevronDownIcon} w="$4" h="$4" color={colors.grayish} />}
@@ -433,28 +433,19 @@ const HomeContestList = () => {
               {datePickerModelEnd ? <Icon as={ChevronUpIcon} w="$4" h="$4" color={colors.grayish} /> : <Icon as={ChevronDownIcon} w="$4" h="$4" color={colors.grayish} />}
             </Pressable>
             <>
-      {/* <Pressable 
-        style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 10 }} 
-        onPress={() => setShowPicker(true)}
-      >
-        <Text style={{ fontSize: 12, color: 'gray' }}>
-          {time === '' ? 'Select Time' : time}
-        </Text>
-        {showPicker ? <ChevronUpIcon size={4} color="gray" /> : <ChevronDownIcon size={4} color="gray" />}
-      </Pressable> */}
 
-      {showPicker && (
-        <DateTimePicker 
-          value={new Date()}
-          mode="time"
-          display="default"
-          onChange={handleConfirm}
-        />
-      )}
-    </>
+              {showPicker && (
+                <DateTimePicker
+                  value={new Date()}
+                  mode="time"
+                  display="default"
+                  onChange={handleConfirm}
+                />
+              )}
+            </>
           </Box>
 
-        </Box>
+        </Box> */}
 
 
         {/* =================================================== filter top bar =================================================== */}
@@ -473,7 +464,7 @@ const HomeContestList = () => {
             <Icon as={spotsFilter == 'max' ? ArrowDownIcon : ArrowUpIcon} w={moderateScale(13)} h={moderateScale(13)} />
           </Pressable>
 
-     
+
           <Pressable
             onPress={() => {
               setSelectedSortBy('prizepool');
@@ -535,139 +526,142 @@ const HomeContestList = () => {
                 <Box key={item?._id} backgroundColor={colors.black} py={moderateScaleVertical(10)}>
                   <Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.white} numberOfLines={1} px={moderateScale(15)} pb={moderateScaleVertical(10)}>{item?.category?.name}</Text>
                   <Box gap={15} backgroundColor='black'>
-                  {item?.contests?.length>0?(<>  
-                    {/* <Text style={{color:colors.gold,textAlign:"center" ,marginTop:200}}>{item?.contests?.length}</Text> */}
-                    {
-                      item?.contests?.map((item: CONTEST, index: number) => {
-                        const startTimeString = new Date()?.toISOString();
-                        const timeOfDate: Date | undefined = startTimeString ? parseISO(startTimeString) : undefined;
-                        // console.log("item: ", item);
+                    {item?.contests?.length > 0 ? (<>
+                      {/* <Text style={{color:colors.gold,textAlign:"center" ,marginTop:200}}>{item?.contests?.length}</Text> */}
+                      {
+                        item?.contests?.map((item: CONTEST, index: number) => {
+                          const startTimeString = new Date()?.toISOString();
+                          const timeOfDate: Date | undefined = startTimeString ? parseISO(startTimeString) : undefined;
+                          // console.log("item: ", item);
 
-                        return (
-                          <Box backgroundColor='black' key={index?.toString()} px={moderateScale(15)}>
-                            <Box backgroundColor={colors.black} borderRightWidth={1} borderLeftWidth={1} borderStartStartRadius={14} borderColor={colors.gold} borderEndEndRadius={1} pt={10} gap={8} borderRadius={10} overflow="hidden">
-                              <Pressable gap={8} onPress={() => navigation.navigate(NavigationString.ViewHomeContest, { flexible: true ? 'Yes' : 'No', cardFrom: cardFrom, contestId: item?._id, slotId: item?.timeSlots?._id, isUserJoinContest: item?.isUserJoinContest })} >
-                                <Box display={cardFrom === 'upcoming' ? 'flex' : 'none'} flexDirection='row' alignItems='center' justifyContent="space-between" px={moderateScale(10)}>
-                                  <Pressable style={{flexDirection: "row",  alignItems: "center", justifyContent: "center", }}   hitSlop={20} onPress={() => { handleSaveContest(item?._id, cotegoryId, item?.timeSlots?._id) }}>
-                                    {item?.isUserBookMarked ? <Icon as={FavouriteIcon} fill={colors.white} w="$5" h="$5" color={colors.white} /> :<Icon fill={colors.black} as={FavouriteIcon} w="$5" h="$5" color={colors.white} /> }
-                                    <Text style={{ color: colors.white, fontSize: 14,marginLeft:5, marginBottom:2 }}>{item?.favorite}</Text>
-                                  </Pressable>
-                                  <Pressable hitSlop={20} onPress={() => { handleSaveContest(item?._id, cotegoryId, item?.timeSlots?._id) }}>
-                                    {item?.isNotificationActive ? <Icon as={BellIcon} fill={colors.white} w="$5" h="$5" color={colors.white} /> : <Icon as={BellIcon} w="$5" h="$5" color={colors.white} />}
-                                  </Pressable>
+                          return (
+                            <Box backgroundColor='black' key={index?.toString()} px={moderateScale(15)}>
+                              <Box backgroundColor={colors.black} borderRightWidth={1} borderLeftWidth={1} borderStartStartRadius={14} borderColor={colors.gold} borderEndEndRadius={1} pt={10} gap={8} borderRadius={10} overflow="hidden">
+                                <Pressable gap={8} onPress={() => navigation.navigate(NavigationString.ViewHomeContest, { flexible: true ? 'Yes' : 'No', cardFrom: cardFrom, contestId: item?._id, slotId: item?.timeSlots?._id, isUserJoinContest: item?.isUserJoinContest })} >
+                                  <Box display={cardFrom === 'upcoming' ? 'flex' : 'none'} flexDirection='row' alignItems='center' justifyContent="space-between" px={moderateScale(10)}>
+                                    <Pressable style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", }} hitSlop={20} onPress={() => { handleSaveContest(item?._id, cotegoryId, item?.timeSlots?._id) }}>
+                                      {item?.isUserBookMarked ? <Icon as={FavouriteIcon} fill={colors.white} w="$5" h="$5" color={colors.white} /> : <Icon fill={colors.black} as={FavouriteIcon} w="$5" h="$5" color={colors.white} />}
+                                      <Text style={{ color: colors.white, fontSize: 14, marginLeft: 5, marginBottom: 2 }}>{item?.favorite}</Text>
+                                    </Pressable>
+                                    {/* <Pressable hitSlop={20} onPress={() => { handleSaveContest(item?._id, cotegoryId, item?.timeSlots?._id) }}>
+                                      {item?.isNotificationActive ? <Icon as={BellIcon} fill={colors.white} w="$5" h="$5" color={colors.white} /> : <Icon as={BellIcon} w="$5" h="$5" color={colors.white} />}
+                                    </Pressable> */}
                                   </Box>
-                                <Box flexDirection="row" alignItems="center" px={10}>
-                                  <Box flex={0.8} alignItems='flex-start'>
-                                    <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gold} numberOfLines={1}>Prize Pool</Text>
-                                  </Box>
-                                  <Box alignItems="flex-end" flex={0.6} >
-                                    <Box flexDirection="row" alignItems="center" gap={moderateScale(10)}>
-                                      <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} >Entry</Text>
-                                      {(cardFrom === 'live' || cardFrom === 'wining') && <Icon as={CheckCircleIcon} w="$3" h="$3" color={colors.greenText} />}
+                                  <Box flexDirection="row" alignItems="center" px={10}>
+                                    <Box flex={0.8} alignItems='flex-start'>
+                                      <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gold} numberOfLines={1}>Prize Pool</Text>
                                     </Box>
-                                  </Box>
-                                </Box>
-
-                                <Box flexDirection="row" alignItems="center" px={10}>
-                                  <Text fontFamily={'$robotoBold'} fontSize={20} lineHeight={22} color={colors.white} numberOfLines={1} flex={1} mt={5}>{'\u20B9'}{formatAmount(Number(item?.prizeDistributionAmount))} </Text>
-                                  <Box alignItems='center' flex={1} >
-
-                                    {cardFrom === 'live' && <>
-                                      <CardTimer endTime={item?.timeSlots?.endTime} color={colors.red} startTime={item?.timeSlots?.startTime} />
-                                    </>}
-
-                                    {cardFrom === 'upcoming' && <>
-                                      <Text fontFamily="$robotoMedium" fontSize={12} lineHeight={14} color={colors.dimGray} numberOfLines={2} textAlign="center">
-                                        {format(item?.timeSlots?.startTime, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") ? <CardTimer endTime={item?.timeSlots?.startTime} color={colors.red} /> : format(item?.timeSlots?.startTime, "hh:mm a")}
-                                      </Text>
-                                      <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.dimGray} numberOfLines={2} textAlign="center">{format(item?.timeSlots?.startTime, "dd MMM yyyy")}</Text>
-                                    </>}
-
-                                    {cardFrom === 'wining' && <>
-                                      <Text fontFamily={'$poppinsMedium'} fontSize={12} lineHeight={14} color={'#c20c0d'} numberOfLines={1} >{formatDate(item?.timeSlots?.endTime, "hh:mm a")}</Text>
-                                      <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.dimGray} numberOfLines={2} textAlign="center">{format(item?.timeSlots?.endTime, "dd MMM yyyy")}</Text>
-                                    </>}
-                                  </Box>
-
-                                  {
-                                    true ?
-                                      <Box flex={1} alignItems='flex-end'>
-                                        <Pressable onPress={() => navigation.navigate(NavigationString.ViewHomeContest, { flexible: true ? 'Yes' : 'No', cardFrom: cardFrom, contestId: item?._id, slotId: item?.timeSlots?._id, isUserJoinContest: item?.isUserJoinContest })} height={moderateScale(32)} width={moderateScale(75)} backgroundColor={colors.greenText} alignItems="center" justifyContent="center" borderRadius={moderateScale(8)}>
-                                          <Text fontFamily={'$robotoMedium'} fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1} textAlign="center">{'\u20B9'} {formatAmount(Number(item?.entryAmount))}</Text>
-                                        </Pressable>
+                                    <Box alignItems="flex-end" flex={0.6} >
+                                      <Box flexDirection="row" alignItems="center" gap={moderateScale(10)}>
+                                        <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} >Entry</Text>
+                                        {(cardFrom === 'live' || cardFrom === 'wining') && <Icon as={CheckCircleIcon} w="$3" h="$3" color={colors.greenText} />}
                                       </Box>
-                                      :
-                                      <Box flex={0.6} alignItems='flex-end'>
-                                        <Pressable flexDirection="row" alignItems="center" justifyContent="center" w={moderateScale(75)} h={moderateScale(32)} bgColor={colors.greenText} borderRadius={moderateScale(5)} gap={moderateScale(4)}>
-                                          <Image alt='icon' source={imgIcon.bCoin} w={moderateScale(14)} h={moderateScale(14)} resizeMode='contain' />
-                                          <Text fontFamily={'$robotoMedium'} fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1}>20</Text>
-                                        </Pressable>
-                                      </Box>
-                                  }
-                                </Box>
-
-                                <Slider disabled={true} minimumValue={0} maximumValue={item?.slots} maximumTrackTintColor={'#fdebeb'} minimumTrackTintColor={colors.gold} maximumTrackStyle={{ height: moderateScale(6) }}
-                                  minimumTrackStyle={{ height: moderateScale(6) }} thumbTintColor="transparent" value={item?.slotsContestFillInfo} onValueChange={(value) => { }}
-                                  containerStyle={{ height: moderateScale(12), marginHorizontal: moderateScale(10) }}
-                                />
-
-                                <Box flexDirection="row" alignItems="center" justifyContent='space-between' px={10}>
-                                  <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>
-                                    {(() => {
-                                      const totalSlots = item?.slots ?? 0; // Default to 0 if undefined
-                                      const filledSlots = item?.slotsContestFillInfo ?? 0; // Default to 0 if undefined
-                                      const leftSlots = totalSlots - filledSlots; // Calculate left slots
-                                      return `${leftSlots > 0 ? leftSlots : 0} spots left`; // Ensure no negative values
-                                    })()}</Text>
-
-                                  <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} > {item?.slots == 'undefined' ? 0 : item?.slots}  spots</Text>
-                                </Box>
-                              </Pressable>
-                              <Box flexDirection="row" alignItems="center" justifyContent='space-between' backgroundColor={colors.black} px={10} py={15}>
-                                <Box flexDirection="row" alignItems="center" gap={10} backgroundColor='black'>
-                                  <Tooltip actionType='press' withOverlay={false} backgroundColor={colors.themeBlue} height={moderateScale(30)} popover={<Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1} >First Prize = {'\u20B9'}{formatAmount(item?.prizeDistribution[0]?.prizeAmount)}</Text>}>
-                                    <Box flexDirection="row" alignItems="center" gap={3}>
-                                      <Image alt="icon" source={imgIcon.prize1} w={moderateScale(15)} h={moderateScale(15)} resizeMode="contain" />
-                                      <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} >{'\u20B9'}{formatAmount(item?.rankDistribution[0]?.amount)}</Text>
                                     </Box>
-                                  </Tooltip>
-                                  <Tooltip actionType='press' withOverlay={false} backgroundColor={colors.themeBlue} height={moderateScale(30)} width={moderateScale(170)} popover={<Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1} >{item?.prizeDistributionPercentage} teams win the contest</Text>}>
-                                    <Box flexDirection="row" alignItems="center" gap={3}>
-                                      <MyMatch15Icon />
-                                      <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} >{item?.rankPercentage}%</Text>
-                                    </Box>
-                                  </Tooltip>
-                                  <Tooltip actionType='press' withOverlay={false} backgroundColor={colors.themeBlue} height={moderateScale(50)} width={moderateScale(170)} popover={<Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={2} >Max {item?.upto} entries per user in this contest</Text>}>
-                                    <Box flexDirection="row" alignItems="center" gap={3}>
-                                      {true ? <MLetterIcon /> : <SingleLetterIcon />}
-                                      <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} >Upto {item?.upto}</Text>
-                                    </Box>
-                                  </Tooltip>
-
-                                  <Tooltip actionType='press' withOverlay={false} backgroundColor={colors.themeBlue} height={moderateScale(35)} width={moderateScale(270)} popover={<Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={2} >You can use 4.3 cash bonus for every entry</Text>}>
-                                    <Box flexDirection="row" alignItems="center" gap={3}>
-                                      <Image alt="icon" source={imgIcon.bCoin} w={moderateScale(12)} h={moderateScale(12)} alignSelf='baseline' resizeMode="contain" />
-                                      <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} >Use {item?.entryAmount * (item?.bonusCashPercentage / 100)}</Text>
-                                    </Box>
-                                  </Tooltip>
-                                </Box>
-                                <Tooltip actionType='press' withOverlay={false} backgroundColor={colors.themeBlue} height={moderateScale(50)} width={moderateScale(270)} popover={<Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={2} >{true ? 'Take Place even if 2 spots fill, and the Prize Pool will depend on how many spots are filled.' : 'Guaranteed to take place regardless of spots filed.'}</Text>}>
-                                  <Box flexDirection="row" alignItems="center" gap={5}>
-                                    {true ? <RupeeCircleGreenIcon /> : <Icon as={CheckCircleIcon} w="$4" h="$4" color={colors.greenText} />}
-                                    <Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.dimGray} numberOfLines={1} >{true ? 'Flexible' : 'Guaranteed'}</Text>
                                   </Box>
-                                </Tooltip>
+
+                                  <Box flexDirection="row" alignItems="center" px={10}>
+                                    <Text fontFamily={'$robotoBold'} fontSize={20} lineHeight={22} color={colors.white} numberOfLines={1} flex={1} mt={5}>{'\u20B9'}{formatAmount(Number(item?.prizeDistributionAmount))} </Text>
+                                    <Box alignItems='center' flex={1} >
+
+                                      {cardFrom === 'live' && <>
+                                        <CardTimer endTime={item?.timeSlots?.endTime} color={colors.red} startTime={item?.timeSlots?.startTime} />
+                                      </>}
+
+                                      {cardFrom === 'upcoming' && <>
+                                        <Text fontFamily="$robotoMedium" fontSize={12} lineHeight={14} color={colors.dimGray} numberOfLines={2} textAlign="center">
+                                          {format(item?.timeSlots?.startTime, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd") ? <CardTimer endTime={item?.timeSlots?.startTime} color={colors.red} /> : format(item?.timeSlots?.startTime, "hh:mm a")}
+                                        </Text>
+                                        <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.dimGray} numberOfLines={2} textAlign="center">{format(item?.timeSlots?.startTime, "dd MMM yyyy")}</Text>
+                                      </>}
+
+                                      {cardFrom === 'wining' && <>
+                                        <Text fontFamily={'$poppinsMedium'} fontSize={12} lineHeight={14} color={'#c20c0d'} numberOfLines={1} >{formatDate(item?.timeSlots?.endTime, "hh:mm a")}</Text>
+                                        <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.dimGray} numberOfLines={2} textAlign="center">{format(item?.timeSlots?.endTime, "dd MMM yyyy")}</Text>
+                                      </>}
+                                    </Box>
+
+                                    {
+                                      true ?
+                                        <Box flex={1} alignItems='flex-end'>
+                                          <Pressable onPress={() => navigation.navigate(NavigationString.ViewHomeContest, { flexible: true ? 'Yes' : 'No', cardFrom: cardFrom, contestId: item?._id, slotId: item?.timeSlots?._id, isUserJoinContest: item?.isUserJoinContest })} height={moderateScale(32)} width={moderateScale(75)} backgroundColor={colors.greenText} alignItems="center" justifyContent="center" borderRadius={moderateScale(8)}>
+                                            <Text fontFamily={'$robotoMedium'} fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1} textAlign="center">{'\u20B9'} {formatAmount(Number(item?.entryAmount))}</Text>
+                                          </Pressable>
+                                        </Box>
+                                        :
+                                        <Box flex={0.6} alignItems='flex-end'>
+                                          <Pressable flexDirection="row" alignItems="center" justifyContent="center" w={moderateScale(75)} h={moderateScale(32)} bgColor={colors.greenText} borderRadius={moderateScale(5)} gap={moderateScale(4)}>
+                                            <Image alt='icon' source={imgIcon.bCoin} w={moderateScale(14)} h={moderateScale(14)} resizeMode='contain' />
+                                            <Text fontFamily={'$robotoMedium'} fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1}>20</Text>
+                                          </Pressable>
+                                        </Box>
+                                    }
+                                  </Box>
+
+                                  <Slider disabled={true} minimumValue={0} maximumValue={item?.slots} maximumTrackTintColor={'#fdebeb'} minimumTrackTintColor={colors.gold} maximumTrackStyle={{ height: moderateScale(6) }}
+                                    minimumTrackStyle={{ height: moderateScale(6) }} thumbTintColor="transparent" value={item?.slotsContestFillInfo} onValueChange={(value) => { }}
+                                    containerStyle={{ height: moderateScale(12), marginHorizontal: moderateScale(10) }}
+                                  />
+
+                                  <Box flexDirection="row" alignItems="center" justifyContent='space-between' px={10}>
+                                    <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>
+                                      {(() => {
+                                        const totalSlots = item?.slots ?? 0; // Default to 0 if undefined
+                                        const filledSlots = item?.slotsContestFillInfo ?? 0; // Default to 0 if undefined
+                                        const leftSlots = totalSlots - filledSlots; // Calculate left slots
+                                        return `${leftSlots > 0 ? leftSlots : 0} spots left`; // Ensure no negative values
+                                      })()}</Text>
+
+                                    <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} > {item?.slots == 'undefined' ? 0 : item?.slots}  spots</Text>
+                                  </Box>
+                                </Pressable>
+                                <Box flexDirection="row" alignItems="center" justifyContent='space-between' backgroundColor={colors.black} px={10} py={15}>
+                                  <Box flexDirection="row" alignItems="center" gap={10} backgroundColor='black'>
+                                    <Tooltip actionType='press' withOverlay={false} backgroundColor={colors.themeBlue} height={moderateScale(30)} popover={<Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1} >First Prize = {'\u20B9'}{formatAmount(item?.prizeDistribution[0]?.prizeAmount)}</Text>}>
+                                      <Box flexDirection="row" alignItems="center" gap={3}>
+                                        <Image alt="icon" source={imgIcon.prize1} w={moderateScale(15)} h={moderateScale(15)} resizeMode="contain" />
+                                        <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} >{'\u20B9'}{formatAmount(item?.rankDistribution[0]?.amount)}</Text>
+                                      </Box>
+                                    </Tooltip>
+                                    <Tooltip actionType='press' withOverlay={false} backgroundColor={colors.themeBlue} height={moderateScale(30)} width={moderateScale(170)} popover={<Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1} >{item?.rankPercentage}% Bids win the contest</Text>}>
+                                      <Box flexDirection="row" alignItems="center" gap={3}>
+                                        <MyMatch15Icon />
+                                        <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} >{item?.rankPercentage}%</Text>
+                                      </Box>
+                                    </Tooltip>
+                                    <Tooltip actionType='press' withOverlay={false} backgroundColor={colors.themeBlue} height={moderateScale(50)} width={moderateScale(170)} popover={<Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={2} >Max {item?.upto} entries per user in this contest</Text>}>
+                                      <Box flexDirection="row" alignItems="center" gap={3}>
+                                        {true ? <MLetterIcon /> : <SingleLetterIcon />}
+                                        <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} >Upto {item?.upto}</Text>
+                                      </Box>
+                                    </Tooltip>
+
+                                    {item?.entryAmount * (item?.bonusCashPercentage / 100) == 0 ? <View /> :
+                                      (
+                                        <Tooltip actionType='press' withOverlay={false} backgroundColor={colors.themeBlue} height={moderateScale(35)} width={moderateScale(270)} popover={<Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={2} >You can use {item?.entryAmount * (item?.bonusCashPercentage / 100)} cash bonus for every entry</Text>}>
+                                          <Box flexDirection="row" alignItems="center" gap={3}>
+                                            <Image alt="icon" source={imgIcon.bCoin} w={moderateScale(12)} h={moderateScale(12)} alignSelf='baseline' resizeMode="contain" />
+                                            <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} >Use {item?.entryAmount * (item?.bonusCashPercentage / 100)}</Text>
+                                          </Box>
+                                        </Tooltip>
+                                      )}
+                                  </Box>
+                                  <Tooltip actionType='press' withOverlay={false} backgroundColor={colors.themeBlue} height={moderateScale(50)} width={moderateScale(270)} popover={<Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={2} >{true ? 'The contest starts even if only 2 spots are filled. Prize pool scales with total entries.' : 'Guaranteed to take place regardless of spots filed.'}</Text>}>
+                                    <Box flexDirection="row" alignItems="center" gap={5}>
+                                      {true ? <RupeeCircleGreenIcon /> : <Icon as={CheckCircleIcon} w="$4" h="$4" color={colors.greenText} />}
+                                      <Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.dimGray} numberOfLines={1} >{true ? 'Flexible' : 'Guaranteed'}</Text>
+                                    </Box>
+                                  </Tooltip>
+                                </Box>
+
+
                               </Box>
-
-
                             </Box>
-                          </Box>
-                        )
-                      })
+                          )
+                        })
                       }
-                  </>):(<>
-                  <Text style={{color:colors.gold,textAlign:"center" ,marginTop:200}}>NO Contest Found</Text>
-                  </>)}
+                    </>) : (<>
+                      <Text style={{ color: colors.gold, textAlign: "center", marginTop: 200 }}>NO Contest Found</Text>
+                    </>)}
 
                   </Box>
                 </Box>
@@ -695,7 +689,7 @@ const HomeContestList = () => {
             }}
           />
         </Box>
-        
+
         <Modal animationType='slide' transparent={true} visible={unfavorite} onRequestClose={() => setUnfavorite(false)}>
           <Box flex={1} backgroundColor='rgba(0, 0, 0, 0.5)' alignItems='center' justifyContent='center'>
             <Box backgroundColor={colors.white} borderRadius={10} w={'90%'} gap={15} py={20}  >

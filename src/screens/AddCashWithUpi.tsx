@@ -150,8 +150,10 @@ const AddCash = () => {
 
   const handleAddWalletAmount = async (addAmount: number, type: string, typeBonus: number) => {
 
-    const userDetails: any = await AsyncStorage.getItem("userInfo");
+    // const userDetails: any = await AsyncStorage.getItem("userInfo");
+    const storedUserDetails = await AsyncStorage.getItem("userInfo");
     // console.log(" ===================== handleAddWalletAmount ============================== ");
+    const userDetails = storedUserDetails ? JSON.parse(storedUserDetails) : null;
 
     const minimumAmount = Number(offersSettingsData?.data?.data?.minimumWaletRecharge || "");
     const isInvalidAmount = !addAmount || Number(addAmount) < minimumAmount;
@@ -187,6 +189,14 @@ const AddCash = () => {
 
       // Generate unique order ID
       const orderId = `ORD${Date.now()}${Math.floor(1000 + Math.random() * 9000)}`;
+      // console.log("userDetails: ", userDetails)
+      // console.log("name: ", typeof userDetails?.name)
+
+      let convertedMobile = String(userDetails?.mobileNumber)
+      // console.log("convertedMobile: ", typeof convertedMobile);
+
+
+      // console.log("String(userDetails?.mobileNumber): ", String(userDetails?.mobileNumber));
 
 
       // Create order in backend
@@ -194,17 +204,17 @@ const AddCash = () => {
         amount: addAmount,
         type: "Wallet Recharge",
       });
-
+      //https://realtime.wonbybid.com
       const data = await axios.post(`https://api.ekqr.in/api/create_order`,
         {
           "key": "06718f0b-8d2a-42c5-a753-15f4471a5a3c",
           "client_txn_id": String(orderResponse.data.data.order_id),
           "amount": String(addAmount),
           "p_info": "Product Name",
-          "customer_name": String(userDetails?.name),
-          "customer_mobile": "6201342801",
+          "customer_name": userDetails?.name || "Jon Doe",
+          "customer_mobile": convertedMobile,
           "customer_email": "jondoe@gmail.com",
-          "redirect_url": `https://wonbybid.netlify.app?amount=${String(addAmount)}&bonus=${String(bonuseAmount)}&bonusCashExpireDate=${String(walletInfoData?.data?.bonusCashInfo?.expiringBonusAmount.expireBonusAmountDate)}`,
+          "redirect_url": `https://redirect.wonbybid.com?amount=${String(addAmount)}&bonus=${String(bonuseAmount)}&bonusCashExpireDate=${String(walletInfoData?.data?.bonusCashInfo?.expiringBonusAmount.expireBonusAmountDate)}`,
           "udf1": "user defined field 1 (max 25 char)",
           "udf2": "user defined field 2 (max 25 char)",
           "udf3": "user defined field 3 (max 25 char)"

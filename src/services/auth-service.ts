@@ -16,7 +16,9 @@ class AuthService {
     getAccountOverView: 'getAccountOverView',
     generateOrder: 'generateOrder',
     waletSetting: 'waletSetting',
-    getWithdrawalBalance:'getWithdrawalBalance'
+    getWithdrawalBalance: 'getWithdrawalBalance',
+    getPaymentGetway: 'getPaymentGetway',
+    getPaymentGuid: 'getPaymentGuid',
   };
 
   userLogin = async (data: { mobileNumber: string | undefined, number?: number }): Promise<AxiosResponse<GET_USER_LOGIN>> => {
@@ -27,7 +29,7 @@ class AuthService {
     });
   }
 
-  otpVerifing = async (data: { mobile: string, otp: number, fcmToken: string,sessionId:any }): Promise<AxiosResponse<GET_VERFIED_OTP>> => {
+  otpVerifing = async (data: { mobile: string, otp: number, fcmToken: string, sessionId: any }): Promise<AxiosResponse<GET_VERFIED_OTP>> => {
     return fetcher({
       url: '/otp/verify-otp',
       method: 'POST',
@@ -96,6 +98,19 @@ class AuthService {
   getAccountOverView = async () => {
     return fetcher({
       url: '/wallet/walet-dashbord',
+      method: 'GET',
+    });
+  }
+
+  getPaymentGetway = async () => {
+    return fetcher({
+      url: '/payment/getway/getAll',
+      method: 'GET',
+    });
+  }
+  getPaymentGuid = async () => {
+    return fetcher({
+      url: '/payment/guid',
       method: 'GET',
     });
   }

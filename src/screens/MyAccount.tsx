@@ -1,5 +1,5 @@
-import {useCallback, useState} from 'react';
-import {TouchableOpacity} from 'react-native';
+import { useCallback, useState } from 'react';
+import { TouchableOpacity } from 'react-native';
 import {
   AccordionIcon,
   Box,
@@ -16,17 +16,17 @@ import {
   useFocusEffect,
   useNavigation,
 } from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-import {Container} from '../components/Container';
-import {AppBar} from '../components/AppBar';
-import {colors} from '../constants/colors';
+import { Container } from '../components/Container';
+import { AppBar } from '../components/AppBar';
+import { colors } from '../constants/colors';
 import Body from '../components/Body/Body';
-import {InfoCircleIcon, UserCircleIcon, UserIcon} from '../components/Icons';
-import {moderateScale, moderateScaleVertical} from '../utils/responsiveSize';
-import {NavigationString} from '../navigation/navigationStrings';
+import { InfoCircleIcon, UserCircleIcon, UserIcon } from '../components/Icons';
+import { moderateScale, moderateScaleVertical } from '../utils/responsiveSize';
+import { NavigationString } from '../navigation/navigationStrings';
 import useKycDetails from '../hooks/home/get-kyc-details';
-import {safeMaskString} from '../utils/helper';
+import { safeMaskString } from '../utils/helper';
 import Loader from '../components/Loader';
 
 const MyAccount = () => {
@@ -34,7 +34,7 @@ const MyAccount = () => {
   // init
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
 
-  const {data: result, isLoading, refetch} = useKycDetails();
+  const { data: result, isLoading, refetch } = useKycDetails();
 
   console.log('data: ', result?.data?.profileDetails);
   // console.log("result?.data?.data?.user?.accountNumber: ", result?.data?.data?.user?.accountNumber);
@@ -75,172 +75,47 @@ const MyAccount = () => {
       <AppBar back title="My Account" />
 
       <Body>
-        <TouchableOpacity
-          activeOpacity={0.6}
-          onPress={() => navigation.navigate(NavigationString.AccountOverView)}>
-          <Box
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-            px={7}
-            py={15}
-            borderBottomWidth={1}
-            mx={8}
-            borderBottomColor={colors.gray5}>
-            <Box
-              flexDirection="row"
-              alignItems="center"
-              gap={moderateScale(25)}>
+        <TouchableOpacity activeOpacity={0.6} onPress={() => navigation.navigate(NavigationString.AccountOverView)}>
+          <Box flexDirection="row" alignItems="center" justifyContent="space-between" px={7} py={15} borderBottomWidth={1} mx={8} borderBottomColor={colors.gray5}>
+            <Box flexDirection="row" alignItems="center" gap={moderateScale(25)}>
               <UserIcon />
-              <Text
-                fontFamily={'$robotoRegular'}
-                fontSize={14}
-                lineHeight={16}
-                color={colors.white}
-                numberOfLines={1}>
-                Account Overview
-              </Text>
+              <Text fontFamily={'$robotoRegular'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>Account Overview</Text>
             </Box>
-            <AccordionIcon
-              as={ChevronRightIcon}
-              color={colors.grayish}
-              size="lg"
-            />
+            <AccordionIcon as={ChevronRightIcon} color={colors.grayish} size="lg" />
           </Box>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => setShowProfile(!showProfile)}
-          activeOpacity={0.6}>
-          <Box
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-            px={7}
-            py={15}
-            borderBottomWidth={1}
-            mx={8}
-            borderBottomColor={colors.gray5}>
-            <Box
-              flexDirection="row"
-              alignItems="center"
-              gap={moderateScale(25)}>
-              <UserIcon />
-              <Text
-                fontFamily={'$robotoRegular'}
-                fontSize={14}
-                lineHeight={16}
-                color={colors.white}
-                numberOfLines={1}>
-                Profile
-              </Text>
+        <TouchableOpacity onPress={() => setShowProfile(!showProfile)} activeOpacity={0.6}>
+          <Box flexDirection="row" alignItems="center" justifyContent="space-between" px={7} py={15} borderBottomWidth={1} mx={8} borderBottomColor={colors.gray5}>
+            <Box flexDirection="row" alignItems="center" gap={moderateScale(25)}><UserIcon />
+              <Text fontFamily={'$robotoRegular'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>Profile              </Text>
             </Box>
-            <AccordionIcon
-              as={showProfile ? ChevronDownIcon : ChevronRightIcon}
-              color={colors.grayish}
-              size="lg"
-            />
+            <AccordionIcon as={showProfile ? ChevronDownIcon : ChevronRightIcon} color={colors.grayish} size="lg" />
           </Box>
         </TouchableOpacity>
 
-        <Box
-          display={showProfile ? 'flex' : 'none'}
-          bgColor={colors.gray5}
-          backgroundColor={colors.black}
-          px={moderateScale(15)}
-          py={moderateScaleVertical(10)}
-          gap={15}>
+        <Box display={showProfile ? 'flex' : 'none'} bgColor={colors.gray5} backgroundColor={colors.black} px={moderateScale(15)} py={moderateScaleVertical(10)} gap={15}>
           <Box flexDirection="row" alignItems="center" gap={moderateScale(5)}>
             <UserCircleIcon />
-            <Text
-              fontFamily={'$robotoMedium'}
-              fontSize={16}
-              lineHeight={18}
-              color={colors.white}
-              numberOfLines={1}>
-              Account Details
-            </Text>
+            <Text fontFamily={'$robotoMedium'} fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1}>Account Details</Text>
           </Box>
 
-          <Box
-            borderWidth={2}
-            borderColor={
-                result?.data?.verificationData?.mobileVarification?.varification === 'Approve'
-                  ? colors.greenText
-                  : result?.data?.verificationData?.mobileVarification?.varification !==
-                    'Reject'
-                  ? colors.orange
-                  : colors.red
-              }
-            justifyContent="center"
-            bgColor={colors.black2}
-            h={moderateScale(65)}
-            borderRadius={moderateScale(10)}
-            overflow="hidden">
-            <Box
-              bgColor={
-                result?.data?.verificationData?.mobileVarification?.varification === 'Approve'
-                  ? colors.greenText
-                  : result?.data?.verificationData?.mobileVarification?.varification !==
-                    'Reject'
-                  ? colors.orange
-                  : colors.red
-              }
-              position="absolute"
-              right={0}
-              px={moderateScale(10)}
-              py={moderateScaleVertical(4)}
-              borderBottomLeftRadius={moderateScale(10)}
-              top={0}>
-                 {result?.data?.verificationData?.mobileVarification?.varification ===
+          <Box borderWidth={2} borderColor={result?.data?.verificationData?.mobileVarification?.varification === 'Approve' ? colors.greenText : result?.data?.verificationData?.mobileVarification?.varification !== 'Reject' ? colors.orange : colors.red} justifyContent="center" bgColor={colors.black2} h={moderateScale(65)} borderRadius={moderateScale(10)} overflow="hidden">
+            <Box bgColor={result?.data?.verificationData?.mobileVarification?.varification === 'Approve' ? colors.greenText : result?.data?.verificationData?.mobileVarification?.varification !== 'Reject' ? colors.orange : colors.red} position="absolute" right={0} px={moderateScale(10)} py={moderateScaleVertical(4)} borderBottomLeftRadius={moderateScale(10)} top={0}>
+              {result?.data?.verificationData?.mobileVarification?.varification ===
                 'Approve' ? (
-                  <Text
-                    fontFamily={'$robotoMedium'}
-                    fontSize={12}
-                    lineHeight={14}
-                    color={colors.white}
-                    numberOfLines={1}>
-                    VERIFIED
-                  </Text>
-                ) : result?.data?.verificationData?.mobileVarification?.varification !==
-                  'Reject' ? (
-                  <Text
-                    fontFamily={'$robotoMedium'}
-                    fontSize={12}
-                    lineHeight={14}
-                    color={colors.white}
-                    numberOfLines={1}>
-                    PENDING
-                  </Text>
-                ) : (
-                  <Text
-                    fontFamily={'$robotoMedium'}
-                    fontSize={12}
-                    lineHeight={14}
-                    color={colors.white}
-                    numberOfLines={1}>
-                    REJECT
-                  </Text>
-                )}
+                <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>VERIFIED</Text>
+              ) : result?.data?.verificationData?.mobileVarification?.varification !==
+                'Reject' ? (
+                <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>PENDING</Text>
+              ) : (
+                <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>REJECT</Text>
+              )}
             </Box>
 
             <Box ml={moderateScale(15)} w={moderateScale(240)} gap={6}>
-              <Text
-                fontFamily={'$robotoMedium'}
-                fontSize={14}
-                lineHeight={16}
-                color={colors.white}
-                numberOfLines={1}>
-                Mobile
-              </Text>
-              <Text
-                fontFamily={'$robotoRegular'}
-                fontSize={14}
-                lineHeight={16}
-                color={colors.white}
-                numberOfLines={1}>
-                +91 {result?.data?.verificationData?.mobileVarification?.mobileNo ?? 'N/A'}
-              </Text>
+              <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>Mobile</Text>
+              <Text fontFamily={'$robotoRegular'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>+91 {result?.data?.verificationData?.mobileVarification?.mobileNo ?? 'N/A'}</Text>
             </Box>
           </Box>
 
@@ -254,152 +129,35 @@ const MyAccount = () => {
             </Pressable>
           </Box> */}
 
-          <Pressable
-            onPress={() =>
-              navigation.navigate(NavigationString.KYCVerification, {
-                document: result?.data?.data,
-              })
-            }>
-            <Box
-              borderWidth={2}
-              borderColor={
-                result?.data?.verificationData?.kycVarification?.varification === 'Approve'
-                  ? colors.greenText
-                  : result?.data?.verificationData?.kycVarification?.varification !==
-                    'Reject'
-                  ? colors.orange
-                  : colors.red
-              }
-              flexDirection="row"
-              alignItems="center"
-              bgColor={colors.black2}
-              h={moderateScale(65)}
-              borderRadius={moderateScale(10)}
-              overflow="hidden">
-              <Box
-                bgColor={
-                result?.data?.verificationData?.kycVarification?.varification === 'Approve'
-                  ? colors.greenText
-                  : result?.data?.verificationData?.kycVarification?.varification !==
-                    'Reject'
-                  ? colors.orange
-                  : colors.red
-              }
-                position="absolute"
-                right={0}
-                px={moderateScale(10)}
-                py={moderateScaleVertical(4)}
-                borderBottomLeftRadius={moderateScale(10)}
-                top={0}>
-                {result?.data?.verificationData?.kycVarification?.varification ===
-                'Approve' ? (
-                  <Text
-                    fontFamily={'$robotoMedium'}
-                    fontSize={12}
-                    lineHeight={14}
-                    color={colors.white}
-                    numberOfLines={1}>
-                    VERIFIED
-                  </Text>
+          <Pressable onPress={() => navigation.navigate(NavigationString.KYCVerification, { document: result?.data?.data, })}>
+            <Box borderWidth={2} borderColor={result?.data?.verificationData?.kycVarification?.varification === 'Approve' ? colors.greenText : result?.data?.verificationData?.kycVarification?.varification !== 'Reject' ? colors.orange : colors.red} flexDirection="row" alignItems="center" bgColor={colors.black2} h={moderateScale(65)} borderRadius={moderateScale(10)} overflow="hidden">
+              <Box bgColor={result?.data?.verificationData?.kycVarification?.varification === 'Approve' ? colors.greenText : result?.data?.verificationData?.kycVarification?.varification !== 'Reject' ? colors.orange : colors.red} position="absolute" right={0} px={moderateScale(10)} py={moderateScaleVertical(4)} borderBottomLeftRadius={moderateScale(10)} top={0}>
+                {result?.data?.verificationData?.kycVarification?.varification === 'Approve' ? (
+                  <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>VERIFIED</Text>
                 ) : result?.data?.verificationData?.kycVarification?.varification !==
                   'Reject' ? (
-                  <Text
-                    fontFamily={'$robotoMedium'}
-                    fontSize={12}
-                    lineHeight={14}
-                    color={colors.white}
-                    numberOfLines={1}>
-                    PENDING
-                  </Text>
+                  <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>PENDING</Text>
                 ) : (
-                  <Text
-                    fontFamily={'$robotoMedium'}
-                    fontSize={12}
-                    lineHeight={14}
-                    color={colors.white}
-                    numberOfLines={1}>
-                    REJECT
-                  </Text>
+                  <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>REJECT</Text>
                 )}
               </Box>
 
               <Box ml={moderateScale(15)} w={moderateScale(220)} gap={6}>
-                <Text
-                  fontFamily={'$robotoMedium'}
-                  fontSize={14}
-                  lineHeight={16}
-                  color={colors.white}
-                  numberOfLines={1}>
-                  KYC Verification
-                </Text>
+                <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>KYC Verification</Text>
                 {/* <Text fontFamily={'$robotoRegular'} fontSize={14} lineHeight={16} color={colors.black} numberOfLines={1} >Documents : Pan, {maskString(result?.data?.data?.aadharNumber)} </Text> */}
-                <Text
-                  fontFamily={'$robotoRegular'}
-                  fontSize={14}
-                  lineHeight={16}
-                  color={colors.white}
-                  numberOfLines={1}>
-                  Documents: Pan,{' '}
-                  {
-                    result?.data?.verificationData?.kycVarification
-                      ?.pancardNumber
-                  }
-                  , Aadhaar,{' '}
-                  {
-                    result?.data?.verificationData?.kycVarification
-                      ?.aadharNumber
-                  }{' '}
+                <Text fontFamily={'$robotoRegular'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>
+                  Documents: Pan,{' '}{result?.data?.verificationData?.kycVarification?.pancardNumber}, Aadhaar,{' '}{result?.data?.verificationData?.kycVarification?.aadharNumber}{' '}
                 </Text>
               </Box>
             </Box>
           </Pressable>
 
-          <Pressable
-            onPress={() =>
-              navigation.navigate(NavigationString.BankVerification)
-            }>
-            <Box
-              borderWidth={2}
-              borderColor={
-                result?.data?.verificationData?.bank?.varification === 'Approve'
-                  ? colors.greenText
-                  : result?.data?.verificationData?.bank?.varification !==
-                    'Reject'
-                  ? colors.orange
-                  : colors.red
-              }
-              flexDirection="row"
-              alignItems="center"
-              bgColor={colors.black2}
-              h={moderateScale(65)}
-              borderRadius={moderateScale(10)}
-              overflow="hidden">
-              <Box
-                bgColor={
-                  result?.data?.verificationData?.bank?.varification ===
-                  'Approve'
-                    ? colors.greenText
-                    : result?.data?.verificationData?.bank?.varification !==
-                      'Reject'
-                    ? colors.orange
-                    : colors.red
-                }
-                position="absolute"
-                right={0}
-                px={moderateScale(10)}
-                py={moderateScaleVertical(4)}
-                borderBottomLeftRadius={moderateScale(10)}
-                top={0}>
+          <Pressable onPress={() => navigation.navigate(NavigationString.BankVerification)}>
+            <Box borderWidth={2} borderColor={result?.data?.verificationData?.bank?.varification === 'Approve' ? colors.greenText : result?.data?.verificationData?.bank?.varification !== 'Reject' ? colors.orange : colors.red} flexDirection="row" alignItems="center" bgColor={colors.black2} h={moderateScale(65)} borderRadius={moderateScale(10)} overflow="hidden">
+              <Box bgColor={result?.data?.verificationData?.bank?.varification === 'Approve' ? colors.greenText : result?.data?.verificationData?.bank?.varification !== 'Reject' ? colors.orange : colors.red} position="absolute" right={0} px={moderateScale(10)} py={moderateScaleVertical(4)} borderBottomLeftRadius={moderateScale(10)} top={0}>
                 {result?.data?.verificationData?.bank?.varification ===
-                'Approve' ? (
-                  <Text
-                    fontFamily={'$robotoMedium'}
-                    fontSize={12}
-                    lineHeight={14}
-                    color={colors.white}
-                    numberOfLines={1}>
-                    VERIFIED
-                  </Text>
+                  'Approve' ? (
+                  <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>VERIFIED</Text>
                 ) : result?.data?.verificationData?.bank?.varification !==
                   'Reject' ? (
                   <Text
@@ -448,13 +206,13 @@ const MyAccount = () => {
           <Box
             borderWidth={2}
             borderColor={
-                result?.data?.verificationData?.emailVarification?.varification === 'Approve'
-                  ? colors.greenText
-                  : result?.data?.verificationData?.emailVarification?.varification !==
-                    'Reject'
+              result?.data?.verificationData?.emailVarification?.varification === 'Approve'
+                ? colors.greenText
+                : result?.data?.verificationData?.emailVarification?.varification !==
+                  'Reject'
                   ? colors.orange
                   : colors.red
-              }
+            }
             flexDirection="row"
             alignItems="center"
             bgColor={colors.black2}
@@ -467,8 +225,8 @@ const MyAccount = () => {
                   ? colors.greenText
                   : result?.data?.verificationData?.emailVarification?.varification !==
                     'Reject'
-                  ? colors.orange
-                  : colors.red
+                    ? colors.orange
+                    : colors.red
               }
               position="absolute"
               right={0}
@@ -618,7 +376,7 @@ const MyAccount = () => {
                   numberOfLines={1}
                   flex={1}>
                   {'    '}
-                   : { result?.data?.profileDetails?.pinCode}
+                  : {result?.data?.profileDetails?.pinCode}
                 </Text>
                 <Pressable
                   hitSlop={15}
