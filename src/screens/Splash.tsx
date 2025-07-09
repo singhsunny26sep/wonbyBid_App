@@ -35,37 +35,48 @@ const Splash = () => {
   }, [])
 
   async function authLoad() {
-    // console.log('APP aload splash',)
-    // AsyncStorage.clear()
-    let authData = authContext?.authState
-    let userData = authContext?.userInfo
-    const authStateString: any = await AsyncStorage.getItem('authState');
-    const userInfo: any = await AsyncStorage.getItem('userInfo');
-    const authSaveDataJson = JSON.parse(authStateString)
-    const userInfoData = JSON.parse(userInfo)
-    if (authSaveDataJson) {
-      loginstatus = true
-      await authContext.setAuthState({
-        accessToken: authSaveDataJson?.token,
-        refreshToken: authSaveDataJson?.token,
-        expirationTime: Date.now(),
-        userId: authSaveDataJson?.data?._id,
-        authenticated: true,
-      });
-      await authContext.setUserInfo({
-        userUniqueId: null,
-        userId: userInfoData?._id,
-        userName: userInfoData?.name,
-        userMobile: userInfoData?.mobile,
-        useEmail: userInfoData?.email,
-        profile: userInfoData?.profile,
-      })
-      checkPermission()
-      socketServices.initialzeSocket(authSaveDataJson?.data?._id)
-      navigation?.navigate(NavigationString.BottomTabBar)
+
+    const isFirst = await AsyncStorage.getItem('hasSeenIntro')
+    console.log("isFirst: ", isFirst);
+    // navigation.navigate(NavigationString.IntroVideoScreen)
+    if (isFirst) {
+
+
+      // console.log('APP aload splash',)
+      // AsyncStorage.clear()
+      let authData = authContext?.authState
+      let userData = authContext?.userInfo
+      const authStateString: any = await AsyncStorage.getItem('authState');
+      const userInfo: any = await AsyncStorage.getItem('userInfo');
+      const authSaveDataJson = JSON.parse(authStateString)
+      const userInfoData = JSON.parse(userInfo)
+      if (authSaveDataJson) {
+        loginstatus = true
+        await authContext.setAuthState({
+          accessToken: authSaveDataJson?.token,
+          refreshToken: authSaveDataJson?.token,
+          expirationTime: Date.now(),
+          userId: authSaveDataJson?.data?._id,
+          authenticated: true,
+        });
+        await authContext.setUserInfo({
+          userUniqueId: null,
+          userId: userInfoData?._id,
+          userName: userInfoData?.name,
+          userMobile: userInfoData?.mobile,
+          useEmail: userInfoData?.email,
+          profile: userInfoData?.profile,
+        })
+        checkPermission()
+        socketServices.initialzeSocket(authSaveDataJson?.data?._id)
+        navigation?.navigate(NavigationString.BottomTabBar)
+      } else {
+        console.log('No tokeninfo from memoery')
+        navigation.navigate(NavigationString.Login)
+      }
     } else {
-      console.log('No tokeninfo from memoery')
-      navigation.navigate(NavigationString.Login)
+      navigation.navigate(NavigationString.IntroVideoScreen)
+      await AsyncStorage.setItem("isFirst", "true")
     }
   }
   const checkPermission = async () => {

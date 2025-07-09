@@ -22,10 +22,10 @@ export const shadowStyle = {
   },
 }
 
+
 /* export function formatAmount(amount: number) {
   const crore = 10000000;
   const lakh = 100000;
-
   if (amount >= crore) {
     return `${(amount / crore).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })} Cr`;
   } else if (amount >= lakh) {
@@ -36,6 +36,8 @@ export const shadowStyle = {
     return amount?.toString(); // return as-is for amounts less than 1000
   }
 } */
+
+
 export function formatAmount(amount: number): string {
   const crore = 10000000;
   const lakh = 100000;

@@ -1,14 +1,3 @@
-import About from "../screens/About";
-import Chat from "../screens/Chat";
-import Gst from "../screens/Gst";
-import HelpSupport from "../screens/HelpSupport";
-import HowToPlay from "../screens/HowToPlay";
-import Legality from "../screens/Legality";
-import PaymentScreen from "../screens/PaymentScreen";
-import ResponsiblePlay from "../screens/ResponsiblePlay";
-import ShareContests from "../screens/ShareContests";
-import Tds from "../screens/Tds";
-import TermsAndConditions from "../screens/TermOfServices";
 
 export const NavigationString = {
   Splash: 'Splash',
@@ -83,5 +72,6 @@ export const NavigationString = {
   SucessScreen: "SucessScreen",
   ShareContests: "ShareContests",
   CashFreeWebView: "CashFreeWebView",
-  PaymentScreen: "PaymentScreen"
+  PaymentScreen: "PaymentScreen",
+  IntroVideoScreen: "IntroVideoScreen",
 };  

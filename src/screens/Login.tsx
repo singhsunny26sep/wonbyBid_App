@@ -38,6 +38,7 @@ import {
   statusCodes,
 } from '@react-native-google-signin/google-signin';
 import { OtplessHeadlessModule } from 'otpless-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () => {
   const headlessModule = new OtplessHeadlessModule();
@@ -56,7 +57,7 @@ const Login = () => {
   const getFCMToken = async () => {
     let token = await messaging().getToken();
     setFcmToken(token);
-
+    // await AsyncStorage.removeItem("hasSeenIntro")
     // const playServicesAvailable = await GoogleSignin.hasPlayServices()
     // console.log("playServicesAvailable: ", playServicesAvailable);
   };

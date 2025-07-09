@@ -98,11 +98,7 @@ const MainNavigation = () => {
       <Stack.Screen name={NavigationString.ShareContests} component={StackRoute.ShareContests} />
       <Stack.Screen name={NavigationString.CashFreeWebView} component={StackRoute.CashFreeWebView} />
       <Stack.Screen name={NavigationString.PaymentScreen} component={StackRoute.PaymentScreen} />
-
-
-
-
-
+      <Stack.Screen name={NavigationString.IntroVideoScreen} component={StackRoute.IntroVideoScreen} />
 
 
 

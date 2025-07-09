@@ -73,6 +73,7 @@ import BottomTabStack from "./type/BottomTabStack";
 import DrawerStack from "./type/DrawerStack";
 import TopTabNavigation from "./type/TopTab";
 import PaymentScreen from "../screens/PaymentScreen";
+import IntroVideoScreen from "../screens/IntroVideoScreen";
 
 
 export const StackRoute = {
@@ -148,5 +149,6 @@ export const StackRoute = {
   SucessScreen,
   ShareContests,
   CashFreeWebView,
-  PaymentScreen
+  PaymentScreen,
+  IntroVideoScreen,
 }

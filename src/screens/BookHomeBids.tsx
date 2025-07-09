@@ -70,12 +70,13 @@ const BookHomeBids = () => {
       const contestInfoValue = data?.contestInfo;
       stedecimalRange(data?.decimalRange);
       setInsights(data?.lastThreeDayBidReview);
+      // console.log("current wining user: ", currentWinningUsers);
 
-      setWinningUser(prev => prev !== currentWinningUsers ? currentWinningUsers : prev,);
+      setWinningUser(prev => prev !== currentWinningUsers ? currentWinningUsers : prev);
       setRangeAmount(prev => (prev !== bidRange ? bidRange : prev));
-      setCurrentTimeSlot((prev: any) => prev !== currentTimeSlots ? currentTimeSlots : prev,);
+      setCurrentTimeSlot((prev: any) => prev !== currentTimeSlots ? currentTimeSlots : prev);
       setUpTo(prev => (prev !== uptoValue ? uptoValue : prev));
-      setContestInfo((prev: any) => prev !== contestInfoValue ? contestInfoValue : prev,);
+      setContestInfo((prev: any) => prev !== contestInfoValue ? contestInfoValue : prev);
       setIsLoading(false);
     };
 
@@ -147,6 +148,9 @@ const BookHomeBids = () => {
       </Box>
     );
   }
+
+  // console.log("winningUser: ", winningUser);
+
 
   const RightIcon = () => {
     return (

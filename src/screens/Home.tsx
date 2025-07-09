@@ -60,11 +60,7 @@ const Home = () => {
   // init
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
   const { authContext, userInfo }: any = useContext(AuthContext);
-  const {
-    data: walletInfoData,
-    isLoading,
-    isLoading: walletInfoIsLoading,
-  } = useGetUserWalletInfo();
+  const { data: walletInfoData, isLoading, isLoading: walletInfoIsLoading, } = useGetUserWalletInfo();
   const [load, setLoad] = useState<boolean>();
   // states
   const [selectedOption, setSelectedOption] = useState('live');
@@ -94,11 +90,12 @@ const Home = () => {
 
   useEffect(() => {
     socketServices.on('get-main-contest-data', (data: any) => {
+      // console.log(" ============================= useEffect ============================= ");
+      // console.log("data: ", data?.contest);
       setContests(prevContests => ({
         ...prevContests,
         ...data[0],
       }));
-      // console.log(prevContests,"$$$$$$$$$$$$$$")
     });
 
     socketServices.on('get-main-contest-banner', (data: any) => {

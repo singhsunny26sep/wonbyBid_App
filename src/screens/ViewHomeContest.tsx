@@ -65,7 +65,7 @@ const ViewHomeContest = () => {
     index === self.findIndex((obj) => obj?.userId?._id === item?.userId?._id)
   ); */
   // Step 1: Sort by latest biddingTime (descending)
-  const sorted = ranksArray.sort((a, b) => new Date(b.biddingTime) - new Date(a.biddingTime));
+  // const sorted = ranksArray.sort((a, b) => new Date(b.biddingTime) - new Date(a.biddingTime));
 
   // Step 2: Filter to keep only the latest entry per userId._id
   /* const uniqueData = sorted.filter((item, index, self) =>
@@ -74,6 +74,7 @@ const ViewHomeContest = () => {
 
   const filteredData = ranksArray.filter(item => item?.userId?._id === authContext?.userInfo?.userId);
 
+  // console.log("ranksArray: ", ranksArray);
 
   // const { data: checkAlreadyJoinData, isLoading: checkAlreadyJoinDataIsLoading } = useGetCheckAlreadyJoin({ contestId: contestId, timeslotId: slotId })
   const useJoinContestHomeMutation = useJoinContestHome()
@@ -84,6 +85,7 @@ const ViewHomeContest = () => {
       };
       fetchData();
 
+      setRanksArray([])
       return () => {
         // Cleanup logic (if needed)
       };
@@ -94,10 +96,9 @@ const ViewHomeContest = () => {
     // Define the handler function for the leaderboard
     const handleWinningLeaderBoard = (data: any) => {
       // console.log(" ================== handleWiningLeaderBoard ================== ");
-      // console.log("data?.slotHistory: ", data?.slotHistory);
+      // console.log("data?.slotHistory: ", data?.slotHistory?.userranks);
       // console.log("updated boolean: ", shouldBeTrue(data?.slotHistory?.updatedAt));
       setLeaderLoading(shouldBeTrue(data?.slotHistory?.updatedAt))
-      // console.log("data: ", data?.contest);
       setRanksArray(data?.slotHistory?.userranks);
       setSlotTimes(data?.contest?.timeSlots);
     };
@@ -123,18 +124,23 @@ const ViewHomeContest = () => {
       socketServices.removeListener("postWiningLeaderBord");
       setLoading(false);
     };
-  }, [contestId, selectedTime]);
+  }, [contestId, selectedTime, selectLeaderBoard]);
 
 
   useEffect(() => {
-    if (cardFrom == "wining") {
-      setSelectLeaderBoard("leaderboard")
-    }
     if (isDeclare) {
       setSelectLeaderBoard("leaderboard")
       setLeaderLoading(true)
+    } else if (cardFrom == "wining") {
+      setSelectLeaderBoard("leaderboard")
     }
   }, [isDeclare])
+
+  /* useEffect(() => {
+    if (cardFrom == "wining") {
+      setSelectLeaderBoard("leaderboard")
+    }
+  }, []) */
 
   function getRangeLength(rangeStr: string) {
     const [start, end] = rangeStr.split('-').map(Number);
@@ -434,7 +440,8 @@ const ViewHomeContest = () => {
             <Box w={"100%"} flexDirection='row' >
               <Box flex={2} flexDirection='row' alignItems='center' justifyContent='space-between' py={responsiveHeight(1.2)} px={moderateScale(15)}>
                 <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>BID Count : <Text color={colors.gold} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14}>{filteredData ? filteredData[0]?.totalBids : 0}</Text></Text>
-                <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>Total WON : <Text color={colors.gold} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14}>{'\u20B9'} {filteredData ? Number(filteredData[0]?.WinningAmount || 0) : 0}</Text></Text>
+                <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>Total WON : <Text color={colors.gold} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14}>{'\u20B9'} {filteredData?.reduce((sum: any, item: any) => sum + Number(item?.WinningAmount || 0), 0)}</Text></Text>
+                {/* <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>Total WON : <Text color={colors.gold} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14}>{'\u20B9'} {filteredData ? Number(filteredData[0]?.WinningAmount || 0) : 0}</Text></Text> */}
               </Box>
 
               <Box flex={1} flexDirection='row' alignItems='center' justifyContent='space-between' py={responsiveHeight(1.2)} px={moderateScale(15)}>
@@ -467,6 +474,21 @@ const ViewHomeContest = () => {
             <Box flexDirection="row" alignItems="center" py={12} height={moderateScale(200)} borderBottomWidth={3} borderBottomColor={colors.black}>
               <Text flex={1} textAlign="center" fontFamily={'$robotoBold'} fontSize={14} lineHeight={16} color={colors.gold} >“Every bid is being reviewed for a fair result — results coming up shortly ⏳!”</Text>
             </Box> : selectLeaderBoard === 'leaderboard' && (
+              showUser ? filteredData : ranksArray)
+              ?.sort((a: any, b: any) => a.rank - b.rank)
+              ?.map((item: any, index: number) => (
+                <Box key={index} flexDirection="row" alignItems="center" py={12} borderBottomWidth={3} borderBottomColor={colors.black}>
+                  <Text flex={1} textAlign="center" fontFamily={'$robotoBold'} fontSize={14} lineHeight={16} color={colors.gold} numberOfLines={1}>{item?.rank}</Text>
+                  <Text flex={2} textAlign="center" fontFamily={'$robotoRegular'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>{item?.userId?.name}</Text>
+                  <Text flex={2} textAlign="center" fontFamily={'$robotoMedium'} fontSize={14} lineHeight={16} color={colors.gold} numberOfLines={1}>{'\u20B9'} {Number(item?.WinningAmount)}</Text>
+                  <Text flex={2} textAlign="center" fontFamily={'$robotoRegular'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>{item?.bid}</Text>
+                </Box>
+              )
+              )}
+          {/* {leaderLoading ?
+            <Box flexDirection="row" alignItems="center" py={12} height={moderateScale(200)} borderBottomWidth={3} borderBottomColor={colors.black}>
+              <Text flex={1} textAlign="center" fontFamily={'$robotoBold'} fontSize={14} lineHeight={16} color={colors.gold} >“Every bid is being reviewed for a fair result — results coming up shortly ⏳!”</Text>
+            </Box> : selectLeaderBoard === 'leaderboard' && (
               showUser ? filteredData?.map((item: any, index: number) => (
                 <Box key={index} flexDirection="row" alignItems="center" py={12} borderBottomWidth={3} borderBottomColor={colors.black}>
                   <Text flex={1} textAlign="center" fontFamily={'$robotoBold'} fontSize={14} lineHeight={16} color={colors.gold} numberOfLines={1}>{item?.rank}</Text>
@@ -482,7 +504,7 @@ const ViewHomeContest = () => {
                   <Text flex={2} textAlign="center" fontFamily={'$robotoRegular'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>{item?.bid}</Text>
                 </Box>
               ))
-            )}
+            )} */}
         </Box>
         {/* {cardFrom === 'live' && selectedFill === 'current' && <>
           <Box mx={15} h={moderateScale(45)} px={5} py={5} justifyContent='center' alignItems='center' borderRadius={6} my={moderateScaleVertical(8)}>

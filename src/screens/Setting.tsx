@@ -241,7 +241,6 @@ const Setting = () => {
               <Box flexDirection='row' alignItems='center' gap={moderateScale(25)}>
                 {/* <ShareWhiteIcon color={colors.black} /> */}
                 <ShareNewIcons color={colors.white} />
-
                 <Text fontFamily={'$robotoRegular'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1} >Share & Earn</Text>
               </Box>
               <AccordionIcon as={ChevronRightIcon} color={colors.gold} size='lg' />
