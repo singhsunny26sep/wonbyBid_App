@@ -637,10 +637,10 @@ const HomeContestList = () => {
 
                                     {item?.entryAmount * (item?.bonusCashPercentage / 100) == 0 ? <View /> :
                                       (
-                                        <Tooltip actionType='press' withOverlay={false} backgroundColor={colors.themeBlue} height={moderateScale(35)} width={moderateScale(270)} popover={<Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={2} >You can use {item?.entryAmount * (item?.bonusCashPercentage / 100)} cash bonus for every entry</Text>}>
+                                        <Tooltip actionType='press' withOverlay={false} backgroundColor={colors.themeBlue} height={moderateScale(35)} width={moderateScale(270)} popover={<Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={2} >You can use {formatAmount(item?.entryAmount * (item?.bonusCashPercentage / 100))} cash bonus for every entry</Text>}>
                                           <Box flexDirection="row" alignItems="center" gap={3}>
                                             <Image alt="icon" source={imgIcon.bCoin} w={moderateScale(12)} h={moderateScale(12)} alignSelf='baseline' resizeMode="contain" />
-                                            <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} >Use {item?.entryAmount * (item?.bonusCashPercentage / 100)}</Text>
+                                            <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gray4} numberOfLines={1} >Use {formatAmount(item?.entryAmount * (item?.bonusCashPercentage / 100))}</Text>
                                           </Box>
                                         </Tooltip>
                                       )}
@@ -652,8 +652,6 @@ const HomeContestList = () => {
                                     </Box>
                                   </Tooltip>
                                 </Box>
-
-
                               </Box>
                             </Box>
                           )

@@ -1,18 +1,13 @@
 import React from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {colors} from '../constants/colors';
-import {AppBar} from '../components/AppBar';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { colors } from '../constants/colors';
+import { AppBar } from '../components/AppBar';
 import TableComponent from '../components/Table/Table';
 
 const FeedbackSystem = () => {
   return (
     <ScrollView style={styles.container}>
-      <AppBar
-        textColor={colors.gold}
-        backgroundColor="transparent"
-        back
-        title="How To Play"
-      />
+      <AppBar textColor={colors.gold} back backgroundColor="transparent" title="How To Play" />
 
       <Text style={styles.heading}>Hello everyone, welcome to WonByBid! Now, let's understand the Feedback System in WonByBid.</Text>
 
@@ -63,7 +58,7 @@ const FeedbackSystem = () => {
         97 by Priya & Neha → <Text style={styles.highlight}>Low and Same</Text>
       </Text>
       <Text style={styles.sectionTitle}>Winning Feedback</Text>
-      <Text style={styles.paragraph}>
+      <Text style={[styles.paragraph, { marginBottom: 20 }]}>
         • "Winning" next to a bid means it is in the{' '}
         <Text style={styles.highlight}>Winning Ranks</Text>.{'\n\n'}
         <Text style={styles.subHeading}>Example:</Text>
@@ -71,7 +66,7 @@ const FeedbackSystem = () => {
         First winning bid: 99{'\n'}
         Later: 98, 96, 95 also added to winning ranks
       </Text>
-      <TableComponent/>
+      {/* <TableComponent /> */}
     </ScrollView>
   );
 };

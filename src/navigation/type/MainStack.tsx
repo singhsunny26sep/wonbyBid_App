@@ -39,7 +39,7 @@ const MainNavigation = () => {
       <Stack.Screen name={NavigationString.BottomTabBar} component={StackRoute.BottomTabStack} />
       <Stack.Screen name={NavigationString.Setting} component={StackRoute.Setting} />
       <Stack.Screen name={NavigationString.UserRefer} component={StackRoute.UserRefer} />
-      
+
       {/* <Stack.Screen name={NavigationString.Home} component={StackRoute.Home} /> */}
       <Stack.Screen name={NavigationString.HomeContestList} component={StackRoute.HomeContestList} />
       <Stack.Screen name={NavigationString.BonusCash} component={StackRoute.BonusCash} />
@@ -100,7 +100,7 @@ const MainNavigation = () => {
       <Stack.Screen name={NavigationString.PaymentScreen} component={StackRoute.PaymentScreen} />
 
 
-      
+
 
 
 

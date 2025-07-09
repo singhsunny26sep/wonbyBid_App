@@ -29,6 +29,7 @@ interface GET_CATEGORY {
 };
 const HomeSportCard = ({ item, index, cardShadowColor, onPress, cardFrom }: { item: GET_CATEGORY, index: number, cardShadowColor?: string, onPress?: () => void, cardFrom?: string }) => {
   const [loading, setLoading] = useState<boolean>(false);
+  // console.log("item :", item);
 
   const handlePress = async () => {
     if (!onPress) return;
@@ -41,29 +42,31 @@ const HomeSportCard = ({ item, index, cardShadowColor, onPress, cardFrom }: { it
       setLoading(false);
     }
   };
-  {loading && (
-    <Box
-      position="absolute"
-      top={0}
-      bottom={0}
-      left={0}
-      right={0}
-      alignItems="center"
-      justifyContent="center"
-      backgroundColor="rgba(0,0,0,0.4)"
-      borderRadius={5}
-      zIndex={1}
-    >
-      <Loader/>
-    </Box>
-  )}
-  
+  {
+    loading && (
+      <Box
+        position="absolute"
+        top={0}
+        bottom={0}
+        left={0}
+        right={0}
+        alignItems="center"
+        justifyContent="center"
+        backgroundColor="rgba(0,0,0,0.4)"
+        borderRadius={5}
+        zIndex={1}
+      >
+        <Loader />
+      </Box>
+    )
+  }
+
 
 
   return (
     <Pressable onPress={handlePress}>
       {/* <Text> ============ {cardFrom} ============</Text> */}
-      <Box h={moderateScale(133)} w={'100%'} borderLeftWidth={1} borderRightWidth={1} padding={2} borderEndEndRadius={10}  borderColor={colors.gold}  borderRadius={5} mb={moderateScaleVertical(15)} >
+      <Box h={moderateScale(133)} w={'100%'} borderLeftWidth={1} borderRightWidth={1} padding={2} borderEndEndRadius={10} borderColor={colors.gold} borderRadius={5} mb={moderateScaleVertical(15)} >
         <Box flexDirection='row' alignItems='center' justifyContent='space-between' h={moderateScale(25)} py={5} px={15} overflow='hidden'>
           {/* <Box flexDirection='row' alignItems='center' justifyContent='space-between' w={moderateScale(320)}> */}
           <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} fontWeight='800' color={colors.deepPurple} >{item?.title}</Text>
@@ -114,7 +117,6 @@ const HomeSportCard = ({ item, index, cardShadowColor, onPress, cardFrom }: { it
         </Box>
         <Box flexDirection='row' alignItems='center' justifyContent='space-between' h={moderateScale(35)} borderTopColor={colors.gray8} py={5} px={10} overflow='hidden'>
           <Box py={3} px={5} flexDirection='row' borderRadius={10} alignItems='center' justifyContent='center' gap={5}>
-          
             <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>{cardFrom === 'upcoming' ? `Selected Contests : ${item?.selectedContest}` : cardFrom === 'live' ? `Playing Contests: ${item?.playingContest}` : `Played Contests: ${item?.playedContest}`}</Text>
           </Box>
           <Box display={cardFrom === 'upcoming' || cardFrom === 'live' ? 'flex' : 'none'} py={3} px={8} borderRadius={10} alignItems='center' justifyContent='center'>

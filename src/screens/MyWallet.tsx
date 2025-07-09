@@ -38,8 +38,7 @@ const MyWallet = () => {
       </Container>
     );
   }
-  // console.log("walletSettingData.........................................",walletSettingData?.data?.data?.selectedBestOfferWaletRecharge)
-  // console.log("walletSettingData.........................................")
+
   const months = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
@@ -80,9 +79,9 @@ const MyWallet = () => {
                 <Box flexDirection='row' justifyContent={'space-between'}>
                   <Text fontFamily={'$robotoBold'} fontSize={16} lineHeight={18} color={colors.Purple} numberOfLines={1} >Bonus Cash</Text>
 
-                  <TouchableOpacity onPress={() => setShowWidthdrawModal(true)} style={{ marginTop: -5 }} >
+                  {/* <TouchableOpacity onPress={() => setShowWidthdrawModal(true)} style={{ marginTop: -5 }} >
                     <InfoCircleIcon color={colors.mediumBlue} />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                 </Box>
 
                 <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={16} color={colors.grayish} numberOfLines={1} mt={2} >Use Bonus Cash avail <Text fontFamily={'$poppinsSemiBold'} fontSize={12} lineHeight={16} color={colors.white} fontWeight='800' numberOfLines={1} >flat 10% discount</Text> on all contests</Text>
@@ -95,7 +94,7 @@ const MyWallet = () => {
                   <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={14} color={colors.white} numberOfLines={1} textAlign='center'>(1 Bonus Cash = {'\u20B9'} 1 )</Text>
                 </Box>
 
-                <AccordionIcon as={ChevronRightIcon} color={colors.gold} size='lg' />
+                {/* <AccordionIcon as={ChevronRightIcon} color={colors.gold} size='lg' /> */}
               </Box>
               <Box h={moderateScale(30)} w={'100%'} mt={10} flexDirection='row' alignItems='center' justifyContent='center' gap={moderateScale(5)}>
                 <Image alt='icon' source={imgIcon.bCoin} w={moderateScale(14)} h={moderateScale(14)} resizeMode='contain' />
@@ -104,7 +103,7 @@ const MyWallet = () => {
                 </Text></Text>
               </Box>
             </Box>
-            <Pressable onPress={() => navigation.navigate(NavigationString.PrivateContestTransactions)}>
+            <Pressable /* onPress={() => navigation.navigate(NavigationString.PrivateContestTransactions)} */>
               <Box borderRightWidth={1} borderColor='white' borderEndEndRadius={10} borderRadius={moderateScale(8)} style={shadowStyle} pb={moderateScale(15)} w={'92%'} alignSelf='center' marginVertical={10} my={15}>
                 <Box mx={15} my={15} gap={5}>
                   <Text fontFamily={'$robotoBold'} fontSize={16} lineHeight={18} color={colors.greenText} numberOfLines={1} >Private Contest Balance</Text>
@@ -113,7 +112,7 @@ const MyWallet = () => {
 
                 <Box flexDirection='row' alignItems='center' justifyContent='space-between' mx={15}>
                   <Text fontFamily={'$robotoBold'} fontSize={18} lineHeight={20} color={colors.white} numberOfLines={1} textAlign='center'>{'\u20B9'}{walletInfoData?.data?.newBalance?.privateContestAmount}</Text>
-                  <AccordionIcon as={ChevronRightIcon} color={colors.gold} size='lg' />
+                  {/* <AccordionIcon as={ChevronRightIcon} color={colors.gold} size='lg' /> */}
                 </Box>
               </Box>
               <Text color={colors.white} fontSize={14} width={"90%"} textAlign='center' alignSelf='center' marginTop={80}>The more bonus cash you have, the more you can play! Win a contest, get real money, and use your bonus cash to play again—keep the fun going!</Text>

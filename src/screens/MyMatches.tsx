@@ -112,7 +112,6 @@ const MyMatches = () => {
         <FlatList
           data={liveContest?.length > 0 ? liveContest : []}
           renderItem={({ item, index }: { item: any, index: number }) => <SportCard key={item} item={item} index={index} cardShadowColor={'#0984e3'} onPress={() => {
-
             navigation.navigate(NavigationString.MyContestList, { cardFrom: 'live', categoryName: item?.title, catId: item?.categorieId, type: 'myMatches' })
           }} cardFrom={'live'} />}
           keyExtractor={(item: any) => item?._id}
@@ -131,7 +130,6 @@ const MyMatches = () => {
         <FlatList
           data={upcomingContest?.length > 0 ? upcomingContest : []}
           renderItem={({ item, index }: { item: any, index: number }) => <SportCard key={item?._id} item={item} index={index} cardShadowColor={'#74b9ff'} onPress={() => {
-
             navigation.navigate(NavigationString.MyContestList, { cardFrom: 'upcoming', categoryName: item?.title, catId: item?.categorieId, type: 'myMatches' })
           }} cardFrom={'upcoming'} />}
           keyExtractor={(item: any) => item?._id}

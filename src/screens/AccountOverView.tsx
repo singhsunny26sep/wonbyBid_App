@@ -109,7 +109,7 @@ const AccountOverView = ({ navigation }: any) => {
               color={colors.white}
               numberOfLines={1}>
               {'\u20B9'}
-              {result?.data?.data?.withDrwalBalance}
+              {result?.data?.data?.withDrwalBalance || 0}
             </Text>
           </Box>
 
@@ -404,17 +404,8 @@ const AccountOverView = ({ navigation }: any) => {
               Formulae
             </Text>
           </Box>
-          <Box
-            paddingVertical={2}
-            flexDirection="row"
-            alignItems="center"
-            mx={moderateScale(15)}>
-            <Text
-              fontFamily="$robotoRegular"
-              flex={1}
-              fontSize={14}
-              lineHeight={20}
-              color={colors.white}>
+          <Box paddingVertical={2} flexDirection="row" alignItems="center" mx={moderateScale(15)}>
+            <Text fontFamily="$robotoRegular" flex={1} fontSize={14} lineHeight={20} color={colors.white}>
               {/* TDS = (Total Withdrawal + Winning Balance – Total Deposits) × 30%{' '} */}
               TDS = (Total Withdrawn Balance + Winning Balance – Total Deposits Balance) × 30%{' '}
               {'\n\n'}

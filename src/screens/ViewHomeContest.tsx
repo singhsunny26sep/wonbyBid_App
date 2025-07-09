@@ -43,7 +43,8 @@ const ViewHomeContest = () => {
 
 
   // states
-  const [selectLeaderBoard, setSelectLeaderBoard] = useState<string>('leaderboard')
+  // const [selectLeaderBoard, setSelectLeaderBoard] = useState<string>('leaderboard')
+  const [selectLeaderBoard, setSelectLeaderBoard] = useState<string>('wining')
   const [selectedFill, setSelectedFill] = useState('max')
   // const [contestStateData, setContestStateData] = useState([])
 
@@ -126,6 +127,9 @@ const ViewHomeContest = () => {
 
 
   useEffect(() => {
+    if (cardFrom == "wining") {
+      setSelectLeaderBoard("leaderboard")
+    }
     if (isDeclare) {
       setSelectLeaderBoard("leaderboard")
       setLeaderLoading(true)
@@ -424,29 +428,32 @@ const ViewHomeContest = () => {
           }
         </Box>
         {/* ======================================================= timing opening button ====================================== */}
-        <Box display={selectLeaderBoard === 'leaderboard' ? 'flex' : 'none'} borderTopWidth={1} borderTopColor={colors.paleGray} marginTop={10}>
-          <Box w={"100%"} flexDirection='row' >
-            <Box flex={2} flexDirection='row' alignItems='center' justifyContent='space-between' py={responsiveHeight(1.2)} px={moderateScale(15)}>
-              <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>BID Count : <Text color={colors.gold} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14}>{filteredData ? filteredData[0]?.totalBids : 0}</Text></Text>
-              <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>Total WON : <Text color={colors.gold} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14}>{'\u20B9'} {filteredData ? Number(filteredData[0]?.WinningAmount) : 0}</Text></Text>
-            </Box>
 
-            <Box flex={1} flexDirection='row' alignItems='center' justifyContent='space-between' py={responsiveHeight(1.2)} px={moderateScale(15)}>
-              <Text fontFamily='$robotoMedium' fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>My Bids</Text>
-              <Switch size="md"
-                sx={{
-                  _light: {
-                    props: {
-                      trackColor: {
-                        false: "$backgroundLight300",
-                        true: colors.gold,
+        <Box display={selectLeaderBoard === 'leaderboard' ? 'flex' : 'none'} borderTopWidth={1} borderTopColor={colors.paleGray} marginTop={10}>
+          {cardFrom == "wining" && (
+            <Box w={"100%"} flexDirection='row' >
+              <Box flex={2} flexDirection='row' alignItems='center' justifyContent='space-between' py={responsiveHeight(1.2)} px={moderateScale(15)}>
+                <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>BID Count : <Text color={colors.gold} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14}>{filteredData ? filteredData[0]?.totalBids : 0}</Text></Text>
+                <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>Total WON : <Text color={colors.gold} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14}>{'\u20B9'} {filteredData ? Number(filteredData[0]?.WinningAmount || 0) : 0}</Text></Text>
+              </Box>
+
+              <Box flex={1} flexDirection='row' alignItems='center' justifyContent='space-between' py={responsiveHeight(1.2)} px={moderateScale(15)}>
+                <Text fontFamily='$robotoMedium' fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>My Bids</Text>
+                <Switch size="md"
+                  sx={{
+                    _light: {
+                      props: {
+                        trackColor: {
+                          false: "$backgroundLight300",
+                          true: colors.gold,
+                        },
                       },
                     },
-                  },
-                  marginRight: moderateScale(10)
-                }} isDisabled={false} value={showUser} onToggle={() => setShowUser(!showUser)} />
+                    marginRight: moderateScale(10)
+                  }} isDisabled={false} value={showUser} onToggle={() => setShowUser(!showUser)} />
+              </Box>
             </Box>
-          </Box>
+          )}
           <Box flexDirection="row" py={12} borderTopWidth={1} borderTopColor={colors.paleGray} bgColor={colors.black}>
             <Text flex={1} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.grayish} numberOfLines={1}>RANK</Text>
             <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.grayish} numberOfLines={1}>NAME</Text>

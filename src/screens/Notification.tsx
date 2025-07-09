@@ -84,12 +84,12 @@ const Notification = () => {
           </Box>
         </Pressable> */}
         <Pressable onPress={() => navigation.navigate(NavigationString.Winners)}>
-          <Box  flexDirection='row' alignItems='center' py={8} px={7} borderRadius={10} gap={10}>
+          <Box flexDirection='row' alignItems='center' py={8} px={7} borderRadius={10} gap={10}>
             <WinnerIcon />
           </Box>
         </Pressable>
         <Pressable onPress={() => navigation.navigate(NavigationString.MyWallet)}>
-          <Box  flexDirection='row' alignItems='center' py={7} px={7} mr={moderateScale(20)} borderRadius={10} gap={10}>
+          <Box flexDirection='row' alignItems='center' py={7} px={7} mr={moderateScale(20)} borderRadius={10} gap={10}>
             <WalletIcon />
           </Box>
         </Pressable>
@@ -99,16 +99,16 @@ const Notification = () => {
 
 
   return (
-    <LinearGradient as={RNSVGLinearGradient} colors={[colors.black, colors.black]} locations={[0.65, 1]} useAngle={true} angle={205} angleCenter={{ x: -0.2, y: 0.1 }} style={{flex:1 }}      >
+    <LinearGradient as={RNSVGLinearGradient} colors={[colors.black, colors.black]} locations={[0.65, 1]} useAngle={true} angle={205} angleCenter={{ x: -0.2, y: 0.1 }} style={{ flex: 1 }}      >
 
-    {/* <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed} > */}
+      {/* <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed} > */}
       <AppBar left={<LeftAppBar />} right={<RightIcon />} />
 
       <FlatList data={notifications} renderItem={({ item }) => <NotificationView item={item} />} refreshing={refresh} onRefresh={handleRefresh} />
 
-      {loading && (<Box w={'100%'} h={'100%'} justifyContent='center' alignItems='center' ><Loader/></Box>)}
+      {loading && (<Box w={'100%'} h={'100%'} justifyContent='center' alignItems='center' ><Loader /></Box>)}
 
-    {/* </Container> */}
+      {/* </Container> */}
     </LinearGradient>
   )
 }
