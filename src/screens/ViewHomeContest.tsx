@@ -39,20 +39,18 @@ const ViewHomeContest = () => {
   console.log("=========================================== route.params: viewhomecontest ===============================================================");
   console.log("route.params: ", route?.params);
 
-  // console.log("authContext: ", authContext?.userInfo);
-
 
   // states
   // const [selectLeaderBoard, setSelectLeaderBoard] = useState<string>('leaderboard')
   const [selectLeaderBoard, setSelectLeaderBoard] = useState<string>('wining')
   const [selectedFill, setSelectedFill] = useState('max')
-  // const [contestStateData, setContestStateData] = useState([])
+
 
   const [slotTimes, setSlotTimes] = useState([])
   const [slotTimeLoading, setSlotTimeLoading] = useState(false)
   const [timeSlot, setTimeSlot] = useState(false)
   const [selectedTime, setSelectedTime] = useState(contestData?.data?.data?.timeSlots || "")
-  // console.log("Join Scree.........", { contestId: contestId, timeslotId: slotId })
+
   const [ranksArray, setRanksArray] = useState([])
   const [loading, setLoading] = useState(false)  // api
   const { data: contestData, isLoading: contestIsLoading, refetch } = useGetSignleContestDetailHome({ contestId: contestId, timeslotId: slotId })
@@ -61,20 +59,8 @@ const ViewHomeContest = () => {
 
   const [leaderLoading, setLeaderLoading] = useState<boolean>(false)
 
-  /* const uniqueData = ranksArray.filter((item, index, self) =>
-    index === self.findIndex((obj) => obj?.userId?._id === item?.userId?._id)
-  ); */
-  // Step 1: Sort by latest biddingTime (descending)
-  // const sorted = ranksArray.sort((a, b) => new Date(b.biddingTime) - new Date(a.biddingTime));
-
-  // Step 2: Filter to keep only the latest entry per userId._id
-  /* const uniqueData = sorted.filter((item, index, self) =>
-    index === self.findIndex(obj => obj?.userId?._id === item?.userId?._id)
-  ); */
-
   const filteredData = ranksArray.filter(item => item?.userId?._id === authContext?.userInfo?.userId);
 
-  // console.log("ranksArray: ", ranksArray);
 
   // const { data: checkAlreadyJoinData, isLoading: checkAlreadyJoinDataIsLoading } = useGetCheckAlreadyJoin({ contestId: contestId, timeslotId: slotId })
   const useJoinContestHomeMutation = useJoinContestHome()
@@ -96,10 +82,10 @@ const ViewHomeContest = () => {
     // Define the handler function for the leaderboard
     const handleWinningLeaderBoard = (data: any) => {
       // console.log(" ================== handleWiningLeaderBoard ================== ");
-      // console.log("data?.slotHistory: ", data?.slotHistory?.userranks);
+      console.log("data?.slotHistory: ", data?.slotHistory?.userranks);
       // console.log("updated boolean: ", shouldBeTrue(data?.slotHistory?.updatedAt));
-      setLeaderLoading(shouldBeTrue(data?.slotHistory?.updatedAt))
       setRanksArray(data?.slotHistory?.userranks);
+      setLeaderLoading(shouldBeTrue(data?.slotHistory?.updatedAt))
       setSlotTimes(data?.contest?.timeSlots);
     };
 
@@ -131,23 +117,21 @@ const ViewHomeContest = () => {
     if (isDeclare) {
       setSelectLeaderBoard("leaderboard")
       setLeaderLoading(true)
-    } else if (cardFrom == "wining") {
+    }/*  else if (cardFrom == "wining") {
       setSelectLeaderBoard("leaderboard")
-    }
+    } */
   }, [isDeclare])
 
-  /* useEffect(() => {
+  useEffect(() => {
     if (cardFrom == "wining") {
       setSelectLeaderBoard("leaderboard")
     }
-  }, []) */
+  }, [])
 
   function getRangeLength(rangeStr: string) {
     const [start, end] = rangeStr.split('-').map(Number);
     return end - start; // exclusive of 'end'
   }
-
-  // Example usage:
 
   setTimeout(() => {
     // console.log("30 seconds passed!");
@@ -155,7 +139,6 @@ const ViewHomeContest = () => {
     setLeaderLoading(false)
   }, 30000);
 
-  // console.log("leaderLoading: ", leaderLoading);
 
   const hanldeJoinContest = () => {
     navigation.navigate(NavigationString.BookHomeBids, { contestId: contestId, slotId: slotId, maxPrice: formatAmount(contestData?.data?.data?.prizeDistributionAmount) })
@@ -200,27 +183,19 @@ const ViewHomeContest = () => {
   }
 
   if (contestIsLoading) {
-    // console.log("loading.....");
 
     return (
       <Container backgroundColor='black' statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed}>
         <AppBar title='' back />
         <Box flex={1} backgroundColor='black' justifyContent='center' alignItems='center' >
-          {/* <Spinner size={'large'} color={colors.gold} /> */}
           <Loader />
         </Box>
       </Container>
     )
   }
 
-  // console.log("contestData?.data?.data?.history?.slotsFill?.length: ", contestData?.data?.data?.slots - contestData?.data?.data?.slotFillCount);
-  // console.log("contestData?.data?.data?.slots - contestData?.data?.data?.slotFillCount: ", contestData?.data?.data?.slots - contestData?.data?.data?.slotFillCount);
+  console.log("userranker: ", ranksArray);
 
-  // console.log(contestData?.data?.data?.prizeDistributionPercentage)
-
-  // console.log("ranksArray: ", ranksArray);
-
-  // console.log("showuser: ", showUser)
 
   return (
     <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
@@ -231,9 +206,7 @@ const ViewHomeContest = () => {
             <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gold} numberOfLines={1}>Prize Pool</Text>
             {flexible === 'Yes' && (<Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.gold} numberOfLines={1}>Max Prize Pool</Text>)}
           </Box>
-          {/* {cardFrom === 'live' && <>
-                                      <CardTimer endTime={contestData?.timeSlots?.endTime} color={colors.red} startTime={contestData?.timeSlots?.startTime} />
-                                    </>} */}
+
           <Box flexDirection="row" alignItems="center" justifyContent='space-between' px={10}>
             <Text fontFamily={'$robotoBold'} fontSize={20} lineHeight={22} color={colors.white} numberOfLines={1}>{'\u20B9'} {formatAmount(((contestData?.data?.data?.slotFillCount * contestData?.data?.data?.entryAmount) * (contestData?.data?.data?.prizeDistributionPercentage / 100)) ?? 0)}</Text>
             {flexible === 'Yes' && (<Text fontFamily={'$robotoBold'} fontSize={20} lineHeight={22} color={colors.white} numberOfLines={1}>{'\u20B9'} {formatAmount(contestData?.data?.data?.prizeDistributionAmount)}</Text>)}
@@ -242,7 +215,6 @@ const ViewHomeContest = () => {
 
           <Slider
             minimumValue={0}
-            // maximumValue={contestData?.data?.data?.slots}
             maximumValue={contestData?.data?.data?.slots}
             maximumTrackTintColor={'#fdebeb'}
             minimumTrackTintColor={colors.gold}
@@ -312,10 +284,6 @@ const ViewHomeContest = () => {
                 <Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.dimGray} numberOfLines={1}>{true ? 'Flexible' : 'Guaranteed'}</Text>
               </Box>
             </Tooltip>
-            {/* <Box flexDirection="row" alignItems="center" gap={5}>
-              {flexible === 'Yes' ? <RupeeCircleGreenIcon /> : <Icon as={CheckCircleIcon} w="$4" h="$4" color={colors.greenText} />}
-              <Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.dimGray} numberOfLines={1} >{flexible === 'Yes' ? 'Flexible' : 'Guaranteed'}</Text>
-            </Box> */}
           </Box>
         </Box>
 
@@ -324,16 +292,6 @@ const ViewHomeContest = () => {
           <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={16} color={colors.gray6} numberOfLines={1}>Invite your friends and see who comes out on top!</Text>
         </Pressable>
 
-
-        {/* <Box backgroundColor={'#fdebeb'} flexDirection="row" alignItems="center" justifyContent='space-between' px={15} py={15}>
-          <Box flexDirection="row" alignItems="center" >
-          <Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={'#c0392b'} numberOfLines={1}>Earn </Text>
-          <Image alt="icon" source={imgIcon.bCoin} w={moderateScale(12)} h={moderateScale(12)} alignSelf='baseline' resizeMode="contain" />
-          <Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={'#c0392b'} numberOfLines={1}> 1 for every contest entry</Text>
-
-          </Box>
-          <Icon as={CloseIcon} w={moderateScale(20)} h={moderateScale(20)} color={'#c0392b'} />
-        </Box> */}
 
         {/* button of timing and or wining or laederborad tab */}
         <Box flexDirection='row' alignItems='center' marginTop={10} marginHorizontal={moderateScale(15)} gap={moderateScale(15)} justifyContent={'space-between'}>
@@ -348,36 +306,7 @@ const ViewHomeContest = () => {
           </Box>
 
 
-          {/* <Box display={selectLeaderBoard === 'leaderboard' ? 'flex' : 'none'} >
-            <Box flexDirection="row" alignItems="center" justifyContent='flex-end' px={2} py={10} borderTopColor={colors.paleGray} borderBottomColor={colors.paleGray}>
-              <PrimaryButton
-                onPress={() => setTimeSlot(!timeSlot)}
 
-                buttonText={selectedTime ? `${format(selectedTime?.startTime, "HH:mm:ss")}` : `Select Time`}
-        
-                bgColor={colors.greenText}
-                height={moderateScale(35)}
-                width={moderateScale(130)}
-              />
-            </Box>
-          </Box> */}
-          {/* <Box display={selectLeaderBoard === 'leaderboard' ? 'flex' : 'none'} >
-            <Box flexDirection="row" alignItems="center" justifyContent='flex-end' px={2} py={10} borderTopColor={colors.paleGray} borderBottomColor={colors.paleGray}>
-              <PrimaryButton
-                onPress={() => setTimeSlot(!timeSlot)}
-                buttonText={`${format(contestData?.data?.data?.timeSlots?.startTime, "HH:mm:ss")}`}
-                buttonText={selectedTime ? `${format(selectedTime?.startTime, "HH:mm:ss")}` : `Select Time`}
-                buttonText={
-                  selectedTime
-                    ? `${format(selectedTime?.startTime, "HH:mm:ss")}`
-                    : `${format(contestData?.data?.data?.timeSlots?.startTime, "HH:mm:ss")}`
-                } 
-                bgColor={colors.greenText}
-                height={moderateScale(35)}
-                width={moderateScale(130)}
-              />
-            </Box>
-          </Box> */}
         </Box>
         {/* {(
           <Box borderTopColor={colors.gray5} py={15} px={15}>

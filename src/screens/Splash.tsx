@@ -39,7 +39,7 @@ const Splash = () => {
     const isFirst = await AsyncStorage.getItem('hasSeenIntro')
     console.log("isFirst: ", isFirst);
     // navigation.navigate(NavigationString.IntroVideoScreen)
-    if (isFirst) {
+    // if (isFirst) {
 
 
       // console.log('APP aload splash',)
@@ -74,10 +74,10 @@ const Splash = () => {
         console.log('No tokeninfo from memoery')
         navigation.navigate(NavigationString.Login)
       }
-    } else {
+    /* } else {
       navigation.navigate(NavigationString.IntroVideoScreen)
       await AsyncStorage.setItem("isFirst", "true")
-    }
+    } */
   }
   const checkPermission = async () => {
     try {
