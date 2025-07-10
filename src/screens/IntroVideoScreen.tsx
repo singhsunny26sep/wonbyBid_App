@@ -1,4 +1,3 @@
-// IntroVideoScreen.tsx
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Dimensions } from 'react-native';
 import Video from 'react-native-video';
@@ -10,33 +9,45 @@ const { width, height } = Dimensions.get('window');
 
 const IntroVideoScreen = () => {
   const navigation = useNavigation<any>();
-  const [isVideoEnded, setIsVideoEnded] = useState(false);
-  const [paused, setPaused] = useState(false); // <-- control pause
+  const [paused, setPaused] = useState(false);
 
   const handleSkip = async () => {
-    setPaused(true); // Pause the video
+    setPaused(true);
     await AsyncStorage.setItem('hasSeenIntro', 'true');
-    navigation.navigate(NavigationString.Login) // Navigate to Home or Login
+    navigation.navigate(NavigationString.Login);
   };
 
   const handleEnd = async () => {
-    setIsVideoEnded(true);
     await AsyncStorage.setItem('hasSeenIntro', 'true');
-    navigation.navigate(NavigationString.Login)
+    navigation.navigate(NavigationString.Login);
   };
 
   return (
     <View style={styles.container}>
-      <Video
-        source={require('../assets/video/video.mp4')} // your local video
-        style={styles.backgroundVideo}
-        resizeMode="cover"
-        onEnd={handleEnd}
-        muted={false}
-        repeat={false}
-        paused={paused} // <-- bind here
-        controls={false}
-      />
+      {/* Transparent margins */}
+      <View style={styles.overlayTop} />
+      <View style={styles.middleRow}>
+        <View style={styles.overlaySide} />
+
+        {/* Video container */}
+        <View style={styles.videoWrapper}>
+          <Video
+            source={require('../assets/video/video.mp4')}
+            style={styles.video}
+            resizeMode="cover"
+            onEnd={handleEnd}
+            paused={paused}
+            muted={false}
+            repeat={false}
+            controls={false}
+          />
+        </View>
+
+        <View style={styles.overlaySide} />
+      </View>
+      <View style={styles.overlayBottom} />
+
+      {/* Skip button */}
       <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
         <Text style={styles.skipText}>Skip</Text>
       </TouchableOpacity>
@@ -47,20 +58,41 @@ const IntroVideoScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#000',
+    backgroundColor: 'transparent',
   },
-  backgroundVideo: {
-    width,
-    height,
-    position: 'absolute',
+  overlayTop: {
+    flex: 0.25,
+    backgroundColor: 'transparent',
+  },
+  overlayBottom: {
+    flex: 0.25,
+    backgroundColor: 'transparent',
+  },
+  middleRow: {
+    flex: 0.5,
+    flexDirection: 'row',
+  },
+  overlaySide: {
+    flex: 0.2,
+    backgroundColor: 'transparent',
+  },
+  videoWrapper: {
+    flex: 0.6,
+    overflow: 'hidden',
+    borderRadius: 10,
+  },
+  video: {
+    width: '100%',
+    height: '100%',
   },
   skipButton: {
     position: 'absolute',
-    top: 40,
-    right: 20,
+    top: 45,
+    right: 25,
     backgroundColor: 'rgba(255,255,255,0.7)',
     padding: 10,
     borderRadius: 5,
+    zIndex: 10,
   },
   skipText: {
     fontSize: 16,
