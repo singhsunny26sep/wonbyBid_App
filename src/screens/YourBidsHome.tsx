@@ -41,7 +41,9 @@ const YourBidsHome = () => {
   // api
   const { data, isLoading } = useGetUserBidsHome({ contestId: contestId, timeslotId: slotId })
 
-  // console.log(data?.data, 'jkjkjkjk');
+  const sortByBidsDesc = (bidders: any[]) => {
+    return [...bidders].sort((a, b) => b.bid - a.bid);
+  };
 
   if (isLoading) {
     return (
@@ -49,7 +51,7 @@ const YourBidsHome = () => {
         <AppBar title='My Bids' back />
         <Box flex={1} backgroundColor='black' justifyContent='center' alignItems='center' >
           {/* <Spinner size={'large'} color={colors.gold} /> */}
-          <Loader/>
+          <Loader />
         </Box>
       </Container>
     )
@@ -59,7 +61,7 @@ const YourBidsHome = () => {
       <AppBar back title={'My Bids'} />
 
       <FlatList
-        data={data?.data?.data?.length as number > 0 ? data?.data?.data : []}
+        data={data?.data?.data?.length as number > 0 ? sortByBidsDesc(data?.data?.data) : []}
         renderItem={({ item, index }: { item: any, index: number }) => <BidderCard key={index} item={item} index={index} />}
         keyExtractor={(item: any) => item?._id}
         style={{ flex: 1, }}
@@ -76,7 +78,6 @@ const YourBidsHome = () => {
           return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
               <Text fontFamily={'$robotoMedium'} fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1} > No Bids Found</Text>
-
             </View>
           )
         }}

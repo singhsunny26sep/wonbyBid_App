@@ -16,15 +16,13 @@ import { formatAmount } from '../constants/constant'
 import Loader from '../components/Loader'
 
 const BidderCard = ({ item, index }: any) => {
-  console.log("item: ", item);
-  
+  // console.log("item: ", item);
+
   return (
     <Box flexDirection='row' alignItems='center' justifyContent='space-between' bgColor={colors.black} py={responsiveHeight(1.5)} px={moderateScale(15)}>
       <Box gap={moderateScale(5)}>
         <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={16} color={colors.grayish} numberOfLines={1} >{format(new Date(item?.biddingTime), 'hh:mm a')}</Text>
         <Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={16} color={colors.white} numberOfLines={1} >{item?.bidStatus}</Text>
-        {/* <Text fontFamily={'$robotoBold'} fontSize={12} lineHeight={16} color={colors.themeRed} numberOfLines={1} ></Text> */}
-
       </Box>
       <Box alignItems='center' justifyContent='center' borderWidth={2} borderColor={colors.gold} borderRadius={moderateScale(20)} h={moderateScale(35)} w={moderateScale(90)} >
         <Text fontFamily={'$robotoMedium'} fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1} >{formatAmount(item?.bid)}</Text>
@@ -51,27 +49,20 @@ const YourBids = () => {
       <AppBar back title={'My Bids'} />
       <Box flex={1} backgroundColor='black' alignItems='center' justifyContent='center'>
         {/* <Spinner size={'large'} color={colors.gold} /> */}
-        <Loader/>
+        <Loader />
       </Box>
     </Container>
   }
 
-  console.log("result: ", data?.data);
+  console.log("result: ", data?.data); 
+
+  // i am finding this useless in yourbidshome.tsx
 
 
   return (
     <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
       <AppBar back title={'My Bids'} />
 
-      {/* <FlatList
-        data={['01', '02', '03', '04', '05', '06', '07', '08']}
-        renderItem={({ item, index }: { item: any, index: number }) => <BidderCard key={item} item={item} index={index} />}
-        keyExtractor={(item: any) => item}
-        style={{ flex: 1, }}
-        showsVerticalScrollIndicator={false}
-
-        contentContainerStyle={{ gap: responsiveWidth(1.2), }}
-      /> */}
       <FlatList
         data={data?.data?.data?.length as number > 0 ? data?.data?.data : []}
         renderItem={({ item, index }: { item: any, index: number }) => <BidderCard key={index} item={item} index={index} />}

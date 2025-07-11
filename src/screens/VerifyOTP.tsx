@@ -60,7 +60,7 @@ const VerifyOTP = () => {
 
 
 
-  const onOTPVerifing = () => {
+  const onOTPVerifing = async () => {
     // navigation.navigate(NavigationString.BottomTabBar)
     setLoading(true)
     const payload: any = {
@@ -71,7 +71,8 @@ const VerifyOTP = () => {
       fcmToken: fcmToken
     }
 
-    console.log(payload)
+    // console.log(payload)
+    const isFirst = await AsyncStorage.getItem('hasSeenIntro')
 
     useOtpVerifingMutation.mutate(payload, {
       onSuccess: async (data) => {
@@ -87,6 +88,10 @@ const VerifyOTP = () => {
               );
             },
           })
+
+          if (!isFirst) {
+            navigation.navigate(NavigationString.BottomTabBar)
+          }
           // console.log(data?.data,'otp');
           // console.log("result: ", data?.data);
 

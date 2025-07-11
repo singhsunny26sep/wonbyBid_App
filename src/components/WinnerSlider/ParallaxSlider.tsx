@@ -13,8 +13,8 @@ import { TouchableOpacity, ScrollView } from "react-native";
 import useGetAllTopRanks from "../../hooks/home/get-all-top-ranks";
 
 
-const ParallaxSlider = () => {
-  const [activeTab, setActiveTab] = useState("Earners");
+const ParallaxSlider = ({ cardFrom }: any) => {
+  const [activeTab, setActiveTab] = useState(cardFrom ? "Referrers" : "Earners");
   const { width } = Dimensions.get("window"); // Get screen width
   const { data, isLoading } = useGetAllTopRanks()
 

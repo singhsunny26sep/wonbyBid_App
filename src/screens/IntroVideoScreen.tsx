@@ -14,12 +14,12 @@ const IntroVideoScreen = () => {
   const handleSkip = async () => {
     setPaused(true);
     await AsyncStorage.setItem('hasSeenIntro', 'true');
-    navigation.navigate(NavigationString.Login);
+    navigation.navigate(NavigationString.BottomTabBar)
   };
 
   const handleEnd = async () => {
     await AsyncStorage.setItem('hasSeenIntro', 'true');
-    navigation.navigate(NavigationString.Login);
+    navigation.navigate(NavigationString.BottomTabBar)
   };
 
   return (
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   overlayTop: {
-    flex: 0.25,
+    flex: 0.20,
     backgroundColor: 'transparent',
   },
   overlayBottom: {

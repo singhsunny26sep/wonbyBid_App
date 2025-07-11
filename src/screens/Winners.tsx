@@ -12,15 +12,15 @@ import { Box } from '@gluestack-ui/themed'
 import { Image } from '@gluestack-ui/themed'
 import { imagePaths } from '../assets/images'
 
-const Winners = () => {
+const Winners = ({ route }: any) => {
   // init 
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-
+  const cardFrom = route?.params?.cardFrom
   return (
     <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.black} backgroundColor={colors.black}>
       <AppBar back title='Top Winners' />
 
-      <ParallaxSlider />
+      <ParallaxSlider cardFrom={cardFrom} />
 
     </Container>
   )

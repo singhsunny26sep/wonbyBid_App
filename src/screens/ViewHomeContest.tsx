@@ -194,8 +194,9 @@ const ViewHomeContest = () => {
     )
   }
 
-  console.log("userranker: ", ranksArray);
+  // console.log("userranker: ", ranksArray);
 
+  let winibyAmount = filteredData?.reduce((sum: any, item: any) => sum + Number(item?.WinningAmount || 0), 0)
 
   return (
     <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
@@ -368,8 +369,8 @@ const ViewHomeContest = () => {
           {cardFrom == "wining" && (
             <Box w={"100%"} flexDirection='row' >
               <Box flex={2} flexDirection='row' alignItems='center' justifyContent='space-between' py={responsiveHeight(1.2)} px={moderateScale(15)}>
-                <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>BID Count : <Text color={colors.gold} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14}>{filteredData ? filteredData[0]?.totalBids : 0}</Text></Text>
-                <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>Total WON : <Text color={colors.gold} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14}>{'\u20B9'} {filteredData?.reduce((sum: any, item: any) => sum + Number(item?.WinningAmount || 0), 0)}</Text></Text>
+                <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>BID Count : <Text color={colors.gold} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14}>{leaderLoading ? '' : filteredData ? filteredData[0]?.totalBids : 0}</Text></Text>
+                <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>Total WON : {leaderLoading ? "" : <Text color={colors.gold} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14}>{winibyAmount == 0 ? "" : '\u20B9 '} {winibyAmount == 0 ? "" : filteredData?.reduce((sum: any, item: any) => sum + Number(item?.WinningAmount || 0), 0)}</Text>}</Text>
                 {/* <Text flex={2} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>Total WON : <Text color={colors.gold} textAlign="center" fontFamily={'$robotoBold'} fontSize={12} lineHeight={14}>{'\u20B9'} {filteredData ? Number(filteredData[0]?.WinningAmount || 0) : 0}</Text></Text> */}
               </Box>
 

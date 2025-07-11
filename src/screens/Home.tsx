@@ -185,6 +185,8 @@ const Home = () => {
     }
   };
 
+  console.log("banner: ", banner);
+
 
   return (
     <>
@@ -247,46 +249,19 @@ const Home = () => {
           {/* =================================== banner carousel =================================== */}
           <Box h={180} w={'94%'} borderRadius={10} my={moderateScaleVertical(15)} alignSelf="center" overflow="hidden">
             <Carousel style={{ width: '100%', height: '100%', alignSelf: 'center', borderWidth: 0.5, borderRadius: 14, borderStyle: 'dashed', }} showsControls={false} loop={true} autoplay={true} autoplayInterval={1500}>
-              {/*<Image
-              style={{alignSelf: 'center'}}
-              alt="SliderIcon"
-              source={imagePaths.banner1}
-              w="99%"
-              h="100%"
-              resizeMode="cover"
-              alignSelf="center"
-              borderRadius={14}
-            />
-            <Image
-              style={{alignSelf: 'center'}}
-              alt="SliderIcon"
-              source={imagePaths.banner2}
-              w="99%"
-              h="100%"
-              resizeMode="cover"
-              alignSelf="center"
-              borderRadius={14}
-            />
-            
-            <Image
-              style={{alignSelf: 'center'}}
-              alt="SliderIcon"
-              source={imagePaths.banner3}
-              w="99%"
-              h="100%"
-              resizeMode="cover"
-              alignSelf="center"
-              borderRadius={14}
-            />*/}
-              {banner?.map(el => (
-                <Pressable onPress={() => {
+              {banner?.map((el: any) => (
+                <Pressable key={el?._id} onPress={() => {
                   if ((el?.url?.startsWith('http://') || el?.url?.startsWith('https://')) && !el.isEnternalRoute && el.url?.trim()) {
                     Linking.openURL(el.url).catch(err => console.error('Failed to open URL:', err),);
                   } else if (el?.enternalRoute?.trim()) {
-                    navigation?.navigate(el.enternalRoute)
+                    if (el.enternalRoute == "TopRefers") {
+                      navigation?.navigate(NavigationString.Winners, { cardFrom: 'TopRefers' })
+                    } else {
+                      navigation?.navigate(el.enternalRoute)
+                    }
                   }
                 }}>
-                  {el?.imageUrl && <Image style={{ alignSelf: 'center', /* resizeMode: 'contain' */ }} alt="SliderIcon" source={{ uri: el.imageUrl }} w="99%" h="100%" resizeMode="cover" borderRadius={14} />}
+                  {el?.imageUrl && <Image alt="SliderIcon" source={{ uri: el.imageUrl }} w="99%" h="100%" resizeMode="cover" borderRadius={14} />}
                 </Pressable>
               ))}
             </Carousel>
