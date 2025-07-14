@@ -33,7 +33,8 @@ const BankVerification = () => {
 
   // console.log(result?.data?.data)
   const handlSubmit = async () => {
-    if (!accountNumber || !confirmaccountNumber || !bankName || !ifscCode || !upiId) {
+    // if (!accountNumber || !confirmaccountNumber || !bankName || !ifscCode || !upiId) {
+    if (!accountNumber || !confirmaccountNumber || !bankName || !ifscCode) {
       toast.show({
         placement: "bottom",
         render: ({ id }) => {
@@ -116,14 +117,14 @@ const BankVerification = () => {
           <Input marginBottom={5} variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
             <InputField color={colors.white} fontFamily="$robotoMedium" fontSize={14} placeholder="ENTER BANK NAME *" placeholderTextColor={colors.placeHolderColor} autoCapitalize="characters" style={{ textTransform: 'uppercase', paddingRight: 10, }} onChangeText={(e) => setBankName(e.toUpperCase())} value={bankName} />
           </Input>
-          
+
           <Input marginBottom={5} variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
             <InputField color={colors.white} fontFamily='$robotoMedium' fontSize={14} placeholder="Enter IFSC Code *" placeholderTextColor={colors.placeHolderColor} onChangeText={(e) => setIFSCCode(e)} value={ifscCode} />
           </Input>
 
-          <Input marginBottom={5} variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
+          {/* <Input marginBottom={5} variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
             <InputField color={colors.white} fontFamily='$robotoMedium' fontSize={14} placeholder="Enter UPI Id *" autoCapitalize='none' placeholderTextColor={colors.placeHolderColor} onChangeText={(e) => setUpiId(e)} value={upiId} />
-          </Input>
+          </Input> */}
         </Box>
 
         {/* <Box mx={moderateScale(5)} borderWidth={1} borderColor={colors.gray3} borderRadius={moderateScale(10)} overflow='hidden' my={moderateScaleVertical(10)}>

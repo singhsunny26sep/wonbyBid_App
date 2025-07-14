@@ -248,13 +248,13 @@ const CashWithdraw = () => {
 
         <Box marginTop={14} mx={moderateScale(15)} borderEndWidth={1} borderColor={colors.gold} borderRadius={moderateScale(10)} overflow="hidden" mb={moderateScaleVertical(15)}>
           <Box flexDirection="row" alignItems="center" justifyContent="space-around">
-            <Pressable onPress={() => setSelectedWithdrawOption('upi')} width={150} borderBottomWidth={selectedWithdrawOption === 'upi' ? 3 : 0} borderBottomColor={colors.gold} alignItems="center" backgroundColor={selectedWithdrawOption === 'upi' ? 'black' : '#000'} py={moderateScaleVertical(10)}>
+            {/*  <Pressable onPress={() => setSelectedWithdrawOption('upi')} width={150} borderBottomWidth={selectedWithdrawOption === 'upi' ? 3 : 0} borderBottomColor={colors.gold} alignItems="center" backgroundColor={selectedWithdrawOption === 'upi' ? 'black' : '#000'} py={moderateScaleVertical(10)}>
               <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={selectedWithdrawOption === 'upi' ? 'white' : colors.white} numberOfLines={1}>UPI</Text>
-            </Pressable>
+            </Pressable> */}
 
-            <Pressable onPress={() => setSelectedWithdrawOption('bankAcountNo')} width={150} borderBottomWidth={selectedWithdrawOption === 'bankAcountNo' ? 3 : 0} borderBottomColor={colors.gold} alignItems="center" backgroundColor={selectedWithdrawOption === 'bankAcountNo' ? 'black' : '#000'} py={moderateScaleVertical(10)}>
+            {/* <Pressable onPress={() => setSelectedWithdrawOption('bankAcountNo')} width={150} borderBottomWidth={selectedWithdrawOption === 'bankAcountNo' ? 3 : 0} borderBottomColor={colors.gold} alignItems="center" backgroundColor={selectedWithdrawOption === 'bankAcountNo' ? 'black' : '#000'} py={moderateScaleVertical(10)}>
               <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={selectedWithdrawOption === 'bankAcountNo' ? 'white' : colors.white} numberOfLines={1}>Bank Account</Text>
-            </Pressable>
+            </Pressable> */}
           </Box>
           <Box display={selectedWithdrawOption === 'bankAcountNo' ? 'flex' : 'none'} overflow="hidden" mx={moderateScale(10)} my={moderateScaleVertical(15)} borderRadius={moderateScale(10)}>
             <Box bgColor="black" py={moderateScaleVertical(10)} px={moderateScale(10)}>
@@ -268,7 +268,7 @@ const CashWithdraw = () => {
             </Box>
 
           </Box>
-          <Box display={selectedWithdrawOption === 'upi' ? 'flex' : 'none'}>
+          {/* <Box display={selectedWithdrawOption === 'upi' ? 'flex' : 'none'}>
             <Box bgColor="black" py={moderateScaleVertical(24)} px={moderateScale(24)}>
               <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>UPI</Text>
             </Box>
@@ -276,6 +276,16 @@ const CashWithdraw = () => {
               <Input variant="underlined" size="md" isDisabled={true} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
                 <InputField color={colors.white} fontFamily="$robotoMedium" fontSize={14} placeholder="Enter Account Number *" placeholderTextColor={colors.placeHolderColor} value={bankVerification?.upiId ? bankVerification?.upiId : ''} />
               </Input>
+            </Box>
+
+          </Box> */}
+
+          <Box display={selectedWithdrawOption === 'upi' ? 'flex' : 'none'}>
+            <Box bgColor="black" py={moderateScaleVertical(24)} px={moderateScale(24)}>
+              <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>🕒 Note: You can place only one withdrawal request every 24 hours — per balance type.</Text>
+              <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={16} color={colors.white} marginTop={moderateScaleVertical(10)} numberOfLines={1}>🏆 Winning Balance — 1 request / 24 hrs</Text>
+              <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={16} color={colors.white} marginTop={moderateScaleVertical(10)} numberOfLines={1}>🎁 Referral Balance — 1 request / 24 hrs</Text>
+              <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={16} color={colors.white} marginTop={moderateScaleVertical(10)} numberOfLines={1}>🔒 Private Contest Balance — 1 request / 24 hrs</Text>
             </Box>
 
           </Box>
