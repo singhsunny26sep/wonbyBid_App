@@ -100,7 +100,6 @@ const Home = () => {
 
     socketServices.on('get-main-contest-banner', (data: any) => {
       setBanner(data);
-
     });
 
     return () => {
@@ -185,7 +184,7 @@ const Home = () => {
     }
   };
 
-  console.log("banner: ", banner);
+  // console.log("banner: ", banner);
 
 
   return (
@@ -248,7 +247,22 @@ const Home = () => {
 
           {/* =================================== banner carousel =================================== */}
           <Box h={180} w={'94%'} borderRadius={10} my={moderateScaleVertical(15)} alignSelf="center" overflow="hidden">
-            <Carousel style={{ width: '100%', height: '100%', alignSelf: 'center', borderWidth: 0.5, borderRadius: 14, borderStyle: 'dashed', }} showsControls={false} loop={true} autoplay={true} autoplayInterval={1500}>
+            {/* <Carousel style={{ width: '100%', height: '100%', alignSelf: 'center', borderWidth: 0.5, borderRadius: 14, borderStyle: 'dashed', }} showsControls={false} loop={true} autoplay={true} autoplayInterval={1500}> */}
+            <Carousel
+              key={banner?.map(b => b._id).join(',')} // 👈 force re-render on data change
+              style={{
+                width: '100%',
+                height: '100%',
+                alignSelf: 'center',
+                borderWidth: 0.5,
+                borderRadius: 14,
+                borderStyle: 'dashed',
+              }}
+              showsControls={false}
+              loop={true}
+              autoplay={true}
+              autoplayInterval={1500}
+            >
               {banner?.map((el: any) => (
                 <Pressable key={el?._id} onPress={() => {
                   if ((el?.url?.startsWith('http://') || el?.url?.startsWith('https://')) && !el.isEnternalRoute && el.url?.trim()) {
@@ -256,9 +270,13 @@ const Home = () => {
                   } else if (el?.enternalRoute?.trim()) {
                     if (el.enternalRoute == "TopRefers") {
                       navigation?.navigate(NavigationString.Winners, { cardFrom: 'TopRefers' })
-                    } else {
-                      navigation?.navigate(el.enternalRoute)
+                      return
                     }
+                    if (el.enternalRoute == "ReferEarnScreen") {
+                      navigation.navigate(NavigationString.ReferEarn)
+                      return
+                    }
+                    navigation?.navigate(el.enternalRoute)
                   }
                 }}>
                   {el?.imageUrl && <Image alt="SliderIcon" source={{ uri: el.imageUrl }} w="99%" h="100%" resizeMode="cover" borderRadius={14} />}

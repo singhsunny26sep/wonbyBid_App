@@ -70,6 +70,7 @@ const ViewTransaction = () => {
     }, 3000)
     setSelectedTransactionType({ "_index": 0, "label": "All", "value": "All" })
   }, [isLoading])
+
   if (isLoading) {
     return (
       <Container backgroundColor='black' statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed}>
@@ -81,6 +82,7 @@ const ViewTransaction = () => {
       </Container>
     )
   }
+
   return (
     <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
       <AppBar back title='View Transactions' />
@@ -142,19 +144,6 @@ const ViewTransaction = () => {
 }
 
 export default ViewTransaction
-
-// and also need to check addCash function there is showing error while payment
-/* ListFooterComponent={() => (
-            <Box display='flex' flexDirection='row' justifyContent={'space-between'} alignItems='center'>
-              <PrimaryButton buttonText={`Previous Page`} onPress={handlePreviousPage} loading={transactionHistoryIsLoading} backgroundColor={colors.greenText} height={moderateScaleVertical(40)} marginHorizontal={moderateScale(0)} marginBottom={moderateScaleVertical(10)} />
-
-              <Box borderWidth={1} borderRadius={8} w={moderateScale(35)} height={moderateScaleVertical(35)} marginBottom={moderateScaleVertical(10)} alignItems='center' justifyContent='center'>
-                <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.black} numberOfLines={1}>{transactionHistory?.data?.currentPage}</Text>
-              </Box>
-
-              <PrimaryButton buttonText={`Next Page ${transactionHistory?.data?.totalPages}`} loading={transactionHistoryIsLoading} onPress={handleNextPage} backgroundColor={colors.greenText} height={moderateScaleVertical(40)} marginHorizontal={moderateScale(0)} marginBottom={moderateScaleVertical(10)} />
-            </Box>
-          )} */
 
 const localStyles = StyleSheet.create({
 

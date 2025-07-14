@@ -83,10 +83,6 @@ const CashWithdraw = () => {
     }
   };
 
-  // console.log("walletInfoData :", walletInfoData?.data);
-  // console.log("result: ", result?.data?.data);
-
-  // console.log("selectedWithdrawOption: ", selectedWithdrawOption);
 
   const handleWithdrawAmount = () => {
     if (!enterWithdrawAmount) {
@@ -109,7 +105,6 @@ const CashWithdraw = () => {
       selectedWithdrawOption: selectedWithdrawOption,
       AcountNoUpi: selectedWithdrawOption === 'bankAcountNo' ? bankVerification?.accountNo : bankVerification?.upiId
     };
-    // console.log('payload', payload);
 
     useWithdrawWalletAmountMutation.mutate(payload, {
       onSuccess: data => {
@@ -130,11 +125,7 @@ const CashWithdraw = () => {
               );
             },
           });
-          navigation.navigate(NavigationString.SucessScreen, {
-            amount: Number(enterWithdrawAmount),
-            bonus: 0,
-            bonusCashExpireDate: 0,
-          });
+          navigation.navigate(NavigationString.SucessScreen, { amount: Number(enterWithdrawAmount), bonus: 0, bonusCashExpireDate: 0, });
         } else {
           toast.show({
             placement: 'bottom',
@@ -142,10 +133,7 @@ const CashWithdraw = () => {
               const toastId = 'toast-' + id;
               return (
                 <Toast nativeID={toastId} variant="accent" action="error">
-                  <ToastTitle>
-                    {data?.data?.message ||
-                      'Something went wrong while withdraw'}
-                  </ToastTitle>
+                  <ToastTitle>{data?.data?.message || 'Something went wrong while withdraw'}</ToastTitle>
                 </Toast>
               );
             },
@@ -159,19 +147,16 @@ const CashWithdraw = () => {
 
   if (walletInfoIsLoading) {
     return (
-      <Container
-        statusBarStyle="light-content"
-        statusBarBackgroundColor={colors.themeRed}>
+      <Container statusBarStyle="light-content" statusBarBackgroundColor={colors.themeRed}>
         <AppBar back title="Cash Withdraw" />
         <Box flex={1} backgroundColor="black" justifyContent="center" alignItems="center">
-          {/* <Spinner size={'large'} color={colors.gold} /> */}
           <Loader />
         </Box>
       </Container>
     );
   }
-  // console.log("!result?.data?.data?.user?.bankKYC || !result?.data?.data?.documentKYC || !result?.data?.data?.addressKyc: ", !result?.data?.data?.user?.bankKYC || !result?.data?.data?.documentKYC || !result?.data?.data?.addressKyc);
-  // || !result?.data?.data?.documentKYC || !result?.data?.data?.addressKyc
+
+
   return (
     <Container statusBarStyle="light-content" statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
       <AppBar back title="Cash Withdraw" />
@@ -210,24 +195,11 @@ const CashWithdraw = () => {
             </Pressable>
           ))}
         </Box>
-        {/* <Box flexDirection="row" flexWrap="wrap" justifyContent="space-around" gap={10} paddingVertical={10}>
-          {boxes.map((item, index) => (
-            <Pressable key={index} onPress={() => setSelectedBox(index)}>
-              <Box borderLeftWidth={1} borderRightWidth={1} borderRadius={14} padding={24} width={180} borderColor={selectedBox === index ? colors.gold : 'white'} margin={5}>
-                <Text textAlign="center" color="white">{'\u20B9'} {item.value || 0}</Text>
-                <Text textAlign="center" color="white">{item.label}</Text>
-              </Box>
-            </Pressable>
-          ))}
-        </Box> */}
-
 
         <Box bgColor="black" px={24}>
           <Text color="white" numberOfLines={1}>
             {boxes[selectedBox]?.label}:{' '}
-            <Text color="gold">
-              {'\u20B9'} {formatAmount(boxes[selectedBox]?.value || 0)}
-            </Text>
+            <Text color="gold">{'\u20B9'} {formatAmount(boxes[selectedBox]?.value || 0)}</Text>
           </Text>
         </Box>
 
@@ -249,11 +221,7 @@ const CashWithdraw = () => {
             ) : null}
           </Box>
 
-          <Box
-            flexDirection="row"
-            alignItems="center"
-            mx={moderateScale(15)}
-            mb={moderateScaleVertical(10)}>
+          <Box flexDirection="row" alignItems="center" mx={moderateScale(15)} mb={moderateScaleVertical(10)}>
             {/* <Text
               fontFamily={'$robotoMedium'}
               fontSize={12}
@@ -278,204 +246,47 @@ const CashWithdraw = () => {
           </Box>
         </Box>
 
-        <Box
-          marginTop={14}
-          mx={moderateScale(15)}
-          borderEndWidth={1}
-          borderColor={colors.gold}
-          borderRadius={moderateScale(10)}
-          overflow="hidden"
-          mb={moderateScaleVertical(15)}>
-          <Box
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-around">
-            <Pressable
-              onPress={() => setSelectedWithdrawOption('upi')}
-              width={150}
-              borderBottomWidth={selectedWithdrawOption === 'upi' ? 3 : 0}
-              borderBottomColor={colors.gold}
-              alignItems="center"
-              backgroundColor={
-                selectedWithdrawOption === 'upi' ? 'black' : '#000'
-              }
-              py={moderateScaleVertical(10)}>
-              <Text
-                fontFamily={'$robotoMedium'}
-                fontSize={12}
-                lineHeight={14}
-                color={
-                  selectedWithdrawOption === 'upi' ? 'white' : colors.white
-                }
-                numberOfLines={1}>
-                UPI
-              </Text>
+        <Box marginTop={14} mx={moderateScale(15)} borderEndWidth={1} borderColor={colors.gold} borderRadius={moderateScale(10)} overflow="hidden" mb={moderateScaleVertical(15)}>
+          <Box flexDirection="row" alignItems="center" justifyContent="space-around">
+            <Pressable onPress={() => setSelectedWithdrawOption('upi')} width={150} borderBottomWidth={selectedWithdrawOption === 'upi' ? 3 : 0} borderBottomColor={colors.gold} alignItems="center" backgroundColor={selectedWithdrawOption === 'upi' ? 'black' : '#000'} py={moderateScaleVertical(10)}>
+              <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={selectedWithdrawOption === 'upi' ? 'white' : colors.white} numberOfLines={1}>UPI</Text>
             </Pressable>
 
-            <Pressable
-              onPress={() => setSelectedWithdrawOption('bankAcountNo')}
-              width={150}
-              borderBottomWidth={selectedWithdrawOption === 'bankAcountNo' ? 3 : 0}
-              borderBottomColor={colors.gold}
-              alignItems="center"
-              backgroundColor={
-                selectedWithdrawOption === 'bankAcountNo' ? 'black' : '#000'
-              }
-              py={moderateScaleVertical(10)}>
-              <Text
-                fontFamily={'$robotoMedium'}
-                fontSize={12}
-                lineHeight={14}
-                color={
-                  selectedWithdrawOption === 'bankAcountNo' ? 'white' : colors.white
-                }
-                numberOfLines={1}>
-                Bank Account
-              </Text>
+            <Pressable onPress={() => setSelectedWithdrawOption('bankAcountNo')} width={150} borderBottomWidth={selectedWithdrawOption === 'bankAcountNo' ? 3 : 0} borderBottomColor={colors.gold} alignItems="center" backgroundColor={selectedWithdrawOption === 'bankAcountNo' ? 'black' : '#000'} py={moderateScaleVertical(10)}>
+              <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={selectedWithdrawOption === 'bankAcountNo' ? 'white' : colors.white} numberOfLines={1}>Bank Account</Text>
             </Pressable>
           </Box>
-          <Box
-            display={selectedWithdrawOption === 'bankAcountNo' ? 'flex' : 'none'}
-            overflow="hidden"
-            mx={moderateScale(10)}
-            my={moderateScaleVertical(15)}
-            borderRadius={moderateScale(10)}>
-            <Box
-              bgColor="black"
-              py={moderateScaleVertical(10)}
-              px={moderateScale(10)}>
-              <Text
-                fontFamily={'$robotoMedium'}
-                fontSize={14}
-                lineHeight={16}
-                color={colors.white}
-                numberOfLines={1}>
-                Bank details
-              </Text>
+          <Box display={selectedWithdrawOption === 'bankAcountNo' ? 'flex' : 'none'} overflow="hidden" mx={moderateScale(10)} my={moderateScaleVertical(15)} borderRadius={moderateScale(10)}>
+            <Box bgColor="black" py={moderateScaleVertical(10)} px={moderateScale(10)}>
+              <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>Bank details</Text>
             </Box>
 
-            <Box
-              mx={moderateScale(15)}
-              my={moderateScaleVertical(15)}
-              w={moderateScale(240)}
-              gap={moderateScale(10)}>
-              <Input
-                variant="underlined"
-                size="md"
-                isDisabled={true}
-                isInvalid={false}
-                isReadOnly={false}
-                $focus-borderColor={colors.themeRed}>
-                <InputField
-                  color={colors.white}
-                  fontFamily="$robotoMedium"
-                  fontSize={14}
-                  placeholder="Enter Account Number *"
-                  placeholderTextColor={colors.placeHolderColor}
-                  value={
-                    bankVerification?.accountNo
-                      ? bankVerification?.accountNo
-                      : ''
-                  }
-                />
+            <Box mx={moderateScale(15)} my={moderateScaleVertical(15)} w={moderateScale(240)} gap={moderateScale(10)}>
+              <Input variant="underlined" size="md" isDisabled={true} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
+                <InputField color={colors.white} fontFamily="$robotoMedium" fontSize={14} placeholder="Enter Account Number *" placeholderTextColor={colors.placeHolderColor} value={bankVerification?.accountNo ? bankVerification?.accountNo : ''} />
               </Input>
-
-              {/* <Input variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
-                <InputField fontFamily='$robotoMedium' fontSize={14} placeholder="Re-Enter Account Number *" placeholderTextColor={colors.placeHolderColor} />
-              </Input> */}
             </Box>
 
-            {/* <Box mx={moderateScale(5)} borderWidth={1} borderColor={colors.gray3} borderRadius={moderateScale(10)} overflow='hidden' my={moderateScaleVertical(10)}>
-              <Box flexDirection='row' alignItems='center'>
-                <Pressable onPress={() => setSelectedSearchOption('ifsc')} flex={1} borderBottomWidth={selectedSearchOption === 'ifsc' ? 2 : 0} borderBottomColor={'rgb(182,117,115)'} alignItems='center' backgroundColor={colors.paleGray} py={moderateScaleVertical(10)}>
-                  <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.grayish} numberOfLines={1} >Search by IFSC</Text>
-                </Pressable>
-
-                <Pressable onPress={() => setSelectedSearchOption('bankname')} flex={1} borderBottomWidth={selectedSearchOption === 'bankname' ? 2 : 0} borderBottomColor={'rgb(182,117,115)'} alignItems='center' backgroundColor={colors.paleGray} py={moderateScaleVertical(10)}>
-                  <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.grayish} numberOfLines={1} >Search by Bank Name</Text>
-                </Pressable>
-              </Box>
-
-              <Box display={selectedSearchOption === 'bankname' ? 'flex' : 'none'} flexDirection='row' alignItems='center'>
-                <Box mx={moderateScale(15)} my={moderateScaleVertical(15)} w={moderateScale(160)} gap={moderateScale(10)}>
-                  <Input variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
-                    <InputField fontFamily='$robotoMedium' fontSize={14} placeholder="Bank Name *" placeholderTextColor={colors.placeHolderColor} />
-                  </Input>
-
-                  <Input variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
-                    <InputField fontFamily='$robotoMedium' fontSize={14} placeholder="Branch Name *" placeholderTextColor={colors.placeHolderColor} />
-                  </Input>
-                </Box>
-
-                <PrimaryButton buttonText='Search' backgroundColor={'rgb(130,170,22)'} marginLeft={moderateScale(30)} height={moderateScale(30)} />
-              </Box>
-
-              <Box display={selectedSearchOption === 'ifsc' ? 'flex' : 'none'} flexDirection='row' alignItems='center'>
-                <Box mx={moderateScale(15)} my={moderateScaleVertical(15)} w={moderateScale(160)} gap={moderateScale(10)}>
-                  <Input variant="underlined" size="md" isDisabled={false} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
-                    <InputField fontFamily='$robotoMedium' fontSize={14} placeholder="IFSC Code *" placeholderTextColor={colors.placeHolderColor} />
-                  </Input>
-                </Box>
-
-                <PrimaryButton buttonText='Search' backgroundColor={'rgb(130,170,22)'} marginLeft={moderateScale(30)} height={moderateScale(30)} />
-              </Box>
-            </Box> */}
           </Box>
           <Box display={selectedWithdrawOption === 'upi' ? 'flex' : 'none'}>
-            <Box
-              bgColor="black"
-              py={moderateScaleVertical(24)}
-              px={moderateScale(24)}>
-              <Text
-                fontFamily={'$robotoMedium'}
-                fontSize={14}
-                lineHeight={16}
-                color={colors.white}
-                numberOfLines={1}>
-                UPI
-              </Text>
+            <Box bgColor="black" py={moderateScaleVertical(24)} px={moderateScale(24)}>
+              <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>UPI</Text>
             </Box>
-            <Box
-              mx={moderateScale(15)}
-              px={moderateScale(14)}
-              w={moderateScale(240)}
-              gap={moderateScale(10)}>
-              <Input
-                variant="underlined"
-                size="md"
-                isDisabled={true}
-                isInvalid={false}
-                isReadOnly={false}
-                $focus-borderColor={colors.themeRed}>
-                <InputField
-                  color={colors.white}
-                  fontFamily="$robotoMedium"
-                  fontSize={14}
-                  placeholder="Enter Account Number *"
-                  placeholderTextColor={colors.placeHolderColor}
-                  value={bankVerification?.upiId ? bankVerification?.upiId : ''}
-                />
+            <Box mx={moderateScale(15)} px={moderateScale(14)} w={moderateScale(240)} gap={moderateScale(10)}>
+              <Input variant="underlined" size="md" isDisabled={true} isInvalid={false} isReadOnly={false} $focus-borderColor={colors.themeRed}>
+                <InputField color={colors.white} fontFamily="$robotoMedium" fontSize={14} placeholder="Enter Account Number *" placeholderTextColor={colors.placeHolderColor} value={bankVerification?.upiId ? bankVerification?.upiId : ''} />
               </Input>
-              {/* <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.lavenderGray} numberOfLines={1} >Format - username@bankname</Text> */}
             </Box>
 
-            {/* <PrimaryButton buttonText='Save' backgroundColor={'rgb(130,170,22)'} height={moderateScale(30)} width={moderateScale(210)} alignSelf='center' marginBottom={moderateScaleVertical(10)} /> */}
           </Box>
         </Box>
       </Body>
-      {/* {result?.data?.data?.user?.bankKYC && result?.data?.data?.documentKYC && result?.data?.data?.addressKyc ?
-        <PrimaryButton buttonText='Withdraw' onPress={handleWithdrawAmount} disabled={useWithdrawWalletAmountMutation.isPending} loading={useWithdrawWalletAmountMutation.isPending} marginHorizontal={moderateScale(15)} marginVertical={moderateScaleVertical(10)} /> :
-        <PrimaryButton buttonText='Withdraw' onPress={handleWithdrawAmount} disabled={true} loading={useWithdrawWalletAmountMutation.isPending} marginHorizontal={moderateScale(15)} marginVertical={moderateScaleVertical(10)} />
-      } */}
 
       <PrimaryButton
         width={'80%'}
         alignSelf="center"
         buttonText="Withdraw"
-        backgroundColor={(bankVerification?.varification === "Approve" &&
-          kycVarification?.varification === "Approve" && (selectedBox === 2 ? Number(enterWithdrawAmount) >= minimumWidthraw : true))
-          ? colors.greenText : colors.gray6
-        }
+        backgroundColor={(bankVerification?.varification === "Approve" && kycVarification?.varification === "Approve" && (selectedBox === 2 ? Number(enterWithdrawAmount) >= minimumWidthraw : true)) ? colors.greenText : colors.gray6}
         onPress={(selectedBox === 2 ? Number(enterWithdrawAmount) >= minimumWidthraw : true) ? handleWithdrawAmount : () => { Alert.alert(`Withdrawal Amount to be greater than or equal to ${minimumWidthraw}`) }}
         disabled={(bankVerification?.varification !== "Approve" ||
           kycVarification?.varification !== "Approve" && (selectedBox === 2 ? Number(enterWithdrawAmount) >= minimumWidthraw : true))}

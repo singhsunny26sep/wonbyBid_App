@@ -36,13 +36,13 @@ const MyAccount = () => {
 
   const { data: result, isLoading, refetch } = useKycDetails();
 
-  console.log('data: ', result?.data?.profileDetails);
+  // console.log('data: ', result?.data?.profileDetails);
   // console.log("result?.data?.data?.user?.accountNumber: ", result?.data?.data?.user?.accountNumber);
   // console.log("isloading: ", isLoading);
 
   // states
   const [showProfile, setShowProfile] = useState(true);
-  console.log(showProfile, '********************');
+  // console.log(showProfile, '********************');
   useFocusEffect(
     useCallback(() => {
       // This runs whenever the screen comes into focus
@@ -52,26 +52,15 @@ const MyAccount = () => {
 
   if (isLoading)
     return (
-      <Container
-        statusBarStyle="light-content"
-        statusBarBackgroundColor={colors.themeRed}
-        backgroundColor={colors.black}>
+      <Container statusBarStyle="light-content" statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
         <AppBar title="My Account" back />
-        <Box
-          flex={1}
-          backgroundColor="black"
-          justifyContent="center"
-          alignItems="center">
-          {/* <Spinner size={'large'} color={colors.gold} /> */}
+        <Box flex={1} backgroundColor="black" justifyContent="center" alignItems="center">
           <Loader />
         </Box>
       </Container>
     );
   return (
-    <Container
-      statusBarStyle="light-content"
-      statusBarBackgroundColor={colors.themeRed}
-      backgroundColor={colors.black}>
+    <Container statusBarStyle="light-content" statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
       <AppBar back title="My Account" />
 
       <Body>
@@ -102,11 +91,9 @@ const MyAccount = () => {
 
           <Box borderWidth={2} borderColor={result?.data?.verificationData?.mobileVarification?.varification === 'Approve' ? colors.greenText : result?.data?.verificationData?.mobileVarification?.varification !== 'Reject' ? colors.orange : colors.red} justifyContent="center" bgColor={colors.black2} h={moderateScale(65)} borderRadius={moderateScale(10)} overflow="hidden">
             <Box bgColor={result?.data?.verificationData?.mobileVarification?.varification === 'Approve' ? colors.greenText : result?.data?.verificationData?.mobileVarification?.varification !== 'Reject' ? colors.orange : colors.red} position="absolute" right={0} px={moderateScale(10)} py={moderateScaleVertical(4)} borderBottomLeftRadius={moderateScale(10)} top={0}>
-              {result?.data?.verificationData?.mobileVarification?.varification ===
-                'Approve' ? (
+              {result?.data?.verificationData?.mobileVarification?.varification === 'Approve' ? (
                 <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>VERIFIED</Text>
-              ) : result?.data?.verificationData?.mobileVarification?.varification !==
-                'Reject' ? (
+              ) : result?.data?.verificationData?.mobileVarification?.varification !== 'Reject' ? (
                 <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>PENDING</Text>
               ) : (
                 <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>REJECT</Text>
@@ -134,8 +121,7 @@ const MyAccount = () => {
               <Box bgColor={result?.data?.verificationData?.kycVarification?.varification === 'Approve' ? colors.greenText : result?.data?.verificationData?.kycVarification?.varification !== 'Reject' ? colors.orange : colors.red} position="absolute" right={0} px={moderateScale(10)} py={moderateScaleVertical(4)} borderBottomLeftRadius={moderateScale(10)} top={0}>
                 {result?.data?.verificationData?.kycVarification?.varification === 'Approve' ? (
                   <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>VERIFIED</Text>
-                ) : result?.data?.verificationData?.kycVarification?.varification !==
-                  'Reject' ? (
+                ) : result?.data?.verificationData?.kycVarification?.varification !== 'Reject' ? (
                   <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>PENDING</Text>
                 ) : (
                   <Text fontFamily={'$robotoMedium'} fontSize={12} lineHeight={14} color={colors.white} numberOfLines={1}>REJECT</Text>
@@ -144,7 +130,6 @@ const MyAccount = () => {
 
               <Box ml={moderateScale(15)} w={moderateScale(220)} gap={6}>
                 <Text fontFamily={'$robotoMedium'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>KYC Verification</Text>
-                {/* <Text fontFamily={'$robotoRegular'} fontSize={14} lineHeight={16} color={colors.black} numberOfLines={1} >Documents : Pan, {maskString(result?.data?.data?.aadharNumber)} </Text> */}
                 <Text fontFamily={'$robotoRegular'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>
                   Documents: Pan,{' '}{result?.data?.verificationData?.kycVarification?.pancardNumber}, Aadhaar,{' '}{result?.data?.verificationData?.kycVarification?.aadharNumber}{' '}
                 </Text>

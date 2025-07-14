@@ -83,7 +83,7 @@ const VerifyOTP = () => {
               const toastId = "toast-" + id
               return (
                 <Toast nativeID={toastId} variant="accent" action="success">
-                  <ToastTitle>LogIn successfully</ToastTitle>
+                  <ToastTitle>Login successfully</ToastTitle>
                 </Toast>
               );
             },

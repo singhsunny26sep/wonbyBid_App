@@ -9,3 +9,19 @@ export default function useUserReferal() {
     queryFn: AuthService.getReferals,
   });
 }
+
+
+export const useGetReferData = () => {
+  return useQuery({
+    queryKey: [AuthService.queryKeys.getReferData],
+    queryFn: AuthService.getReferData,
+  });
+}
+
+
+export const useGetBannerRefer = ({ screenName }: any) => {
+  return useQuery({
+    queryKey: [AuthService.queryKeys.getBannerScreenName, { screenName }],
+    queryFn: () => AuthService.getBannerScreenName({ screenName }),
+  });
+}

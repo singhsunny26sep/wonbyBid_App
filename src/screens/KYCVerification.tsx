@@ -217,32 +217,12 @@ const KYCVerification = () => {
   ) */
 
   return (
-    <Container
-      statusBarStyle="light-content"
-      statusBarBackgroundColor={colors.themeRed}
-      backgroundColor={colors.black}>
+    <Container statusBarStyle="light-content" statusBarBackgroundColor={colors.themeRed} backgroundColor={colors.black}>
       <AppBar back title="KYC Verification" />
 
-      <Box
-        mx={moderateScale(15)}
-        my={moderateScaleVertical(20)}
-        gap={moderateScale(6)}>
-        <Text
-          fontFamily="$robotoBold"
-          fontSize={16}
-          lineHeight={18}
-          color={colors.white}
-          numberOfLines={1}>
-          Complete KYC Verification
-        </Text>
-        <Text
-          fontFamily="$robotoMedium"
-          fontSize={14}
-          lineHeight={16}
-          color={colors.white}
-          numberOfLines={1}>
-          Select an option to proceed
-        </Text>
+      <Box mx={moderateScale(15)} my={moderateScaleVertical(20)} gap={moderateScale(6)}>
+        <Text fontFamily="$robotoBold" fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1}>Complete KYC Verification</Text>
+        <Text fontFamily="$robotoMedium" fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1}>Select an option to proceed</Text>
       </Box>
 
       <Box gap={moderateScale(10)}>

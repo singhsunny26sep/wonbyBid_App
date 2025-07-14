@@ -7,14 +7,14 @@ import { colors } from '../constants/colors'
 import { moderateScale } from '../utils/responsiveSize'
 import { CircketColorIcon, CircleGoldenTick, CopyIcon, ThreeDotsGray, ThreeDotsIcon, WhatsappIcon } from '../components/Icons'
 import PrimaryButton from '../components/Button/PrimaryButton'
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { Dimensions } from 'react-native';
 import { useState } from 'react';
 import { shadowStyle } from '../constants/constant';
 import Body from '../components/Body/Body';
 import { AppBar } from '../components/AppBar';
 import Share, { Social } from 'react-native-share';
-import useUserReferal from '../hooks/auth/get-referal-user';
+import useUserReferal, { useGetBannerRefer, useGetReferData } from '../hooks/auth/get-referal-user';
 import { Clipboard, ToastAndroid } from 'react-native';
 
 const ReferEarn = () => {
@@ -22,31 +22,15 @@ const ReferEarn = () => {
   const wWidht = Dimensions.get('screen').width;
   const wHeight = Dimensions.get('screen').height;
   const { data: referalData, isLoading: profileIsLoading } = useUserReferal()
+  const { data: referData, isLoading: referLoading } = useGetReferData()
+  const { data: bannerData, isLoading: bannerLoading } = useGetBannerRefer({ screenName: "ReferEarnScreen" })
 
   const [sliderImgActive, setSliderImgActive] = useState(0)
 
-  const onChangeSliderImg = (nativeEvent: any) => {
+  const [bannerIsLoading, setBannerIsLoading] = useState<boolean>(bannerLoading)
 
-    if (nativeEvent) {
-      const slide = Math.ceil(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width)
-      if (slide != sliderImgActive) {
-        setSliderImgActive(slide)
-      }
-    }
-  }
 
-  /* const shareMessageOnWhatsapp = async () => {
-    try {
-      const options = {
-        message: 'Hello! This is from WonByBid.',
-        social: Share.Social.WHATSAPP,
-        URL: "https://www.wonbybid.com/"
-      };
-      await Share.shareSingle(options);
-    } catch (error) {
-      console.error('Error sharing via WhatsApp:', error);
-    }
-  }; */
+
   const shareMessageOnWhatsapp = async () => {
     try {
       const options = {
@@ -61,18 +45,6 @@ const ReferEarn = () => {
   };
 
 
-  /*  const shareRefer = async () => {
-     try {
-       const options = {
-         title: 'Share via',
-         message: 'Hello! This is from WonByBid.',
-         URL: 'https://www.wonbybid.com/',
-       };
-       await Share.open(options); // Show popup with all available apps
-     } catch (error) {
-       console.error('Error sharing content:', error);
-     }
-   }; */
   const shareRefer = async () => {
     try {
       const options = {
@@ -91,13 +63,32 @@ const ReferEarn = () => {
     ToastAndroid.show('Referral Code Copied!', ToastAndroid.SHORT)
   }
 
+  // console.log("referData: ", referData?.data);
+  // console.log("referData: ", referalData?.data);
+  // console.log("bannerData: ", bannerData?.data);
+
+
   return (
     <Container statusBarStyle='light-content' statusBarBackgroundColor={colors.black} >
       <AppBar back backgroundColor={colors.black} title='Refer & Earn' />
       <Body>
         <Box w={'100%'} overflow='hidden' backgroundColor={colors.black} style={shadowStyle}>
           <Box w={'100%'} borderBottomLeftRadius={moderateScale(20)} borderBottomRightRadius={moderateScale(20)} overflow='hidden' >
-            <ImageBackground alt='icon' source={require('../assets/icons/share.jpeg')} w={'100%'} h={300}>
+            {/* <ImageBackground alt='icon' source={require('../assets/icons/share.jpeg')} w={'100%'} h={300}>
+              <View style={{ width: wWidht * 0.9, height: wHeight * 0.15, alignSelf: 'center', marginHorizontal: responsiveWidth(5), borderColor: '#E3DBDB', borderRadius: responsiveWidth(5), marginTop: responsiveHeight(4), }} >
+              </View>
+            </ImageBackground> */}
+            <ImageBackground
+              source={{ uri: bannerData?.data?.imageUrl } || require('../assets/icons/share.jpeg')}
+              style={{ width: '100%', height: 300, justifyContent: 'center', alignItems: 'center' }}
+              onLoadStart={() => setBannerIsLoading(true)}
+              onLoadEnd={() => setBannerIsLoading(false)}
+              onError={() => setBannerIsLoading(false)}
+            >
+              {bannerIsLoading && (
+                <ActivityIndicator size="large" color="#FEAC2F" />
+              )}
+
               <View style={{ width: wWidht * 0.9, height: wHeight * 0.15, alignSelf: 'center', marginHorizontal: responsiveWidth(5), borderColor: '#E3DBDB', borderRadius: responsiveWidth(5), marginTop: responsiveHeight(4), }} >
               </View>
             </ImageBackground>
@@ -141,7 +132,7 @@ const ReferEarn = () => {
           <Box backgroundColor={colors.black}>
             <Text fontFamily={'$poppinsSemiBold'} fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1} alignSelf='center' mt={responsiveHeight(3)} fontWeight='700'>How it Works</Text>
 
-            <Text fontFamily={'$poppinsMedium'} fontSize={13} lineHeight={18} color={colors.white} numberOfLines={3} textAlign='center' alignSelf='center' w={moderateScale(320)} mt={responsiveHeight(1)} fontWeight='200' >“Refer friends and get 10% of their recharge instantly, up to <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={20} color={colors.white} numberOfLines={1}>{'\u20B9'}</Text>100! The more they recharge,</Text>
+            <Text fontFamily={'$poppinsMedium'} fontSize={13} lineHeight={18} color={colors.white} numberOfLines={3} textAlign='center' alignSelf='center' w={moderateScale(320)} mt={responsiveHeight(1)} fontWeight='200' >“Refer friends and get <Text color={colors.gold} fontSize={13}>{referData?.data?.data?.amountDistributionPercentage || 0}%</Text> of their recharge instantly, up to <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={20} color={colors.white} numberOfLines={1}></Text><Text color={colors.gold} fontSize={13}>{'\u20B9'}{referData?.data?.data?.amount || 0}</Text> The more they recharge,</Text>
             <Text fontFamily={'$poppinsMedium'} fontSize={13} lineHeight={18} color={colors.white} numberOfLines={3} textAlign='center' alignSelf='center' w={moderateScale(320)} fontWeight='200' >the more you earn—and you can withdraw your rewards anytime!”</Text>
             {/* <Text fontFamily={'$poppinsMedium'} fontSize={13} lineHeight={18} color={colors.white} numberOfLines={3} textAlign='center' alignSelf='center' w={moderateScale(320)} mt={responsiveHeight(1)} fontWeight='200' >“Refer friends and get 10% of their recharge instantly, up to ₹100! The more they recharge, the more you earn—and you can withdraw your rewards anytime!”</Text> */}
             <Image alt='icon' source={require('../assets/icons/refericons.png')} w={'100%'} h={moderateScale(70)} mt={responsiveHeight(4)} />
@@ -157,33 +148,28 @@ const ReferEarn = () => {
 
             {
               referalData?.data?.referedUserdata?.map((el: any, i: any) =>
-                <Box flexDirection='row' alignItems='center' justifyContent='space-between' h={moderateScale(70)} borderWidth={0.5} borderColor='white' mb={responsiveHeight(1)} mx={moderateScale(15)} bgColor={colors.black} borderRadius={moderateScale(10)} px={moderateScale(15)}>
+                <Box key={i} flexDirection='row' alignItems='center' justifyContent='space-between' h={moderateScale(70)} borderWidth={0.5} borderColor='white' mb={responsiveHeight(1)} mx={moderateScale(15)} bgColor={colors.black} borderRadius={moderateScale(10)} px={moderateScale(15)}>
                   <Box flexDirection='row' alignItems='center' gap={moderateScale(10)}>
                     <Box h={moderateScale(35)} w={moderateScale(35)} borderRadius={moderateScale(40)} >
                       <Image alt='icon' source={{ uri: 'https://cdn-icons-png.flaticon.com/512/219/219988.png' }} h={'100%'} w={'100%'} resizeMode='contain' />
                     </Box>
                     <Box>
                       <Text fontFamily={'$poppinsSemiBold'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1} >{el.refereeDetails.name}</Text>
-                      {/* <Text fontFamily={'$poppinsMedium'} fontSize={14} lineHeight={16} color={colors.white} numberOfLines={1} >{el.refereeDetails.mobileNumber}</Text> */}
                     </Box>
                   </Box>
-
                   <Box>
-                    {/* <Text fontFamily={'$poppinsBold'} fontSize={16} lineHeight={18} color={colors.white} numberOfLines={1}  >{'\u20B9'} 0 / {'\u20B9'} 100</Text> */}
                     <Text fontFamily={'$robotoBold'} fontSize={14} lineHeight={20} color={colors.white} numberOfLines={1}>{'\u20B9'} {el.creditRewardAmount} / {'\u20B9'} {el.rewardAmount}</Text>
                   </Box>
-
                 </Box>
               )
             }
-
           </Box>
         </Box>
       </Body>
 
 
 
-    </Container>
+    </Container >
   )
 }
 

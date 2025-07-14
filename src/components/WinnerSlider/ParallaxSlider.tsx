@@ -18,6 +18,8 @@ const ParallaxSlider = ({ cardFrom }: any) => {
   const { width } = Dimensions.get("window"); // Get screen width
   const { data, isLoading } = useGetAllTopRanks()
 
+  // console.log("data: ", data?.data?.data?.topUserranks)
+
   return (
     isLoading ?
       <Box w={'100%'} h={moderateScale(110)} alignContent={'center'} justifyContent={'center'}>
